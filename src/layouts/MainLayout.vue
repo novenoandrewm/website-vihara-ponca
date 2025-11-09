@@ -4,11 +4,24 @@ import AppFooter from '@/components/AppFooter.vue'
 </script>
 
 <template>
-  <div class="min-h-screen bg-zinc-900 text-zinc-100 flex flex-col">
+  <div class="flex min-h-screen flex-col bg-zinc-900 text-zinc-100">
     <NavBar />
     <div class="flex-1">
-      <router-view />
+      <Transition name="fade" mode="out-in">
+        <router-view />
+      </Transition>
     </div>
     <AppFooter />
   </div>
 </template>
+
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.18s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

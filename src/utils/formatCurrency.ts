@@ -7,6 +7,6 @@ export function formatCurrency(
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,
-    maximumFractionDigits: maxFraction
+    maximumFractionDigits: maxFraction,
   }).format(value)
 }

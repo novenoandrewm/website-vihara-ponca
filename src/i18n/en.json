@@ -1,4 +1,4 @@
 {
-  "nav": { "home": "Home", "pmv": "PMV", "gabi": "GABI", "finance": "Finance" },
+  "nav": { "home": "Home", "pmv": "PMV", "gabi": "GABI" },
   "home": { "title": "Home" }
 }

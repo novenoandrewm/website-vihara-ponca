@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Fokus keyboard yang jelas di seluruh situs */
+:focus-visible {
+  outline: 2px solid #5b6cff;
+  outline-offset: 2px;
+}

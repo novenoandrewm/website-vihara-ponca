@@ -12,6 +12,6 @@ export default defineConfig({
   },
   server: {
     port: 5173, // opsional
-    open: false // opsional
+    open: false, // opsional
   },
 })

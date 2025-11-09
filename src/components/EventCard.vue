@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { formatDate } from '@/utils/formatDate'
-defineProps<{ title: string; date: string; location: string; description?: string }>()
+defineProps<{
+  title: string
+  date: string
+  location: string
+  description?: string
+}>()
 </script>
 
 <template>
