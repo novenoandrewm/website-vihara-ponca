@@ -14,7 +14,8 @@
     "typecheck": "vue-tsc --noEmit",
     "coverage": "vitest run --coverage",
     "ci": "npm run lint && npm run typecheck && npm run coverage && npm run build",
-    "prepare": "husky"
+    "prepare": "husky",
+    "postbuild": "node scripts/generate-sitemap.mjs"
   },
   "dependencies": {
     "pinia": "^2.3.1",
