@@ -4,16 +4,27 @@ import HeroSection from '@/components/HeroSection.vue'
 import EventCard from '@/components/EventCard.vue'
 import SkeletonCard from '@/components/SkeletonCard.vue'
 import { getUpcomingEvents, type EventItem } from '@/services/events'
+import { upsertJsonLd, eventsItemListSchema } from '@/utils/structured'
 
-const events = ref<EventItem[] | null>(null)
+// state utama
+const events = ref<EventItem[]>([])
 const errorMsg = ref<string | null>(null)
+const loading = ref(true)
 
 onMounted(async () => {
   try {
-    events.value = await getUpcomingEvents()
+    const data = await getUpcomingEvents()
+    events.value = data
+
+    // inject JSON-LD hanya kalau ada event
+    if (Array.isArray(data) && data.length > 0) {
+      upsertJsonLd('events', eventsItemListSchema(data))
+    }
   } catch {
+    // pesan user-friendly
     errorMsg.value = 'Gagal memuat data acara. Silakan coba muat ulang.'
-    events.value = []
+  } finally {
+    loading.value = false
   }
 })
 </script>
@@ -33,8 +44,9 @@ onMounted(async () => {
     </div>
 
     <!-- Loading -->
-    <section v-else-if="events === null" class="grid gap-4 md:grid-cols-2">
-      <SkeletonCard /><SkeletonCard />
+    <section v-else-if="loading" class="grid gap-4 md:grid-cols-2">
+      <SkeletonCard />
+      <SkeletonCard />
     </section>
 
     <!-- Empty -->
@@ -46,7 +58,8 @@ onMounted(async () => {
     <section v-else class="grid gap-4 md:grid-cols-2">
       <EventCard
         v-for="e in events"
-        :key="e.id ?? `${e.title}-${e.date}`"
+        :id="`event-${e.id}`"
+        :key="e.id"
         :title="e.title"
         :date="e.date"
         :location="e.location"

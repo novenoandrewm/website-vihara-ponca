@@ -25,6 +25,21 @@ export default [
       ...js.configs.recommended.rules,
       ...vue.configs['vue3-recommended'].rules,
       ...ts.configs.recommended.rules,
+
+      // ---- tambahkan baris2 di bawah ini ----
+      'no-unused-vars': 'off', // matikan rule JS biasa
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          args: 'all',
+          argsIgnorePattern: '^_', // abaikan argumen yang diawali _
+          varsIgnorePattern: '^_', // abaikan variabel yang diawali _
+          caughtErrors: 'all',
+          caughtErrorsIgnorePattern: '^_', // abaikan parameter catch yang diawali _
+        },
+      ],
+      // ---------------------------------------
+
       'vue/multi-word-component-names': 'off',
     },
   },

@@ -1,8 +1,8 @@
-// src/env.d.ts
-import 'vue-router'
-declare module 'vue-router' {
-  interface RouteMeta {
-    title?: string
-    description?: string
-  }
+/// <reference types="vite/client" />
+
+interface ImportMetaEnv {
+  readonly VITE_SITE_URL?: string
+}
+interface ImportMeta {
+  readonly env: ImportMetaEnv
 }
