@@ -16,7 +16,7 @@ const phoneHref = phoneDisplay.replace(/[^0-9+]/g, '')
 const plusCode = 'MQ34+9Q'
 const mapsQuery = `${plusCode} Pd. Cabe Udik, Kota Tangerang Selatan, Banten, Indonesia`
 
-// Link buka maps
+// Link buka maps (menggunakan short URL yang disediakan)
 const mapsOpenUrl = 'https://maps.app.goo.gl/8rog6mKrPTjqBBFh8'
 
 // Embed maps (pakai query/plus code)
@@ -47,13 +47,14 @@ const showSuccess = computed(() => route.query.success === '1')
     <form
       name="contact"
       method="POST"
-      action="/contact?success=1"
+      action="/contact/success/"
       data-netlify="true"
       netlify-honeypot="bot-field"
       class="max-w-md space-y-4"
     >
       <input type="hidden" name="form-name" value="contact" />
 
+      <!-- honeypot anti-spam -->
       <p class="hidden">
         <label>
           Don’t fill this out if you’re human: <input name="bot-field" />
@@ -61,9 +62,9 @@ const showSuccess = computed(() => route.query.success === '1')
       </p>
 
       <div>
-        <label class="mb-1 block text-sm" for="name">{{
-          t('contact.name')
-        }}</label>
+        <label class="mb-1 block text-sm" for="name">
+          {{ t('contact.name') }}
+        </label>
         <input
           id="name"
           name="name"
@@ -75,9 +76,9 @@ const showSuccess = computed(() => route.query.success === '1')
       </div>
 
       <div>
-        <label class="mb-1 block text-sm" for="email">{{
-          t('contact.email')
-        }}</label>
+        <label class="mb-1 block text-sm" for="email">
+          {{ t('contact.email') }}
+        </label>
         <input
           id="email"
           name="email"
@@ -89,9 +90,9 @@ const showSuccess = computed(() => route.query.success === '1')
       </div>
 
       <div>
-        <label class="mb-1 block text-sm" for="message">{{
-          t('contact.message')
-        }}</label>
+        <label class="mb-1 block text-sm" for="message">
+          {{ t('contact.message') }}
+        </label>
         <textarea
           id="message"
           name="message"
@@ -114,19 +115,17 @@ const showSuccess = computed(() => route.query.success === '1')
       <h2 class="text-xl font-semibold">{{ t('contact.location') }}</h2>
 
       <p class="text-zinc-300">
-        <span class="font-medium"
-          >{{ t('contact.address_label', 'Alamat') }}:</span
-        >
+        <span class="font-medium">
+          {{ t('contact.address_label', 'Alamat') }}:
+        </span>
         {{ address }}
       </p>
 
       <p class="text-zinc-300">
-        <span class="font-medium"
-          >{{ t('contact.phone_label', 'Telepon') }}:</span
-        >
-        <a class="underline" :href="`tel:${phoneHref}`">
-          {{ phoneDisplay }}
-        </a>
+        <span class="font-medium">
+          {{ t('contact.phone_label', 'Telepon') }}:
+        </span>
+        <a class="underline" :href="`tel:${phoneHref}`">{{ phoneDisplay }}</a>
       </p>
 
       <a
