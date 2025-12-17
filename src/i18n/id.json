@@ -1,4 +1,39 @@
 {
-  "nav": { "home": "Beranda", "pmv": "PMV", "gabi": "GABI" },
-  "home": { "title": "Beranda" }
+  "nav": {
+    "home": "Beranda",
+    "pmv": "PMV",
+    "gabi": "GABI",
+    "contact": "Kontak"
+  },
+  "home": {
+    "title": "Beranda",
+    "error": "Gagal memuat data acara. Silakan coba muat ulang.",
+    "no_events": "Belum ada kegiatan terjadwal."
+  },
+  "categories": {
+    "all": "Semua",
+    "pmv": "PMV",
+    "gabi": "GABI",
+    "general": "Umum"
+  },
+  "contact": {
+    "title": "Kontak & Lokasi",
+    "description": "Silakan hubungi kami atau kunjungi alamat kami.",
+    "name": "Nama",
+    "email": "Email",
+    "message": "Pesan",
+    "submit": "Kirim",
+    "location": "Lokasi",
+    "map_placeholder": "Peta akan ditampilkan di sini",
+    "address_label": "Alamat",
+    "phone_label": "Telepon",
+    "open_maps": "Buka di Google Maps",
+    "map_title": "Peta lokasi vihara",
+    "success": "Terima kasih! Pesan Anda sudah terkirim."
+  },
+  "event": {
+    "not_found": "Acara tidak ditemukan.",
+    "error_load": "Gagal memuat detail acara.",
+    "back": "Kembali ke Beranda"
+  }
 }

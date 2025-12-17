@@ -8,7 +8,7 @@ const SITE_URL = (
 ).replace(/\/+$/, '')
 
 // List of SPA public routes
-const routes = ['/', '/pmv', '/gabi']
+const routes = ['/', '/pmv', '/gabi', '/contact']
 
 const lastmod = new Date().toISOString().slice(0, 10) // yyyy-mm-dd
 const urls = routes

@@ -1,15 +1,30 @@
+<!-- src/pages/Home.vue -->
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
 import HeroSection from '@/components/HeroSection.vue'
 import EventCard from '@/components/EventCard.vue'
 import SkeletonCard from '@/components/SkeletonCard.vue'
+
 import { getUpcomingEvents, type EventItem } from '@/services/events'
 import { upsertJsonLd, eventsItemListSchema } from '@/utils/structured'
+
+const { t } = useI18n({ useScope: 'global' })
 
 // state utama
 const events = ref<EventItem[]>([])
 const errorMsg = ref<string | null>(null)
 const loading = ref(true)
+
+// filter kategori
+const selectedCategory = ref<'all' | 'pmv' | 'gabi' | 'general'>('all')
+
+const filteredEvents = computed(() =>
+  selectedCategory.value === 'all'
+    ? events.value
+    : events.value.filter((e) => e.category === selectedCategory.value)
+)
 
 onMounted(async () => {
   try {
@@ -21,8 +36,10 @@ onMounted(async () => {
       upsertJsonLd('events', eventsItemListSchema(data))
     }
   } catch {
-    // pesan user-friendly
-    errorMsg.value = 'Gagal memuat data acara. Silakan coba muat ulang.'
+    errorMsg.value = t(
+      'home.error',
+      'Gagal memuat data acara. Silakan coba muat ulang.'
+    )
   } finally {
     loading.value = false
   }
@@ -50,21 +67,41 @@ onMounted(async () => {
     </section>
 
     <!-- Empty -->
-    <section v-else-if="events.length === 0" class="text-zinc-300">
-      Belum ada kegiatan terjadwal.
+    <section v-else-if="filteredEvents.length === 0" class="text-zinc-300">
+      {{ t('home.no_events', 'Belum ada kegiatan terjadwal.') }}
     </section>
 
     <!-- Data -->
-    <section v-else class="grid gap-4 md:grid-cols-2">
-      <EventCard
-        v-for="e in events"
-        :id="`event-${e.id}`"
-        :key="e.id"
-        :title="e.title"
-        :date="e.date"
-        :location="e.location"
-        :description="e.description"
-      />
+    <section v-else class="space-y-4">
+      <!-- Filter -->
+      <div class="flex flex-wrap gap-2">
+        <button
+          v-for="cat in ['all', 'pmv', 'gabi', 'general']"
+          :key="cat"
+          class="rounded px-3 py-1 text-sm"
+          :class="
+            selectedCategory === (cat as any)
+              ? 'bg-brand-500 text-white'
+              : 'bg-zinc-700 text-zinc-200'
+          "
+          @click="selectedCategory = cat as any"
+        >
+          {{ t('categories.' + cat, cat) }}
+        </button>
+      </div>
+
+      <!-- List -->
+      <div class="grid gap-4 md:grid-cols-2">
+        <EventCard
+          v-for="e in filteredEvents"
+          :id="`event-${e.id}`"
+          :key="e.id"
+          :title="e.title"
+          :date="e.date"
+          :location="e.location"
+          :description="e.description"
+        />
+      </div>
     </section>
   </main>
 </template>

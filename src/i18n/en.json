@@ -1,4 +1,39 @@
 {
-  "nav": { "home": "Home", "pmv": "PMV", "gabi": "GABI" },
-  "home": { "title": "Home" }
+  "nav": {
+    "home": "Home",
+    "pmv": "PMV",
+    "gabi": "GABI",
+    "contact": "Contact"
+  },
+  "home": {
+    "title": "Home",
+    "error": "Failed to load events. Please try again.",
+    "no_events": "No scheduled events."
+  },
+  "categories": {
+    "all": "All",
+    "pmv": "PMV",
+    "gabi": "GABI",
+    "general": "General"
+  },
+  "contact": {
+    "title": "Contact & Location",
+    "description": "Please contact us or visit our address.",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "submit": "Submit",
+    "location": "Location",
+    "map_placeholder": "Map will be displayed here",
+    "address_label": "Address",
+    "phone_label": "Phone",
+    "open_maps": "Open in Google Maps",
+    "map_title": "Temple location map",
+    "success": "Thank you! Your message has been sent."
+  },
+  "event": {
+    "not_found": "Event not found.",
+    "error_load": "Failed to load event details.",
+    "back": "Back to Home"
+  }
 }

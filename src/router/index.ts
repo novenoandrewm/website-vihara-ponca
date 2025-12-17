@@ -32,6 +32,34 @@ const routes = [
         'Informasi kegiatan Gelanggang Anak Buddhis Indonesia (GABI).',
     },
   },
+  {
+    path: '/contact',
+    name: 'contact',
+    component: () => import('@/pages/Contact.vue'),
+    meta: {
+      title: 'Kontak',
+      description: 'Informasi kontak dan lokasi Vihara Avalokitesvara Ponca.',
+    },
+  },
+  {
+    path: '/events/:id',
+    name: 'event-detail',
+    component: () => import('@/pages/EventDetail.vue'),
+    meta: {
+      title: 'Detail Acara',
+      description: 'Detail acara dan kegiatan di Vihara Avalokitesvara.',
+    },
+  },
+  // fallback 404
+  {
+    path: '/:catchAll(.*)',
+    name: 'not-found',
+    component: () => import('@/pages/NotFound.vue'),
+    meta: {
+      title: '404',
+      description: 'Halaman tidak ditemukan.',
+    },
+  },
 ]
 
 const router = createRouter({

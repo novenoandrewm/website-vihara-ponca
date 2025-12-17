@@ -3,12 +3,27 @@
     "id": "e1",
     "title": "Puja Bakti Umum Mingguan",
     "date": "2025-11-02",
-    "location": "Aula Bakti Sala"
+    "location": "Aula Bakti Sala",
+    "category": "general",
+    "description": "Puja bakti rutin untuk umat umum.",
+    "image": "/images/puja.jpg"
   },
   {
     "id": "e2",
     "title": "Kegiatan PMV",
     "date": "2025-11-05",
-    "location": "Aula Bakti Sala"
+    "location": "Aula Bakti Sala",
+    "category": "pmv",
+    "description": "Kegiatan Persatuan Muda-Mudi.",
+    "image": "/images/pmv.jpg"
+  },
+  {
+    "id": "e3",
+    "title": "Kegiatan GABI",
+    "date": "2025-11-07",
+    "location": "Aula Bakti Sala",
+    "category": "gabi",
+    "description": "Kegiatan Gelanggang Anak Buddhis Indonesia.",
+    "image": "/images/gabi.jpg"
   }
 ]
