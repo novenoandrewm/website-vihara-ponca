@@ -32,7 +32,7 @@ Thumbs.db
 .idea/
 *.iml
 
-# VSCode (optional)
+# VSCode
 .vscode/*
 !.vscode/settings.json
 !.vscode/extensions.json
