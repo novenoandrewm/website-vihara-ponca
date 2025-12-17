@@ -47,7 +47,7 @@ const showSuccess = computed(() => route.query.success === '1')
     <form
       name="contact"
       method="POST"
-      action="/contact?success=1"
+      action="/contact/success/"
       data-netlify="true"
       netlify-honeypot="bot-field"
       class="max-w-md space-y-4"
