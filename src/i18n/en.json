@@ -3,6 +3,7 @@
     "home": "Home",
     "pmv": "PMV",
     "gabi": "GABI",
+    "schedule": "Schedule",
     "contact": "Contact"
   },
   "home": {
@@ -15,6 +16,22 @@
     "pmv": "PMV",
     "gabi": "GABI",
     "general": "General"
+  },
+  "schedule": {
+    "title": "Weekly Schedule",
+    "description": "Weekly activities for the community, PMV, and GABI.",
+    "empty": "No schedule is available.",
+    "no_items_day": "No activities.",
+    "error": "Failed to load the schedule."
+  },
+  "days": {
+    "mon": "Monday",
+    "tue": "Tuesday",
+    "wed": "Wednesday",
+    "thu": "Thursday",
+    "fri": "Friday",
+    "sat": "Saturday",
+    "sun": "Sunday"
   },
   "contact": {
     "title": "Contact & Location",

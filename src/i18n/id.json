@@ -3,6 +3,7 @@
     "home": "Beranda",
     "pmv": "PMV",
     "gabi": "GABI",
+    "schedule": "Jadwal",
     "contact": "Kontak"
   },
   "home": {
@@ -15,6 +16,22 @@
     "pmv": "PMV",
     "gabi": "GABI",
     "general": "Umum"
+  },
+  "schedule": {
+    "title": "Jadwal Kegiatan",
+    "description": "Jadwal kegiatan rutin untuk umat, PMV, dan GABI.",
+    "empty": "Belum ada jadwal yang ditampilkan.",
+    "no_items_day": "Tidak ada kegiatan.",
+    "error": "Gagal memuat jadwal."
+  },
+  "days": {
+    "mon": "Senin",
+    "tue": "Selasa",
+    "wed": "Rabu",
+    "thu": "Kamis",
+    "fri": "Jumat",
+    "sat": "Sabtu",
+    "sun": "Minggu"
   },
   "contact": {
     "title": "Kontak & Lokasi",

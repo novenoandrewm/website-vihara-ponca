@@ -1,0 +1,52 @@
+[
+  {
+    "id": "s1",
+    "title": "Puja Bakti Umum",
+    "day": "sun",
+    "start": "07:00",
+    "end": "09:00",
+    "category": "general",
+    "location": "Aula Bakti",
+    "description": "Puja bakti rutin untuk umat umum."
+  },
+  {
+    "id": "s2",
+    "title": "Meditasi & Chanting",
+    "day": "sat",
+    "start": "19:00",
+    "end": "20:30",
+    "category": "general",
+    "location": "Aula Bakti",
+    "description": "Sesi meditasi terbuka untuk umum."
+  },
+  {
+    "id": "s3",
+    "title": "Kegiatan PMV",
+    "day": "sat",
+    "start": "16:00",
+    "end": "18:00",
+    "category": "pmv",
+    "location": "Ruang Serbaguna",
+    "description": "Latihan, koordinasi, dan aktivitas muda-mudi."
+  },
+  {
+    "id": "s4",
+    "title": "Kegiatan GABI",
+    "day": "sun",
+    "start": "09:30",
+    "end": "11:00",
+    "category": "gabi",
+    "location": "Ruang Kelas",
+    "description": "Kegiatan anak-anak (belajar, bermain, dan nilai kebajikan)."
+  },
+  {
+    "id": "s5",
+    "title": "Kelas Dhamma",
+    "day": "wed",
+    "start": "19:30",
+    "end": "21:00",
+    "category": "general",
+    "location": "Ruang Kelas",
+    "description": "Kelas Dhamma untuk umum."
+  }
+]

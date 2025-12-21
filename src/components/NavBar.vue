@@ -50,6 +50,11 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
             {{ t('nav.contact') }}
           </span>
         </router-link>
+        <router-link v-slot="{ isActive }" to="/schedule">
+          <span :class="isActive ? 'font-medium text-brand-500' : ''">
+            {{ t('nav.schedule') }}
+          </span>
+        </router-link>
       </div>
 
       <!-- spacer -->
@@ -112,6 +117,11 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
         <router-link v-slot="{ isActive }" to="/contact" @click="close">
           <span :class="isActive ? 'font-medium text-brand-500' : ''">
             {{ t('nav.contact') }}
+          </span>
+        </router-link>
+        <router-link v-slot="{ isActive }" to="/schedule" @click="close">
+          <span :class="isActive ? 'font-medium text-brand-500' : ''">
+            {{ t('nav.schedule') }}
           </span>
         </router-link>
       </div>

@@ -41,6 +41,18 @@ const routes = [
       description: 'Informasi kontak dan lokasi Vihara Avalokitesvara Ponca.',
     },
   },
+
+  {
+    path: '/schedule',
+    name: 'schedule',
+    component: () => import('@/pages/Schedule.vue'),
+    meta: {
+      title: 'Jadwal Kegiatan',
+      description:
+        'Jadwal kegiatan rutin Vihara Avalokitesvara, PMV, dan GABI.',
+    },
+  },
+
   {
     path: '/events/:id',
     name: 'event-detail',
