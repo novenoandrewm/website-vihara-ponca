@@ -9,7 +9,13 @@
   "home": {
     "title": "Home",
     "error": "Failed to load events. Please try again.",
-    "no_events": "No scheduled events."
+    "no_events": "No scheduled events.",
+    "weekly_quote_title": "Weekly Quote",
+    "quote_loading": "Loading quote...",
+    "quote_error": "Failed to load weekly quote.",
+    "no_quote": "No quote available this week.",
+    "about_title": "About the Vihara",
+    "about_description": "Vihara Avalokitesvara Pondok Cabe is a Buddhayana temple under the Sangha Agung Indonesia, serving the community since the early 1980s. Located on Jalan Pondok Cabe Raya in Pamulang, South Tangerang, it hosts weekly Sunday services, meditation sessions, and programmes for the youth (PMV) and children (GABI)."
   },
   "categories": {
     "all": "All",

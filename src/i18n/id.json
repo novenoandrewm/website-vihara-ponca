@@ -9,7 +9,13 @@
   "home": {
     "title": "Beranda",
     "error": "Gagal memuat data acara. Silakan coba muat ulang.",
-    "no_events": "Belum ada kegiatan terjadwal."
+    "no_events": "Belum ada kegiatan terjadwal.",
+    "weekly_quote_title": "Kutipan Mingguan",
+    "quote_loading": "Memuat kutipan...",
+    "quote_error": "Gagal memuat kutipan mingguan.",
+    "no_quote": "Belum ada kutipan minggu ini.",
+    "about_title": "Tentang Vihara",
+    "about_description": "Vihara Avalokitesvara Pondok Cabe adalah vihara Buddhayana di bawah Sangha Agung Indonesia yang melayani umat sejak awal 1980-an. Vihara ini berlokasi di Jalan Pondok Cabe Raya, Pondok Cabe Udik, Pamulang, Tangerang Selatan dan menjadi pusat kegiatan keagamaan seperti puja bakti Minggu pagi, meditasi, serta program remaja (PMV) dan anak-anak (GABI)."
   },
   "categories": {
     "all": "Semua",
