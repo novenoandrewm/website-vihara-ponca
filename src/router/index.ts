@@ -1,95 +1,64 @@
-// src/router/index.ts
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/store/auth'
 import { setPageMeta } from '@/utils/seo'
 
 const routes = [
+  // ...rute publik...
   {
-    path: '/',
-    name: 'home',
-    component: () => import('@/pages/Home.vue'),
+    path: '/admin',
+    name: 'dashboard',
+    component: () => import('@/pages/AdminDashboard.vue'),
     meta: {
-      title: 'Beranda',
-      description:
-        'Informasi kegiatan rutin, PMV, GABI, dan aktivitas terbaru.',
+      title: 'Dashboard',
+      description: 'Halaman admin untuk mengelola konten',
+      requiresAuth: true,
+      roles: ['superadmin', 'pmv_admin', 'gabi_admin', 'schedule_admin'],
     },
   },
   {
-    path: '/pmv',
-    name: 'pmv',
-    component: () => import('@/pages/Pmv.vue'),
+    path: '/admin/pmv',
+    name: 'admin-pmv',
+    component: () => import('@/pages/AdminPmv.vue'),
     meta: {
-      title: 'PMV',
-      description: 'Agenda dan kegiatan Persatuan Muda-Mudi Vihara (PMV).',
+      title: 'Kelola PMV',
+      requiresAuth: true,
+      roles: ['superadmin', 'pmv_admin'],
     },
   },
+  // tambahkan rute admin lainnya sesuai modul
   {
-    path: '/gabi',
-    name: 'gabi',
-    component: () => import('@/pages/Gabi.vue'),
-    meta: {
-      title: 'GABI',
-      description:
-        'Informasi kegiatan Gelanggang Anak Buddhis Indonesia (GABI).',
-    },
+    path: '/login',
+    name: 'login',
+    component: () => import('@/pages/Login.vue'),
+    meta: { title: 'Login' },
   },
-  {
-    path: '/contact',
-    name: 'contact',
-    component: () => import('@/pages/Contact.vue'),
-    meta: {
-      title: 'Kontak',
-      description: 'Informasi kontak dan lokasi Vihara Avalokitesvara Ponca.',
-    },
-  },
-
-  {
-    path: '/schedule',
-    name: 'schedule',
-    component: () => import('@/pages/Schedule.vue'),
-    meta: {
-      title: 'Jadwal Kegiatan',
-      description:
-        'Jadwal kegiatan rutin Vihara Avalokitesvara, PMV, dan GABI.',
-    },
-  },
-
-  {
-    path: '/events/:id',
-    name: 'event-detail',
-    component: () => import('@/pages/EventDetail.vue'),
-    meta: {
-      title: 'Detail Acara',
-      description: 'Detail acara dan kegiatan di Vihara Avalokitesvara.',
-    },
-  },
-  // fallback 404
-  {
-    path: '/:catchAll(.*)',
-    name: 'not-found',
-    component: () => import('@/pages/NotFound.vue'),
-    meta: {
-      title: '404',
-      description: 'Halaman tidak ditemukan.',
-    },
-  },
+  // rute fallback / not found...
 ]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
-  scrollBehavior() {
-    return { top: 0 }
-  },
+})
+
+router.beforeEach((to) => {
+  const auth = useAuthStore()
+  if (to.meta.requiresAuth) {
+    if (!auth.user) {
+      return { name: 'login' }
+    }
+    // cek hak akses
+    const allowed = (to.meta.roles as string[]) ?? []
+    if (allowed.length && auth.user && !allowed.includes(auth.user.role)) {
+      return { name: 'home' } // tolak akses
+    }
+  }
 })
 
 router.afterEach((to) => {
-  const title = to.meta.title ?? 'Vihara'
-  const description =
-    to.meta.description ?? 'Informasi kegiatan rutin Vihara, PMV, dan GABI.'
+  // set SEO meta sesuai rute
   setPageMeta({
-    title,
-    description,
-    image: 'https://viharaavalokitesvara.netlify.app/og.png',
+    title: (to.meta.title as string) ?? 'Vihara',
+    description: (to.meta.description as string) ?? '',
   })
 })
 
