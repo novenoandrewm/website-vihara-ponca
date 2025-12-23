@@ -1,9 +1,32 @@
 <!-- src/components/NavBar.vue -->
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useAuthStore } from '@/store/auth'
+import { logout as logoutService } from '@/services/auth'
 
 const { t, locale } = useI18n({ useScope: 'global' })
+
+const auth = useAuthStore()
+const isLoggedIn = computed(() => !!auth.user)
+const role = computed(() => auth.user?.role)
+
+const canManagePmv = computed(
+  () =>
+    isLoggedIn.value &&
+    (role.value === 'superadmin' || role.value === 'pmv_admin')
+)
+const canManageGabi = computed(
+  () =>
+    isLoggedIn.value &&
+    (role.value === 'superadmin' || role.value === 'gabi_admin')
+)
+const canManageSchedule = computed(
+  () =>
+    isLoggedIn.value &&
+    (role.value === 'superadmin' || role.value === 'schedule_admin')
+)
+
 const open = ref(false)
 const toggle = () => (open.value = !open.value)
 const close = () => (open.value = false)
@@ -17,6 +40,12 @@ const onKey = (e: KeyboardEvent) => {
 }
 onMounted(() => window.addEventListener('keydown', onKey))
 onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
+
+function handleLogout() {
+  logoutService()
+  auth.setUser(null)
+  close()
+}
 </script>
 
 <template>
@@ -45,16 +74,45 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
             {{ t('nav.gabi') }}
           </span>
         </router-link>
-        <router-link v-slot="{ isActive }" to="/contact">
-          <span :class="isActive ? 'font-medium text-brand-500' : ''">
-            {{ t('nav.contact') }}
-          </span>
-        </router-link>
+
         <router-link v-slot="{ isActive }" to="/schedule">
           <span :class="isActive ? 'font-medium text-brand-500' : ''">
             {{ t('nav.schedule') }}
           </span>
         </router-link>
+
+        <router-link v-slot="{ isActive }" to="/contact">
+          <span :class="isActive ? 'font-medium text-brand-500' : ''">
+            {{ t('nav.contact') }}
+          </span>
+        </router-link>
+
+        <!-- ADMIN links (Desktop) -->
+        <router-link v-if="canManagePmv" to="/admin/pmv">
+          {{ t('nav.admin_pmv', 'Kelola PMV') }}
+        </router-link>
+
+        <router-link v-if="canManageGabi" to="/admin/gabi">
+          {{ t('nav.admin_gabi', 'Kelola GABI') }}
+        </router-link>
+
+        <router-link v-if="canManageSchedule" to="/admin/schedule">
+          {{ t('nav.admin_schedule', 'Kelola Jadwal') }}
+        </router-link>
+
+        <!-- login/logout -->
+        <router-link v-if="!isLoggedIn" to="/login">
+          {{ t('nav.login', 'Login') }}
+        </router-link>
+
+        <button
+          v-else
+          type="button"
+          class="text-sm underline"
+          @click="handleLogout"
+        >
+          {{ t('nav.logout', 'Keluar') }}
+        </button>
       </div>
 
       <!-- spacer -->
@@ -100,30 +158,65 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
     >
       <div class="flex flex-col gap-2 py-3 text-sm">
         <router-link v-slot="{ isActive }" to="/" @click="close">
-          <span :class="isActive ? 'font-medium text-brand-500' : ''">{{
-            t('nav.home')
-          }}</span>
-        </router-link>
-        <router-link v-slot="{ isActive }" to="/pmv" @click="close">
-          <span :class="isActive ? 'font-medium text-brand-500' : ''">{{
-            t('nav.pmv')
-          }}</span>
-        </router-link>
-        <router-link v-slot="{ isActive }" to="/gabi" @click="close">
-          <span :class="isActive ? 'font-medium text-brand-500' : ''">{{
-            t('nav.gabi')
-          }}</span>
-        </router-link>
-        <router-link v-slot="{ isActive }" to="/contact" @click="close">
           <span :class="isActive ? 'font-medium text-brand-500' : ''">
-            {{ t('nav.contact') }}
+            {{ t('nav.home') }}
           </span>
         </router-link>
+
+        <router-link v-slot="{ isActive }" to="/pmv" @click="close">
+          <span :class="isActive ? 'font-medium text-brand-500' : ''">
+            {{ t('nav.pmv') }}
+          </span>
+        </router-link>
+
+        <router-link v-slot="{ isActive }" to="/gabi" @click="close">
+          <span :class="isActive ? 'font-medium text-brand-500' : ''">
+            {{ t('nav.gabi') }}
+          </span>
+        </router-link>
+
         <router-link v-slot="{ isActive }" to="/schedule" @click="close">
           <span :class="isActive ? 'font-medium text-brand-500' : ''">
             {{ t('nav.schedule') }}
           </span>
         </router-link>
+
+        <router-link v-slot="{ isActive }" to="/contact" @click="close">
+          <span :class="isActive ? 'font-medium text-brand-500' : ''">
+            {{ t('nav.contact') }}
+          </span>
+        </router-link>
+
+        <!-- ADMIN links (Mobile) -->
+        <router-link v-if="canManagePmv" to="/admin/pmv" @click="close">
+          {{ t('nav.admin_pmv', 'Kelola PMV') }}
+        </router-link>
+
+        <router-link v-if="canManageGabi" to="/admin/gabi" @click="close">
+          {{ t('nav.admin_gabi', 'Kelola GABI') }}
+        </router-link>
+
+        <router-link
+          v-if="canManageSchedule"
+          to="/admin/schedule"
+          @click="close"
+        >
+          {{ t('nav.admin_schedule', 'Kelola Jadwal') }}
+        </router-link>
+
+        <!-- login/logout (Mobile) -->
+        <router-link v-if="!isLoggedIn" to="/login" @click="close">
+          {{ t('nav.login', 'Login') }}
+        </router-link>
+
+        <button
+          v-else
+          type="button"
+          class="text-left underline"
+          @click="handleLogout"
+        >
+          {{ t('nav.logout', 'Keluar') }}
+        </button>
       </div>
 
       <div class="flex gap-2">

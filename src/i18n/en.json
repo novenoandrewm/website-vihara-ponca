@@ -6,9 +6,11 @@
     "schedule": "Schedule",
     "contact": "Contact",
     "login": "Login",
-    "logout": "Logout"
+    "logout": "Logout",
+    "admin_pmv": "Manage PMV",
+    "admin_gabi": "Manage GABI",
+    "admin_schedule": "Manage Schedule"
   },
-
   "login": {
     "title": "Login",
     "email": "Email",
@@ -16,12 +18,11 @@
     "submit": "Login",
     "error": "Login failed. Check your email and password."
   },
-
   "admin": {
     "pmv": { "title": "Manage PMV Activities" },
-    "gabi": { "title": "Manage GABI Activities" }
+    "gabi": { "title": "Manage GABI Activities" },
+    "schedule": { "title": "Manage Schedule" }
   },
-
   "home": {
     "title": "Home",
     "error": "Failed to load events. Please try again.",
@@ -31,16 +32,14 @@
     "quote_error": "Failed to load weekly quote.",
     "no_quote": "No quote available this week.",
     "about_title": "About the Vihara",
-    "about_description": "Vihara Avalokitesvara Pondok Cabe is a Buddhayana temple under the Sangha Agung Indonesia, serving the community since the early 1980s. Located on Jalan Pondok Cabe Raya in Pamulang, South Tangerang, it hosts weekly Sunday services, meditation sessions, and programmes for the youth (PMV) and children (GABI)."
+    "about_description": "Vihara Avalokitesvara Pondok Cabe is a Buddhayana temple under the Sangha Agung Indonesia, serving the community since the early 1980s. Located on Jalan Pondok Cabe Raya in Pamulang, South Tangerang, it hosts weekly Sunday services, meditation sessions, and programmes for youth (PMV) and children (GABI)."
   },
-
   "categories": {
     "all": "All",
     "pmv": "PMV",
     "gabi": "GABI",
     "general": "General"
   },
-
   "schedule": {
     "title": "Weekly Schedule",
     "description": "Weekly activities for the community, PMV, and GABI.",
@@ -48,7 +47,6 @@
     "no_items_day": "No activities.",
     "error": "Failed to load the schedule."
   },
-
   "days": {
     "mon": "Monday",
     "tue": "Tuesday",
@@ -58,7 +56,6 @@
     "sat": "Saturday",
     "sun": "Sunday"
   },
-
   "contact": {
     "title": "Contact & Location",
     "description": "Please contact us or visit our address.",
@@ -74,7 +71,6 @@
     "map_title": "Temple location map",
     "success": "Thank you! Your message has been sent."
   },
-
   "event": {
     "not_found": "Event not found.",
     "error_load": "Failed to load event details.",

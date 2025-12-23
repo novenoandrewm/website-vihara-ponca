@@ -10,17 +10,37 @@ export type EventItem = {
   image?: string
 }
 
-// Ambil daftar acara dari JSON lalu urutkan berdasarkan tanggal
-export async function getUpcomingEvents(): Promise<EventItem[]> {
-  const base = import.meta.env.BASE_URL ?? '/'
-  const data = await fetchJson<EventItem[]>(`${base}data/events.json`)
-  return data
+function sortByDate(items: EventItem[]) {
+  return items
     .slice()
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 }
 
-// Ambil acara per ID, kembalikan null bila tidak ditemukan
+export async function getUpcomingEvents(): Promise<EventItem[]> {
+  const base = import.meta.env.BASE_URL ?? '/'
+
+  try {
+    const api = await fetchJson<EventItem[]>(`${base}api/events`)
+    if (Array.isArray(api)) return sortByDate(api)
+  } catch {
+    // fallback
+  }
+
+  const data = await fetchJson<EventItem[]>(`${base}data/events.json`)
+  return sortByDate(data)
+}
+
 export async function getEventById(id: string): Promise<EventItem | null> {
+  const base = import.meta.env.BASE_URL ?? '/'
+
+  try {
+    return await fetchJson<EventItem>(
+      `${base}api/events/${encodeURIComponent(id)}`
+    )
+  } catch {
+    // fallback
+  }
+
   const events = await getUpcomingEvents()
   return events.find((e) => e.id === id) ?? null
 }

@@ -5,6 +5,31 @@
 [build.environment]
   NODE_VERSION = "20"
 
+[functions]
+  directory = "netlify/functions"
+
+# ===== API redirects =====
+[[redirects]]
+  from = "/api/login"
+  to = "/.netlify/functions/login"
+  status = 200
+
+[[redirects]]
+  from = "/api/me"
+  to = "/.netlify/functions/me"
+  status = 200
+
+[[redirects]]
+  from = "/api/events/*"
+  to = "/.netlify/functions/events/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/api/events"
+  to = "/.netlify/functions/events"
+  status = 200
+
+# ===== SPA fallback =====
 [[redirects]]
   from = "/*"
   to   = "/index.html"
@@ -13,13 +38,14 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    # Security
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "geolocation=(), microphone=(), camera=()"
     Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+
     Content-Security-Policy = "default-src 'self'; base-uri 'self'; frame-ancestors 'none'; frame-src 'self' https://www.google.com https://www.google.com/maps https://maps.google.com; img-src 'self' data: https:; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self';"
+
     Cache-Control = "public, max-age=0, must-revalidate"
 
 [[headers]]
