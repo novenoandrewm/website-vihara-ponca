@@ -1,57 +1,88 @@
 import { ref } from 'vue'
 
-/*
- * Authentication and user-session helper. This service is responsible for
- * performing login requests against the API, persisting the resulting
- * JSON Web Token (JWT) and user profile to localStorage, and exposing a
- * reactive currentUser ref. Storing the user profile alongside the token
- * ensures that on subsequent page refreshes the application can restore
- * the authenticated state without needing to re‑decode the JWT or re‑fetch
- * profile information from the server.
- */
+export type Role = 'superadmin' | 'pmv_admin' | 'gabi_admin' | 'schedule_admin'
+
 export type User = {
   id: string
   name: string
-  role: 'superadmin' | 'pmv_admin' | 'gabi_admin' | 'schedule_admin'
+  email?: string
+  role: Role
 }
 
-// A ref that holds the current authenticated user.
-const currentUser = ref<User | null>(null)
+type LoginResponse = {
+  token: string
+  user: User
+}
 
-// Immediately attempt to hydrate currentUser from localStorage
-const storedUser = localStorage.getItem('user')
-if (storedUser) {
+const TOKEN_KEY = 'token'
+const USER_KEY = 'user'
+
+const hasStorage = () =>
+  typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'
+
+function safeJsonParse<T>(raw: string | null): T | null {
+  if (!raw) return null
   try {
-    currentUser.value = JSON.parse(storedUser) as User
+    return JSON.parse(raw) as T
   } catch {
-    currentUser.value = null
+    return null
   }
 }
 
-/** Perform login; persist both JWT and user to localStorage. */
-export async function login(email: string, password: string): Promise<void> {
-  const res = await fetch('/api/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password }),
-    credentials: 'include',
-  })
-  if (!res.ok) throw new Error('Invalid credentials')
-  const data = await res.json()
-  // Persist token and user profile to localStorage
-  localStorage.setItem('token', data.token)
-  localStorage.setItem('user', JSON.stringify(data.user))
-  currentUser.value = data.user as User
+export function getToken(): string | null {
+  if (!hasStorage()) return null
+  return localStorage.getItem(TOKEN_KEY)
 }
 
-/** Logout: clear token and user from storage. */
-export function logout(): void {
-  localStorage.removeItem('token')
-  localStorage.removeItem('user')
-  currentUser.value = null
+export function getStoredUser(): User | null {
+  if (!hasStorage()) return null
+  return safeJsonParse<User>(localStorage.getItem(USER_KEY))
 }
 
-/** Return the reactive currentUser ref. */
+export function setSession(token: string, user: User): void {
+  if (!hasStorage()) return
+  localStorage.setItem(TOKEN_KEY, token)
+  localStorage.setItem(USER_KEY, JSON.stringify(user))
+}
+
+export function clearSession(): void {
+  if (!hasStorage()) return
+  localStorage.removeItem(TOKEN_KEY)
+  localStorage.removeItem(USER_KEY)
+}
+
+export function getAuthHeader(): Record<string, string> {
+  const token = getToken()
+  return token ? { Authorization: `Bearer ${token}` } : {}
+}
+
+const currentUser = ref<User | null>(getStoredUser())
 export function useCurrentUser() {
   return currentUser
+}
+
+/** Perform login; persist JWT + user into localStorage */
+export async function login(email: string, password: string): Promise<User> {
+  const res = await fetch('/api/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({ email, password }),
+  })
+
+  if (!res.ok) {
+    const errJson = safeJsonParse<{ error?: string }>(await res.text())
+    throw new Error(errJson?.error || 'Login failed')
+  }
+
+  const data = (await res.json()) as LoginResponse
+
+  setSession(data.token, data.user)
+  currentUser.value = data.user
+  return data.user
+}
+
+/** Logout: clear token + user from storage */
+export function logout(): void {
+  clearSession()
+  currentUser.value = null
 }

@@ -87,35 +87,31 @@ function handleLogout() {
           </span>
         </router-link>
 
-        <!-- ADMIN links (Desktop) -->
+        <!-- ADMIN links -->
         <router-link v-if="canManagePmv" to="/admin/pmv">
-          {{ t('nav.admin_pmv', 'Kelola PMV') }}
+          {{ t('nav.admin_pmv') }}
         </router-link>
-
         <router-link v-if="canManageGabi" to="/admin/gabi">
-          {{ t('nav.admin_gabi', 'Kelola GABI') }}
+          {{ t('nav.admin_gabi') }}
         </router-link>
-
         <router-link v-if="canManageSchedule" to="/admin/schedule">
-          {{ t('nav.admin_schedule', 'Kelola Jadwal') }}
+          {{ t('nav.admin_schedule') }}
         </router-link>
 
         <!-- login/logout -->
         <router-link v-if="!isLoggedIn" to="/login">
-          {{ t('nav.login', 'Login') }}
+          {{ t('nav.login') }}
         </router-link>
-
         <button
           v-else
           type="button"
           class="text-sm underline"
           @click="handleLogout"
         >
-          {{ t('nav.logout', 'Keluar') }}
+          {{ t('nav.logout') }}
         </button>
       </div>
 
-      <!-- spacer -->
       <div class="flex-1"></div>
 
       <!-- language (desktop) -->
@@ -157,65 +153,40 @@ function handleLogout() {
       class="border-t border-zinc-800 px-4 pb-3 md:hidden"
     >
       <div class="flex flex-col gap-2 py-3 text-sm">
-        <router-link v-slot="{ isActive }" to="/" @click="close">
-          <span :class="isActive ? 'font-medium text-brand-500' : ''">
-            {{ t('nav.home') }}
-          </span>
-        </router-link>
+        <router-link to="/" @click="close">{{ t('nav.home') }}</router-link>
+        <router-link to="/pmv" @click="close">{{ t('nav.pmv') }}</router-link>
+        <router-link to="/gabi" @click="close">{{ t('nav.gabi') }}</router-link>
+        <router-link to="/schedule" @click="close">{{
+          t('nav.schedule')
+        }}</router-link>
+        <router-link to="/contact" @click="close">{{
+          t('nav.contact')
+        }}</router-link>
 
-        <router-link v-slot="{ isActive }" to="/pmv" @click="close">
-          <span :class="isActive ? 'font-medium text-brand-500' : ''">
-            {{ t('nav.pmv') }}
-          </span>
-        </router-link>
-
-        <router-link v-slot="{ isActive }" to="/gabi" @click="close">
-          <span :class="isActive ? 'font-medium text-brand-500' : ''">
-            {{ t('nav.gabi') }}
-          </span>
-        </router-link>
-
-        <router-link v-slot="{ isActive }" to="/schedule" @click="close">
-          <span :class="isActive ? 'font-medium text-brand-500' : ''">
-            {{ t('nav.schedule') }}
-          </span>
-        </router-link>
-
-        <router-link v-slot="{ isActive }" to="/contact" @click="close">
-          <span :class="isActive ? 'font-medium text-brand-500' : ''">
-            {{ t('nav.contact') }}
-          </span>
-        </router-link>
-
-        <!-- ADMIN links (Mobile) -->
         <router-link v-if="canManagePmv" to="/admin/pmv" @click="close">
-          {{ t('nav.admin_pmv', 'Kelola PMV') }}
+          {{ t('nav.admin_pmv') }}
         </router-link>
-
         <router-link v-if="canManageGabi" to="/admin/gabi" @click="close">
-          {{ t('nav.admin_gabi', 'Kelola GABI') }}
+          {{ t('nav.admin_gabi') }}
         </router-link>
-
         <router-link
           v-if="canManageSchedule"
           to="/admin/schedule"
           @click="close"
         >
-          {{ t('nav.admin_schedule', 'Kelola Jadwal') }}
+          {{ t('nav.admin_schedule') }}
         </router-link>
 
-        <!-- login/logout (Mobile) -->
         <router-link v-if="!isLoggedIn" to="/login" @click="close">
-          {{ t('nav.login', 'Login') }}
+          {{ t('nav.login') }}
         </router-link>
-
         <button
           v-else
           type="button"
           class="text-left underline"
           @click="handleLogout"
         >
-          {{ t('nav.logout', 'Keluar') }}
+          {{ t('nav.logout') }}
         </button>
       </div>
 

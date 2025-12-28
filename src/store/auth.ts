@@ -1,38 +1,88 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import type { User } from '@/services/auth'
+import { computed, ref } from 'vue'
+import {
+  login as apiLogin,
+  logout as apiLogout,
+  getToken,
+  getStoredUser,
+} from '@/services/auth'
+import type { Role, User } from '@/services/auth'
 
-/**
- * Pinia store for authentication state. This store holds the current user
- * and provides helpers to persist and restore the profile from localStorage.
- */
+const TOKEN_KEY = 'token'
+const USER_KEY = 'user'
+
+const hasStorage = () =>
+  typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'
+
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(null)
+  const token = ref<string | null>(null)
 
-  /** Set the user in state and persist to localStorage. */
+  const isLoggedIn = computed(() => !!user.value && !!token.value)
+  const role = computed<Role | null>(() => user.value?.role ?? null)
+
+  function loadFromLocalStorage(): void {
+    user.value = getStoredUser()
+    token.value = getToken()
+  }
+
   function setUser(u: User | null): void {
     user.value = u
-    if (u) {
-      localStorage.setItem('user', JSON.stringify(u))
-    } else {
-      localStorage.removeItem('user')
-    }
+    if (!hasStorage()) return
+
+    if (u) localStorage.setItem(USER_KEY, JSON.stringify(u))
+    else localStorage.removeItem(USER_KEY)
   }
 
-  /** Load the user from localStorage. Call during startup. */
-  function loadFromLocalStorage(): void {
-    const stored = localStorage.getItem('user')
-    if (stored) {
-      try {
-        user.value = JSON.parse(stored) as User
-      } catch {
-        user.value = null
-      }
-    }
+  function setToken(t: string | null): void {
+    token.value = t
+    if (!hasStorage()) return
+
+    if (t) localStorage.setItem(TOKEN_KEY, t)
+    else localStorage.removeItem(TOKEN_KEY)
   }
 
-  // Hydrate automatically on store creation
+  function setSession(next: { user: User; token: string } | null): void {
+    if (!next) {
+      setUser(null)
+      setToken(null)
+      return
+    }
+    setUser(next.user)
+    setToken(next.token)
+  }
+
+  function logout(): void {
+    apiLogout()
+    setSession(null)
+  }
+
+  async function login(email: string, password: string): Promise<User> {
+    // apiLogin akan simpan token+user ke localStorage
+    const u = await apiLogin(email, password)
+    // hydrate store dari storage supaya sinkron
+    loadFromLocalStorage()
+    return u
+  }
+
+  function hasAnyRole(roles: Role[]): boolean {
+    return !!user.value && roles.includes(user.value.role)
+  }
+
+  // hydrate otomatis saat store dibuat
   loadFromLocalStorage()
 
-  return { user, setUser, loadFromLocalStorage }
+  return {
+    user,
+    token,
+    isLoggedIn,
+    role,
+    setUser,
+    setToken,
+    setSession,
+    loadFromLocalStorage,
+    login,
+    logout,
+    hasAnyRole,
+  }
 })

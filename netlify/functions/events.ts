@@ -1,4 +1,5 @@
 import type { Handler } from '@netlify/functions'
+import { randomUUID } from 'node:crypto'
 import {
   json,
   badRequest,
@@ -23,18 +24,27 @@ type EventItem = {
 
 const EVENTS_PATH = 'public/data/events.json'
 
-function getIdFromPath(path: string) {
-  const m = path.match(/\/events\/([^/]+)$/)
+function getIdFromPath(path: string): string | null {
+  // support:
+  // /.netlify/functions/events/<id>
+  // /.netlify/functions/events/<id>/
+  const m = path.match(/\/events\/([^/]+)\/?$/)
   return m?.[1] ? decodeURIComponent(m[1]) : null
 }
 
-function sortByDate(items: EventItem[]) {
+function sortByDate(items: EventItem[]): EventItem[] {
   return items
     .slice()
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 }
 
-function getErrorMessage(err: unknown) {
+function normalizeCategory(v: unknown): string {
+  return String(v ?? '')
+    .trim()
+    .toLowerCase()
+}
+
+function getErrorMessage(err: unknown): string {
   if (err instanceof Error) return err.message
   if (typeof err === 'string') return err
   return 'Server error'
@@ -58,17 +68,18 @@ export const handler: Handler = async (event) => {
 
       const one = list.find((x) => x.id === id)
       if (!one) return notFound('Event not found')
+
       return json(200, one, {
         'Cache-Control': 'public, max-age=0, s-maxage=60',
       })
     }
 
     // ===== ADMIN MUTATIONS =====
-    const user = requireAuth(
-      (event.headers.authorization || event.headers.Authorization || null) as
-        | string
-        | null
-    )
+    const authHeader = (event.headers.authorization ??
+      event.headers.Authorization ??
+      null) as string | null
+
+    const user = requireAuth(authHeader)
     if (!user) return unauthorized()
 
     const { data, sha } = await readRepoJson<EventItem[]>(EVENTS_PATH)
@@ -80,13 +91,13 @@ export const handler: Handler = async (event) => {
         return badRequest('title, date, location, category are required')
       }
 
-      const category = String(body.category)
+      const category = normalizeCategory(body.category)
       if (!canManageEventCategory(user.role, category)) {
         return forbidden('You cannot create events in this category')
       }
 
       const newItem: EventItem = {
-        id: crypto.randomUUID(),
+        id: randomUUID(),
         title: String(body.title),
         date: String(body.date),
         location: String(body.location),
@@ -116,7 +127,7 @@ export const handler: Handler = async (event) => {
 
       const current = list[idx]
       const nextCategory = body.category
-        ? String(body.category)
+        ? normalizeCategory(body.category)
         : current.category
 
       if (

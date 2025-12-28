@@ -1,13 +1,13 @@
 export function json(
   statusCode: number,
   body: unknown,
-  extraHeaders: Record<string, string> = {}
+  headers: Record<string, string> = {}
 ) {
   return {
     statusCode,
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
-      ...extraHeaders,
+      ...headers,
     },
     body: JSON.stringify(body),
   }
@@ -29,11 +29,11 @@ export function notFound(message = 'Not Found') {
   return json(404, { error: message })
 }
 
-export function serverError(message = 'Server Error') {
+export function serverError(message = 'Server error') {
   return json(500, { error: message })
 }
 
-export function parseJsonBody<T = unknown>(raw: string | null): T | null {
+export function parseJsonBody<T>(raw: string | null): T | null {
   if (!raw) return null
   try {
     return JSON.parse(raw) as T

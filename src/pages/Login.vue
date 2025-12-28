@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { login } from '@/services/auth'
 import { useAuthStore } from '@/store/auth'
 
 const { t } = useI18n({ useScope: 'global' })
 const router = useRouter()
+const route = useRoute()
 const auth = useAuthStore()
 
 const email = ref('')
@@ -20,9 +21,19 @@ async function handleSubmit() {
 
   try {
     await login(email.value, password.value)
-    // refresh store from localStorage after login
     auth.loadFromLocalStorage()
-    router.push({ name: 'dashboard' })
+
+    const redirect =
+      typeof route.query.redirect === 'string' ? route.query.redirect : null
+
+    // kalau ada redirect, kembali ke halaman tujuan
+    if (redirect) {
+      await router.push(redirect)
+      return
+    }
+
+    // fallback
+    await router.push({ name: 'dashboard' })
   } catch (_e) {
     errorMsg.value = t('login.error', 'Login gagal. Cek email dan kata sandi.')
   } finally {
