@@ -1,3 +1,4 @@
+// netlify/functions/events.ts
 import type { Handler } from '@netlify/functions'
 import { randomUUID } from 'node:crypto'
 import {
@@ -28,6 +29,8 @@ function getIdFromPath(path: string): string | null {
   // support:
   // /.netlify/functions/events/<id>
   // /.netlify/functions/events/<id>/
+  // /api/events/<id>
+  // /api/events/<id>/
   const m = path.match(/\/events\/([^/]+)\/?$/)
   return m?.[1] ? decodeURIComponent(m[1]) : null
 }
@@ -54,6 +57,11 @@ export const handler: Handler = async (event) => {
   try {
     const method = event.httpMethod
     const id = getIdFromPath(event.path)
+
+    // Optional: handle preflight
+    if (method === 'OPTIONS') {
+      return json(200, { ok: true }, { Allow: 'GET,POST,PUT,DELETE,OPTIONS' })
+    }
 
     // ===== PUBLIC GET =====
     if (method === 'GET') {
@@ -86,7 +94,10 @@ export const handler: Handler = async (event) => {
     const list = Array.isArray(data) ? data.slice() : []
 
     if (method === 'POST') {
-      const body = parseJsonBody<Partial<EventItem>>(event.body)
+      const body = parseJsonBody<Partial<EventItem>>(
+        event.body,
+        event.isBase64Encoded
+      )
       if (!body?.title || !body?.date || !body?.location || !body?.category) {
         return badRequest('title, date, location, category are required')
       }
@@ -119,19 +130,23 @@ export const handler: Handler = async (event) => {
     if (method === 'PUT') {
       if (!id) return badRequest('Missing event id')
 
-      const body = parseJsonBody<Partial<EventItem>>(event.body)
+      const body = parseJsonBody<Partial<EventItem>>(
+        event.body,
+        event.isBase64Encoded
+      )
       if (!body) return badRequest('Invalid JSON')
 
       const idx = list.findIndex((x) => x.id === id)
       if (idx === -1) return notFound('Event not found')
 
       const current = list[idx]
-      const nextCategory = body.category
-        ? normalizeCategory(body.category)
-        : current.category
+      const currentCategory = normalizeCategory(current.category)
 
+      const nextCategory = normalizeCategory(body.category ?? currentCategory)
+
+      // RBAC must allow editing OLD category and NEW category
       if (
-        !canManageEventCategory(user.role, current.category) ||
+        !canManageEventCategory(user.role, currentCategory) ||
         !canManageEventCategory(user.role, nextCategory)
       ) {
         return forbidden('You cannot update events in this category')
@@ -141,7 +156,7 @@ export const handler: Handler = async (event) => {
         ...current,
         ...body,
         id: current.id,
-        category: nextCategory,
+        category: nextCategory, // force normalized
       }
 
       const next = sortByDate(list.map((x) => (x.id === id ? updated : x)))
@@ -160,7 +175,8 @@ export const handler: Handler = async (event) => {
       const current = list.find((x) => x.id === id)
       if (!current) return notFound('Event not found')
 
-      if (!canManageEventCategory(user.role, current.category)) {
+      const currentCategory = normalizeCategory(current.category)
+      if (!canManageEventCategory(user.role, currentCategory)) {
         return forbidden('You cannot delete events in this category')
       }
 
@@ -174,7 +190,11 @@ export const handler: Handler = async (event) => {
       return json(200, { ok: true })
     }
 
-    return json(405, { error: 'Method Not Allowed' })
+    return json(
+      405,
+      { error: 'Method Not Allowed' },
+      { Allow: 'GET,POST,PUT,DELETE,OPTIONS' }
+    )
   } catch (err: unknown) {
     return serverError(getErrorMessage(err))
   }

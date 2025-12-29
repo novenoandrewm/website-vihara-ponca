@@ -4,19 +4,27 @@
     "module": "ESNext",
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "moduleResolution": "bundler",
+
     "baseUrl": ".",
     "paths": { "@/*": ["src/*"] },
+
     "types": ["node", "vite/client", "vitest/globals", "vitest-axe/matchers"],
+
     "strict": true,
     "skipLibCheck": true,
     "noEmit": true,
     "isolatedModules": true,
     "resolveJsonModule": true,
-    "useDefineForClassFields": true
+    "useDefineForClassFields": true,
+
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": [
     "src",
     "tests",
+    "netlify/functions/**/*.ts",
+    "scripts/**/*.ts",
     "vite.config.ts",
     "vitest.config.ts",
     "src/env.d.ts"

@@ -1,8 +1,11 @@
+// netlify/functions/_lib/response.ts
+import type { HandlerResponse } from '@netlify/functions'
+
 export function json(
   statusCode: number,
   body: unknown,
   headers: Record<string, string> = {}
-) {
+): HandlerResponse {
   return {
     statusCode,
     headers: {
@@ -33,10 +36,20 @@ export function serverError(message = 'Server error') {
   return json(500, { error: message })
 }
 
-export function parseJsonBody<T>(raw: string | null): T | null {
+/**
+ * Safe JSON parse for Netlify event.body.
+ * Supports base64 body.
+ */
+export function parseJsonBody<T>(
+  raw: string | null,
+  isBase64Encoded = false
+): T | null {
   if (!raw) return null
   try {
-    return JSON.parse(raw) as T
+    const text = isBase64Encoded
+      ? Buffer.from(raw, 'base64').toString('utf8')
+      : raw
+    return JSON.parse(text) as T
   } catch {
     return null
   }

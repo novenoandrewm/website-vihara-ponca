@@ -20,13 +20,13 @@
   status = 200
 
 [[redirects]]
-  from = "/api/events/*"
-  to = "/.netlify/functions/events/:splat"
+  from = "/api/events"
+  to = "/.netlify/functions/events"
   status = 200
 
 [[redirects]]
-  from = "/api/events"
-  to = "/.netlify/functions/events"
+  from = "/api/events/*"
+  to = "/.netlify/functions/events/:splat"
   status = 200
 
 # ===== SPA fallback =====
@@ -35,6 +35,7 @@
   to   = "/index.html"
   status = 200
 
+# ===== Security headers =====
 [[headers]]
   for = "/*"
   [headers.values]
