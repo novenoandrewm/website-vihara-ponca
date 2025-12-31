@@ -1,241 +1,249 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useAuthStore } from '@/store/auth'
+import {
+  getUpcomingEvents,
+  createEvent,
+  updateEvent,
+  deleteEvent,
+  type EventItem,
+} from '@/services/events'
 
 const { t } = useI18n({ useScope: 'global' })
+const auth = useAuthStore()
 
-type PmvPost = {
-  id: string
-  title: string
-  content: string
-  updatedAt: string
-}
+const fixedCategory = 'pmv'
+const canAccess = computed(
+  () => auth.user?.role === 'superadmin' || auth.user?.role === 'pmv_admin'
+)
 
-const STORAGE_KEY = 'admin_pmv_posts_v1'
-
-const items = ref<PmvPost[]>([])
 const loading = ref(true)
-const errorMsg = ref<string | null>(null)
+const saving = ref(false)
+const error = ref<string | null>(null)
+const items = ref<EventItem[]>([])
 
-// form state
 const editingId = ref<string | null>(null)
-const title = ref('')
-const content = ref('')
-
-const isEditing = computed(() => editingId.value !== null)
-
-function load() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    items.value = raw ? (JSON.parse(raw) as PmvPost[]) : []
-  } catch {
-    items.value = []
-  }
-}
-
-function save() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(items.value))
-}
+const form = ref({
+  title: '',
+  date: '',
+  location: '',
+  description: '',
+  image: '',
+})
 
 function resetForm() {
   editingId.value = null
-  title.value = ''
-  content.value = ''
+  form.value = { title: '', date: '', location: '', description: '', image: '' }
 }
 
-function startEdit(post: PmvPost) {
-  editingId.value = post.id
-  title.value = post.title
-  content.value = post.content
+async function load() {
+  loading.value = true
+  error.value = null
+  try {
+    const all = await getUpcomingEvents()
+    items.value = all.filter((x) => x.category === fixedCategory)
+  } catch (e: unknown) {
+    error.value = e instanceof Error ? e.message : 'Failed to load'
+  } finally {
+    loading.value = false
+  }
 }
 
-function remove(id: string) {
-  items.value = items.value.filter((x) => x.id !== id)
-  save()
-  if (editingId.value === id) resetForm()
+function startEdit(x: EventItem) {
+  editingId.value = x.id
+  form.value = {
+    title: x.title,
+    date: x.date,
+    location: x.location,
+    description: x.description ?? '',
+    image: x.image ?? '',
+  }
 }
 
-function submit() {
-  const now = new Date().toISOString()
-
-  if (!title.value.trim() || !content.value.trim()) return
-
-  if (isEditing.value) {
-    const idx = items.value.findIndex((x) => x.id === editingId.value)
-    if (idx !== -1) {
-      items.value[idx] = {
-        ...items.value[idx],
-        title: title.value.trim(),
-        content: content.value.trim(),
-        updatedAt: now,
-      }
-      save()
-      resetForm()
+async function submit() {
+  saving.value = true
+  error.value = null
+  try {
+    const payload = {
+      title: form.value.title.trim(),
+      date: form.value.date.trim(),
+      location: form.value.location.trim(),
+      category: fixedCategory,
+      description: form.value.description.trim() || undefined,
+      image: form.value.image.trim() || undefined,
     }
-    return
-  }
 
-  const newItem: PmvPost = {
-    id: crypto.randomUUID(),
-    title: title.value.trim(),
-    content: content.value.trim(),
-    updatedAt: now,
+    if (!payload.title || !payload.date || !payload.location) {
+      throw new Error('title, date, location wajib diisi')
+    }
+
+    if (editingId.value) {
+      await updateEvent(editingId.value, payload)
+    } else {
+      await createEvent(payload)
+    }
+
+    await load()
+    resetForm()
+  } catch (e: unknown) {
+    error.value = e instanceof Error ? e.message : 'Save failed'
+  } finally {
+    saving.value = false
   }
-  items.value = [newItem, ...items.value]
-  save()
-  resetForm()
+}
+
+async function remove(id: string) {
+  const ok = confirm('Hapus item ini?')
+  if (!ok) return
+  saving.value = true
+  error.value = null
+  try {
+    await deleteEvent(id)
+    await load()
+    if (editingId.value === id) resetForm()
+  } catch (e: unknown) {
+    error.value = e instanceof Error ? e.message : 'Delete failed'
+  } finally {
+    saving.value = false
+  }
 }
 
 onMounted(() => {
-  try {
-    load()
-  } catch (_e) {
-    errorMsg.value = t('admin.error_generic', 'Terjadi kesalahan.')
-  } finally {
+  if (canAccess.value) load()
+  else {
     loading.value = false
+    error.value = 'Forbidden'
   }
 })
 </script>
 
 <template>
-  <main id="main" tabindex="-1" class="mx-auto max-w-6xl space-y-6 p-6">
-    <header class="space-y-1">
-      <h1 class="text-2xl font-semibold">
-        {{ t('admin.pmv.title', 'Kelola Kegiatan PMV') }}
-      </h1>
-      <p class="text-zinc-300">
-        {{
-          t('admin.pmv.desc', 'Tambah atau perbarui informasi kegiatan PMV.')
-        }}
-      </p>
-    </header>
+  <main class="mx-auto max-w-5xl space-y-6 p-6">
+    <h1 class="text-2xl font-semibold">
+      {{ t('admin.pmv.title', 'Kelola Kegiatan PMV') }}
+    </h1>
 
-    <div
-      v-if="errorMsg"
-      role="alert"
-      class="rounded-xl border border-red-700/40 bg-red-900/20 p-4 text-red-200"
+    <p
+      v-if="error"
+      class="rounded border border-red-900 bg-red-950 p-3 text-sm"
     >
-      {{ errorMsg }}
-    </div>
+      {{ error }}
+    </p>
 
-    <section class="grid gap-6 md:grid-cols-2">
-      <!-- Form -->
-      <form
-        class="space-y-3 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4"
-        @submit.prevent="submit"
-      >
-        <h2 class="text-lg font-semibold">
-          {{ isEditing ? t('admin.edit', 'Edit') : t('admin.add', 'Tambah') }}
-        </h2>
+    <section class="rounded border border-zinc-800 bg-zinc-900 p-4">
+      <h2 class="mb-3 font-medium">
+        {{ editingId ? 'Edit Event' : 'Tambah Event' }}
+      </h2>
 
-        <div>
-          <label class="mb-1 block text-sm" for="title">
-            {{ t('admin.field_title', 'Judul') }}
-          </label>
+      <form class="grid gap-3 sm:grid-cols-2" @submit.prevent="submit">
+        <label class="text-sm">
+          Judul
           <input
-            id="title"
-            v-model="title"
-            type="text"
-            class="w-full rounded border border-zinc-600 bg-zinc-800 p-2 text-zinc-200"
+            v-model="form.title"
+            class="mt-1 w-full rounded border border-zinc-700 bg-zinc-800 p-2"
             required
           />
-        </div>
+        </label>
 
-        <div>
-          <label class="mb-1 block text-sm" for="content">
-            {{ t('admin.field_content', 'Konten') }}
-          </label>
-          <textarea
-            id="content"
-            v-model="content"
-            rows="6"
-            class="w-full rounded border border-zinc-600 bg-zinc-800 p-2 text-zinc-200"
+        <label class="text-sm">
+          Tanggal
+          <input
+            v-model="form.date"
+            type="date"
+            class="mt-1 w-full rounded border border-zinc-700 bg-zinc-800 p-2"
             required
-          ></textarea>
-        </div>
+          />
+        </label>
 
-        <div class="flex gap-2">
+        <label class="text-sm sm:col-span-2">
+          Lokasi
+          <input
+            v-model="form.location"
+            class="mt-1 w-full rounded border border-zinc-700 bg-zinc-800 p-2"
+            required
+          />
+        </label>
+
+        <label class="text-sm sm:col-span-2">
+          Deskripsi
+          <textarea
+            v-model="form.description"
+            rows="4"
+            class="mt-1 w-full rounded border border-zinc-700 bg-zinc-800 p-2"
+          />
+        </label>
+
+        <label class="text-sm sm:col-span-2">
+          Image URL (opsional)
+          <input
+            v-model="form.image"
+            class="mt-1 w-full rounded border border-zinc-700 bg-zinc-800 p-2"
+            placeholder="/images/pmv.jpg"
+          />
+        </label>
+
+        <div class="flex gap-2 sm:col-span-2">
           <button
             type="submit"
-            class="rounded bg-brand-500 px-4 py-2 text-white hover:bg-brand-600"
+            :disabled="saving"
+            class="rounded bg-brand-500 px-4 py-2 text-white disabled:opacity-60"
           >
-            {{
-              isEditing ? t('admin.save', 'Simpan') : t('admin.create', 'Buat')
-            }}
+            {{ saving ? '...' : 'Simpan' }}
           </button>
-
           <button
             type="button"
-            class="rounded bg-zinc-800 px-4 py-2 text-zinc-100 hover:bg-zinc-700"
+            class="rounded border border-zinc-700 px-4 py-2"
             @click="resetForm"
           >
-            {{ t('admin.cancel', 'Batal') }}
+            Batal
           </button>
         </div>
-
-        <p class="text-xs text-zinc-400">
-          {{
-            t(
-              'admin.note_local',
-              'Catatan: sementara tersimpan di browser (localStorage).'
-            )
-          }}
-        </p>
       </form>
+    </section>
 
-      <!-- List -->
-      <section
-        class="space-y-3 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4"
-      >
-        <h2 class="text-lg font-semibold">
-          {{ t('admin.list', 'Daftar') }}
-        </h2>
+    <section class="space-y-3">
+      <h2 class="font-medium">Daftar Event</h2>
 
-        <div v-if="loading" class="text-zinc-300">
-          {{ t('admin.loading', 'Memuat...') }}
-        </div>
+      <p v-if="loading" class="text-sm text-zinc-400">Loading...</p>
 
-        <div v-else-if="items.length === 0" class="text-zinc-300">
-          {{ t('admin.empty', 'Belum ada data.') }}
-        </div>
+      <div v-else class="overflow-x-auto rounded border border-zinc-800">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-zinc-900 text-zinc-300">
+            <tr>
+              <th class="p-3">Tanggal</th>
+              <th class="p-3">Judul</th>
+              <th class="p-3">Lokasi</th>
+              <th class="p-3">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="x in items" :key="x.id" class="border-t border-zinc-800">
+              <td class="p-3">{{ x.date }}</td>
+              <td class="p-3">{{ x.title }}</td>
+              <td class="p-3">{{ x.location }}</td>
+              <td class="p-3">
+                <div class="flex gap-2">
+                  <button class="underline" type="button" @click="startEdit(x)">
+                    Edit
+                  </button>
+                  <button
+                    class="text-red-300 underline"
+                    type="button"
+                    @click="remove(x.id)"
+                  >
+                    Hapus
+                  </button>
+                </div>
+              </td>
+            </tr>
 
-        <div v-else class="space-y-3">
-          <article
-            v-for="p in items"
-            :key="p.id"
-            class="rounded-xl border border-zinc-800 bg-zinc-950/40 p-3"
-          >
-            <div class="flex items-start justify-between gap-3">
-              <div>
-                <h3 class="font-semibold">{{ p.title }}</h3>
-                <p class="mt-1 line-clamp-3 text-sm text-zinc-300">
-                  {{ p.content }}
-                </p>
-                <p class="mt-2 text-xs text-zinc-500">
-                  {{ t('admin.updated', 'Diperbarui') }}: {{ p.updatedAt }}
-                </p>
-              </div>
-
-              <div class="flex shrink-0 flex-col gap-2">
-                <button
-                  type="button"
-                  class="rounded bg-zinc-800 px-3 py-1 text-xs hover:bg-zinc-700"
-                  @click="startEdit(p)"
-                >
-                  {{ t('admin.edit', 'Edit') }}
-                </button>
-                <button
-                  type="button"
-                  class="rounded bg-red-900/40 px-3 py-1 text-xs text-red-200 hover:bg-red-900/60"
-                  @click="remove(p.id)"
-                >
-                  {{ t('admin.delete', 'Hapus') }}
-                </button>
-              </div>
-            </div>
-          </article>
-        </div>
-      </section>
+            <tr v-if="items.length === 0">
+              <td class="p-3 text-zinc-400" colspan="4">Belum ada data.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
   </main>
 </template>

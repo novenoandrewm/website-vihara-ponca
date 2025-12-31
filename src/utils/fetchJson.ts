@@ -1,46 +1,49 @@
-import { getToken } from '@/services/auth'
+export class HttpError extends Error {
+  status: number
+  statusText: string
+  bodyText: string
 
-type FetchJsonInit = RequestInit & {
-  /** default: true kalau url dimulai dengan /api/ */
-  auth?: boolean
+  constructor(status: number, statusText: string, bodyText: string) {
+    super(bodyText || `HTTP ${status} ${statusText}`)
+    this.name = 'HttpError'
+    this.status = status
+    this.statusText = statusText
+    this.bodyText = bodyText
+  }
 }
 
-async function readErrorMessage(res: Response): Promise<string> {
-  const text = await res.text()
-  if (!text) return `Fetch failed ${res.status} ${res.statusText}`
-
+function safeJsonParse<T>(text: string): T | null {
   try {
-    const j = JSON.parse(text) as { error?: string; message?: string }
-    return (
-      j.error || j.message || `Fetch failed ${res.status} ${res.statusText}`
-    )
+    return JSON.parse(text) as T
   } catch {
-    return text
+    return null
   }
 }
 
 export async function fetchJson<T>(
   url: string,
-  init: FetchJsonInit = {}
+  init: RequestInit = {}
 ): Promise<T> {
-  const headers = new Headers(init.headers || {})
-  if (!headers.has('Accept')) headers.set('Accept', 'application/json')
-
-  const shouldAuth = init.auth ?? url.startsWith('/api/')
-  if (shouldAuth) {
-    const token = getToken()
-    if (token) headers.set('Authorization', `Bearer ${token}`)
-  }
-
+  const method = (init.method ?? 'GET').toUpperCase()
   const res = await fetch(url, {
-    cache: 'no-store',
+    cache: method === 'GET' ? 'no-store' : init.cache,
     ...init,
-    headers,
   })
 
+  const text = await res.text()
+
   if (!res.ok) {
-    throw new Error(await readErrorMessage(res))
+    const maybe = safeJsonParse<{ error?: string; message?: string }>(text)
+    const msg = maybe?.error || maybe?.message || text || `${res.statusText}`
+    throw new HttpError(res.status, res.statusText, msg)
   }
 
-  return (await res.json()) as T
+  // kalau body kosong
+  if (!text) return undefined as T
+
+  const parsed = safeJsonParse<T>(text)
+  if (parsed === null) {
+    throw new Error('Response is not valid JSON')
+  }
+  return parsed
 }
