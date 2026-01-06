@@ -1,4 +1,4 @@
-// Minimal helper utk pasang <script type="application/ld+json"> ke <head>
+// src/utils/structured.ts
 export function upsertJsonLd(id: string, data: unknown) {
   const elId = `jsonld-${id}`
   let el = document.getElementById(elId) as HTMLScriptElement | null

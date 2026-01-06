@@ -1,3 +1,4 @@
+// src/utils/rbac.ts
 import type { Role } from '@/services/auth'
 
 export function hasRole(userRole: Role | undefined, allowed: Role[]): boolean {
