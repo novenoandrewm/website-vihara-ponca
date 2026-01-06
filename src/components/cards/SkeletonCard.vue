@@ -38,8 +38,8 @@ function toneClass(tone: CardTone): string {
     :class="toneClass(props.tone)"
     aria-busy="true"
     aria-label="Loading"
+    role="status"
   >
-    <!-- soft ambient -->
     <div
       aria-hidden="true"
       class="pointer-events-none absolute inset-0 opacity-40"
@@ -52,7 +52,6 @@ function toneClass(tone: CardTone): string {
       />
     </div>
 
-    <!-- shimmer overlay -->
     <div
       aria-hidden="true"
       class="via-white/6 pointer-events-none absolute inset-0 -translate-x-full animate-[shimmer_1.7s_infinite] bg-gradient-to-r from-transparent to-transparent"
