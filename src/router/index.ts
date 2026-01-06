@@ -4,13 +4,25 @@ import { useAuthStore } from '@/store/auth'
 import { setPageMeta } from '@/utils/seo'
 
 const routes: RouteRecordRaw[] = [
+  // ===== PUBLIC =====
   {
     path: '/',
     name: 'home',
     component: () => import('@/pages/Home.vue'),
     meta: {
       title: 'Vihara Avalokitesvara',
-      description: 'Informasi kegiatan rutin, PMV, dan GABI.',
+      description:
+        'Informasi kegiatan terbaru, kutipan mingguan, dan agenda komunitas.',
+    },
+  },
+  {
+    path: '/about',
+    name: 'about',
+    component: () => import('@/pages/About.vue'),
+    meta: {
+      title: 'Tentang Vihara',
+      description:
+        'Profil, visi & misi, sejarah singkat, dan informasi pimpinan.',
     },
   },
   {
@@ -44,7 +56,7 @@ const routes: RouteRecordRaw[] = [
     meta: { title: 'Login', description: 'Login admin.' },
   },
 
-  // ===== Event detail (karena kamu punya EventDetail.vue) =====
+  // ===== EVENT DETAIL =====
   {
     path: '/event/:id',
     name: 'event-detail',
@@ -52,7 +64,7 @@ const routes: RouteRecordRaw[] = [
     meta: { title: 'Detail Acara', description: 'Detail acara.' },
   },
 
-  // ===== ADMIN (RBAC) =====
+  // ===== ADMIN =====
   {
     path: '/admin',
     name: 'dashboard',
@@ -61,7 +73,13 @@ const routes: RouteRecordRaw[] = [
       title: 'Dashboard Admin',
       description: 'Dashboard admin.',
       requiresAuth: true,
-      roles: ['superadmin', 'pmv_admin', 'gabi_admin', 'schedule_admin'],
+      roles: [
+        'superadmin',
+        'pmv_admin',
+        'gabi_admin',
+        'schedule_admin',
+        'quotes_admin',
+      ],
     },
   },
   {
@@ -97,8 +115,19 @@ const routes: RouteRecordRaw[] = [
       roles: ['superadmin', 'schedule_admin'],
     },
   },
+  {
+    path: '/admin/quotes',
+    name: 'admin-quotes',
+    component: () => import('@/pages/AdminQuotes.vue'),
+    meta: {
+      title: 'Kelola Quotes',
+      description: 'Kelola kutipan mingguan.',
+      requiresAuth: true,
+      roles: ['superadmin', 'quotes_admin'],
+    },
+  },
 
-  // 404
+  // ===== 404 =====
   {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
@@ -110,27 +139,42 @@ const routes: RouteRecordRaw[] = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
-  scrollBehavior() {
-    return { top: 0 }
+  scrollBehavior(_to, _from, savedPosition) {
+    if (savedPosition) return { ...savedPosition, behavior: 'smooth' }
+    return { top: 0, behavior: 'smooth' }
   },
 })
 
+/**
+ * =========================
+ * RBAC GUARD (FINAL)
+ * =========================
+ */
 router.beforeEach((to) => {
-  if (!to.meta.requiresAuth) return
+  if (!to.meta.requiresAuth) return true
 
   const auth = useAuthStore()
+  const user = auth.user
 
-  // belum login -> ke login
-  if (!auth.user) {
+  if (!user) {
     return { name: 'login', query: { redirect: to.fullPath } }
   }
 
-  // cek roles
-  const allowed = (to.meta.roles as string[] | undefined) ?? []
-  if (allowed.length && !allowed.includes(auth.user.role)) {
-    // kalau tidak punya akses, lempar ke home
+  if (user.role === 'superadmin') {
+    return true
+  }
+
+  // 🎯 Role-based access
+  const allowedRoles = to.meta.roles as string[] | undefined
+  if (!allowedRoles || allowedRoles.length === 0) {
+    return true
+  }
+
+  if (!allowedRoles.includes(user.role)) {
     return { name: 'home' }
   }
+
+  return true
 })
 
 router.afterEach((to) => {

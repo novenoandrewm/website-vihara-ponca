@@ -1,6 +1,12 @@
+// src/services/auth.ts
 import { ref } from 'vue'
 
-export type Role = 'superadmin' | 'pmv_admin' | 'gabi_admin' | 'schedule_admin'
+export type Role =
+  | 'superadmin'
+  | 'pmv_admin'
+  | 'gabi_admin'
+  | 'schedule_admin'
+  | 'quotes_admin'
 
 export type User = {
   id: string
@@ -65,7 +71,10 @@ export function useCurrentUser() {
 export async function login(email: string, password: string): Promise<User> {
   const res = await fetch('/api/login', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
     body: JSON.stringify({ email, password }),
   })
 

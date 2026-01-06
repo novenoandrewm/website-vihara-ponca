@@ -1,132 +1,197 @@
+<!-- src/pages/Schedule.vue -->
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import SkeletonCard from '@/components/SkeletonCard.vue'
-import { getWeeklySchedule, type ScheduleItem } from '@/services/schedule'
+import Container from '@/components/ui/Container.vue'
+import EventCard from '@/components/cards/EventCard.vue'
+import SkeletonCard from '@/components/cards/SkeletonCard.vue'
+import TitleOrnament from '@/components/ui/TitleOrnament.vue'
+
+import { listEvents, type EventItem } from '@/services/eventsApi'
 
 const { t } = useI18n({ useScope: 'global' })
 
-const items = ref<ScheduleItem[] | null>(null)
+const loading = ref<boolean>(true)
 const errorMsg = ref<string | null>(null)
+const all = ref<EventItem[]>([])
 
-const selectedCategory = ref<'all' | 'general' | 'pmv' | 'gabi'>('all')
-
-const filtered = computed(() => {
-  if (!items.value) return []
-  if (selectedCategory.value === 'all') return items.value
-  return items.value.filter((x) => x.category === selectedCategory.value)
-})
-
-const dayKeys = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const
-
-const groupedByDay = computed(() => {
-  const map: Record<string, ScheduleItem[]> = {}
-  for (const d of dayKeys) map[d] = []
-  for (const it of filtered.value) map[it.day].push(it)
-  return map
-})
-
-function timeRange(start: string, end?: string) {
-  return end ? `${start}–${end}` : start
+function isRecord(v: unknown): v is Record<string, unknown> {
+  return typeof v === 'object' && v !== null
 }
 
-onMounted(async () => {
-  try {
-    items.value = await getWeeklySchedule()
-  } catch {
-    errorMsg.value = t('schedule.error', 'Gagal memuat jadwal.')
-    items.value = []
+function getErrMsg(err: unknown): string | null {
+  if (err instanceof Error) return err.message
+  if (typeof err === 'string' && err.trim()) return err
+  if (isRecord(err) && typeof err.message === 'string' && err.message.trim()) {
+    return err.message
   }
+  return null
+}
+
+function isoTime(iso: string): number {
+  const n = new Date(iso).getTime()
+  return Number.isFinite(n) ? n : 0
+}
+
+const todayIso = computed<string>(() => new Date().toISOString().slice(0, 10))
+
+const scheduleItems = computed<EventItem[]>(() => {
+  return all.value
+    .filter((e) => e.category === 'general')
+    .slice()
+    .sort((a, b) => isoTime(a.date) - isoTime(b.date))
 })
+
+const upcoming = computed<EventItem[]>(() =>
+  scheduleItems.value.filter((e) => e.date >= todayIso.value)
+)
+
+const past = computed<EventItem[]>(() =>
+  scheduleItems.value
+    .filter((e) => e.date < todayIso.value)
+    .slice()
+    .sort((a, b) => isoTime(b.date) - isoTime(a.date))
+)
+
+async function refresh(): Promise<void> {
+  loading.value = true
+  errorMsg.value = null
+  try {
+    all.value = await listEvents()
+  } catch (err: unknown) {
+    errorMsg.value =
+      getErrMsg(err) ?? t('admin.error_generic', 'Terjadi kesalahan.')
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(refresh)
 </script>
 
 <template>
-  <main id="main" tabindex="-1" class="mx-auto max-w-6xl space-y-6 p-6">
-    <header class="space-y-2">
-      <h1 class="text-2xl font-semibold">{{ t('schedule.title') }}</h1>
-      <p class="text-zinc-300">{{ t('schedule.description') }}</p>
-    </header>
-
-    <!-- Error -->
-    <div
-      v-if="errorMsg"
-      role="alert"
-      aria-live="polite"
-      class="rounded-xl border border-red-700/40 bg-red-900/20 p-4 text-red-200"
-    >
-      {{ errorMsg }}
-    </div>
-
-    <!-- Loading -->
-    <section v-else-if="items === null" class="grid gap-4 md:grid-cols-2">
-      <SkeletonCard />
-      <SkeletonCard />
-    </section>
-
-    <!-- Empty -->
-    <section v-else-if="items.length === 0" class="text-zinc-300">
-      {{ t('schedule.empty', 'Belum ada jadwal yang ditampilkan.') }}
-    </section>
-
-    <template v-else>
-      <!-- Filter -->
-      <section class="flex flex-wrap gap-2">
-        <button
-          v-for="cat in ['all', 'general', 'pmv', 'gabi']"
-          :key="cat"
-          class="rounded px-3 py-1 text-sm"
-          :class="
-            selectedCategory === (cat as any)
-              ? 'bg-brand-500 text-white'
-              : 'bg-zinc-700 text-zinc-200'
-          "
-          @click="selectedCategory = cat as any"
+  <div class="min-h-[60vh]">
+    <section class="relative overflow-hidden bg-hero-radial py-10 md:py-14">
+      <div class="pointer-events-none absolute inset-0">
+        <div
+          class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-400/25 to-transparent"
+          aria-hidden="true"
+        />
+        <div
+          class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-zinc-950/70 to-transparent"
+          aria-hidden="true"
+        />
+        <div
+          class="absolute left-1/2 top-10 hidden -translate-x-1/2 select-none font-display text-[140px] font-semibold tracking-[0.10em] text-brand-300/[0.04] md:block"
+          aria-hidden="true"
         >
-          <!-- reuse label categories.* -->
-          {{ t('categories.' + (cat === 'all' ? 'all' : cat), cat) }}
-        </button>
-      </section>
-
-      <!-- Group by day -->
-      <section class="space-y-6">
-        <div v-for="d in dayKeys" :key="d" class="space-y-3">
-          <h2 class="text-xl font-semibold">{{ t(`days.${d}`) }}</h2>
-
-          <div v-if="groupedByDay[d].length === 0" class="text-zinc-400">
-            {{ t('schedule.no_items_day', 'Tidak ada kegiatan.') }}
-          </div>
-
-          <div v-else class="grid gap-4 md:grid-cols-2">
-            <article
-              v-for="it in groupedByDay[d]"
-              :key="it.id"
-              class="rounded-2xl border border-zinc-700 bg-zinc-900 p-4"
-            >
-              <div class="flex items-start justify-between gap-4">
-                <div class="space-y-1">
-                  <h3 class="text-lg font-semibold text-zinc-100">
-                    {{ it.title }}
-                  </h3>
-
-                  <p class="text-sm text-zinc-300">
-                    {{ timeRange(it.start, it.end) }}
-                    <span v-if="it.location"> · {{ it.location }}</span>
-                  </p>
-
-                  <p class="text-sm text-zinc-400">
-                    {{ t('categories.' + it.category) }}
-                  </p>
-                </div>
-              </div>
-
-              <p v-if="it.description" class="mt-3 text-zinc-200">
-                {{ it.description }}
-              </p>
-            </article>
-          </div>
+          ॐ
         </div>
+      </div>
+
+      <Container>
+        <div class="mx-auto max-w-4xl text-center">
+          <h1
+            class="font-display text-3xl font-semibold tracking-[0.08em] text-zinc-100 md:text-5xl"
+          >
+            {{ t('schedule.title', 'Jadwal & Event') }}
+          </h1>
+
+          <div class="mt-4 flex justify-center">
+            <TitleOrnament tone="gold" align="center" size="md" symbol="卍" />
+          </div>
+
+          <p
+            class="mx-auto mt-5 max-w-3xl text-sm leading-relaxed text-zinc-300 md:text-base"
+          >
+            {{
+              t(
+                'schedule.subtitle',
+                'Jadwal kegiatan dan event umum. Update disusun rapi agar mudah diikuti.'
+              )
+            }}
+          </p>
+        </div>
+      </Container>
+    </section>
+
+    <Container>
+      <section class="py-10 md:py-14">
+        <div
+          v-if="errorMsg"
+          role="alert"
+          class="mb-6 rounded-2xl border border-red-700/40 bg-red-900/20 p-4 text-red-200"
+        >
+          {{ errorMsg }}
+        </div>
+
+        <div v-if="loading" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <SkeletonCard v-for="i in 6" :key="i" :lines="3" />
+        </div>
+
+        <template v-else>
+          <div class="mb-6">
+            <h2
+              class="font-display text-2xl font-semibold tracking-[0.06em] text-zinc-100"
+            >
+              {{ t('schedule.upcoming', 'Upcoming') }}
+            </h2>
+            <div
+              class="mt-3 h-px w-full bg-gradient-to-r from-transparent via-zinc-800/80 to-transparent"
+              aria-hidden="true"
+            />
+          </div>
+
+          <div
+            v-if="upcoming.length === 0"
+            class="rounded-2xl border border-zinc-800/70 bg-zinc-950/40 p-6 text-zinc-300"
+          >
+            {{ t('schedule.empty_upcoming', 'Belum ada jadwal terdekat.') }}
+          </div>
+
+          <div v-else class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <EventCard
+              v-for="e in upcoming"
+              :key="e.id"
+              :title="e.title"
+              :date="e.date"
+              :location="e.location"
+              :description="e.description"
+              :image="e.image"
+            />
+          </div>
+
+          <div class="mt-12">
+            <div class="mb-4 flex items-center justify-between">
+              <h2
+                class="font-display text-xl font-semibold tracking-[0.06em] text-zinc-100"
+              >
+                {{ t('schedule.past', 'Past') }}
+              </h2>
+              <span class="text-xs text-zinc-500">
+                {{ t('schedule.past_note', 'Arsip event sebelumnya') }}
+              </span>
+            </div>
+
+            <div v-if="past.length === 0" class="text-sm text-zinc-400">
+              {{ t('schedule.empty_past', 'Belum ada arsip.') }}
+            </div>
+
+            <div v-else class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <EventCard
+                v-for="e in past"
+                :key="e.id"
+                :title="e.title"
+                :date="e.date"
+                :location="e.location"
+                :description="e.description"
+                :image="e.image"
+              />
+            </div>
+          </div>
+        </template>
       </section>
-    </template>
-  </main>
+    </Container>
+  </div>
 </template>

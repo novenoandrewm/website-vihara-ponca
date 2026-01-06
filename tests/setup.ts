@@ -3,7 +3,7 @@ import { createI18n } from 'vue-i18n'
 import 'vitest-axe/extend-expect'
 
 import id from '@/i18n/id.json'
-import en from '@/i18n/en.json' // kalau file ini ada
+import en from '@/i18n/en.json'
 
 Object.defineProperty(window.HTMLCanvasElement.prototype, 'getContext', {
   value: () => null,

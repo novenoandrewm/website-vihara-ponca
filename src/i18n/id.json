@@ -1,6 +1,7 @@
 {
   "nav": {
     "home": "Beranda",
+    "about": "Tentang Vihara",
     "pmv": "PMV",
     "gabi": "GABI",
     "schedule": "Jadwal",
@@ -19,6 +20,7 @@
     "error": "Login gagal. Cek email dan kata sandi."
   },
   "admin": {
+    "error_generic": "Terjadi kesalahan.",
     "dashboard": {
       "title": "Dashboard Admin",
       "subtitle": "Pilih modul yang ingin kamu kelola."
@@ -29,6 +31,7 @@
   },
   "home": {
     "title": "Beranda",
+    "subtitle": "Informasi ringkas, agenda komunitas, dan kegiatan terbaru.",
     "error": "Gagal memuat data acara. Silakan coba muat ulang.",
     "no_events": "Belum ada kegiatan terjadwal.",
     "weekly_quote_title": "Kutipan Mingguan",
@@ -38,15 +41,107 @@
     "about_title": "Tentang Vihara",
     "about_description": "Vihara Avalokitesvara Pondok Cabe adalah vihara Buddhayana di bawah Sangha Agung Indonesia yang melayani umat sejak awal 1980-an. Vihara ini berlokasi di Jalan Pondok Cabe Raya, Pondok Cabe Udik, Pamulang, Tangerang Selatan dan menjadi pusat kegiatan keagamaan seperti puja bakti Minggu pagi, meditasi, serta program remaja (PMV) dan anak-anak (GABI)."
   },
+  "about": {
+    "title": "Tentang Vihara",
+    "subtitle": "Profil vihara, visi & misi, sejarah singkat, dan informasi pimpinan.",
+    "profile": {
+      "badge": "Profil",
+      "title": "Profil, Visi & Misi",
+      "description": "Vihara Avalokitesvara adalah tempat pembinaan spiritual dan pelayanan umat: ruang untuk belajar Dhamma, melatih kebajikan, dan mempererat kebersamaan dalam suasana yang tenang dan tertib.",
+      "vision_title": "Visi",
+      "vision_text": "Menjadi vihara yang menumbuhkan kebijaksanaan, welas asih, dan keharmonisan—serta menjadi pusat pembinaan Dhamma yang hangat bagi umat.",
+      "mission_title": "Misi",
+      "mission_items": [
+        "Menyelenggarakan puja bakti, meditasi, dan pembinaan Dhamma secara rutin.",
+        "Mendorong pengembangan karakter, disiplin, dan kepedulian sosial dalam komunitas.",
+        "Menyediakan ruang belajar untuk anak (GABI) dan remaja/pemuda (PMV) yang mendidik dan menyenangkan.",
+        "Membangun budaya pelayanan (seva) melalui kegiatan kepanitiaan dan bakti sosial."
+      ]
+    },
+    "history": {
+      "badge": "Sejarah",
+      "title": "Sejarah Singkat",
+      "timeline": [
+        {
+          "year": "Awal 1980-an",
+          "text": "Komunitas umat mulai membangun kegiatan ibadah dan pembinaan secara sederhana, bertumbuh seiring meningkatnya kebutuhan tempat berpraktik Dhamma."
+        },
+        {
+          "year": "Berkembang",
+          "text": "Kegiatan rutin, meditasi, dan pembinaan umat semakin terstruktur; program remaja (PMV) dan anak (GABI) mulai diperkuat agar pembinaan berkelanjutan."
+        },
+        {
+          "year": "Saat ini",
+          "text": "Vihara terus melayani umat melalui kegiatan keagamaan, pendidikan Dhamma, serta pelayanan sosial—dengan semangat kebersamaan dan ketertiban."
+        }
+      ]
+    },
+    "leadership": {
+      "badge": "Pimpinan",
+      "title": "Informasi Pimpinan",
+      "note": "Informasi pimpinan dan struktur pengurus dapat diperbarui sesuai masa bakti. Untuk data terbaru, silakan cek pengumuman resmi vihara.",
+      "name_label": "Nama",
+      "items": [
+        {
+          "role": "Ketua Vihara",
+          "name": "—",
+          "note": "Koordinasi kegiatan vihara dan pelayanan umat."
+        },
+        {
+          "role": "Pembina Rohani / Pandita",
+          "name": "—",
+          "note": "Pembinaan Dhamma, bimbingan spiritual, dan paritta."
+        },
+        {
+          "role": "Sekretaris",
+          "name": "—",
+          "note": "Administrasi, dokumentasi, dan informasi kegiatan."
+        },
+        {
+          "role": "Bendahara",
+          "name": "—",
+          "note": "Pengelolaan dana, laporan, dan kebutuhan operasional."
+        },
+        {
+          "role": "Koordinator PMV",
+          "name": "—",
+          "note": "Pembinaan remaja/pemuda dan kegiatan kepanitiaan."
+        },
+        {
+          "role": "Koordinator GABI",
+          "name": "—",
+          "note": "Pembinaan anak (Sekolah Minggu Buddha) dan program edukatif."
+        }
+      ]
+    }
+  },
   "categories": {
     "all": "Semua",
     "pmv": "PMV",
     "gabi": "GABI",
     "general": "Umum"
   },
+  "pmv": {
+    "title_full": "Persatuan Muda Mudi (PMV)",
+    "desc_full": "PMV (Persatuan Muda-Mudi Vihara) adalah wadah kegiatan pemuda-pemudi di vihara yang fokus pada pembinaan Dhamma, pengembangan karakter & kepemimpinan, serta pelayanan melalui kepanitiaan acara vihara dan kegiatan sosial.",
+    "activities": "Kegiatan PMV",
+    "empty": "Belum ada data PMV."
+  },
+  "gabi": {
+    "title_full": "Gelanggang Anak Buddhis Indonesia (GABI)",
+    "desc_full": "GABI (Gelanggang Anak Buddhis Indonesia) adalah wadah pembinaan anak-anak Buddhis (Sekolah Minggu Buddha) di vihara, tempat anak belajar nilai-nilai Buddhis secara menyenangkan melalui cerita Dhamma, doa/paritta sederhana, permainan edukatif, dan kegiatan kreatif.",
+    "activities": "Kegiatan GABI",
+    "empty": "Belum ada data GABI."
+  },
   "schedule": {
-    "title": "Jadwal Kegiatan",
+    "title": "Jadwal & Event",
+    "subtitle": "Jadwal kegiatan dan event umum. Update disusun rapi agar mudah diikuti.",
     "description": "Jadwal kegiatan rutin untuk umat, PMV, dan GABI.",
+    "upcoming": "Upcoming",
+    "empty_upcoming": "Belum ada jadwal terdekat.",
+    "past": "Past",
+    "past_note": "Arsip event sebelumnya",
+    "empty_past": "Belum ada arsip.",
     "empty": "Belum ada jadwal yang ditampilkan.",
     "no_items_day": "Tidak ada kegiatan.",
     "error": "Gagal memuat jadwal."

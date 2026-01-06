@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { getEventById, type EventItem } from '@/services/events'
-import SkeletonCard from '@/components/SkeletonCard.vue'
+import SkeletonCard from '@/components/cards/SkeletonCard.vue'
 import { formatDate } from '@/utils/formatDate'
 import { useI18n } from 'vue-i18n'
 

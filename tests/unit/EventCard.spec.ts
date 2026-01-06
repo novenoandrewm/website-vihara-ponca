@@ -1,6 +1,6 @@
 // tests/unit/EventCard.spec.ts
 import { mount } from '@vue/test-utils'
-import EventCard from '@/components/EventCard.vue'
+import EventCard from '@/components/cards/EventCard.vue'
 import { formatDate } from '@/utils/formatDate'
 import { describe, it, expect } from 'vitest'
 

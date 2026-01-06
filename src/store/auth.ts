@@ -1,3 +1,4 @@
+// src/store/auth.ts
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import {
@@ -29,7 +30,6 @@ export const useAuthStore = defineStore('auth', () => {
   function setUser(u: User | null): void {
     user.value = u
     if (!hasStorage()) return
-
     if (u) localStorage.setItem(USER_KEY, JSON.stringify(u))
     else localStorage.removeItem(USER_KEY)
   }
@@ -37,7 +37,6 @@ export const useAuthStore = defineStore('auth', () => {
   function setToken(t: string | null): void {
     token.value = t
     if (!hasStorage()) return
-
     if (t) localStorage.setItem(TOKEN_KEY, t)
     else localStorage.removeItem(TOKEN_KEY)
   }
@@ -58,18 +57,17 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function login(email: string, password: string): Promise<User> {
-    // apiLogin akan simpan token+user ke localStorage
     const u = await apiLogin(email, password)
-    // hydrate store dari storage supaya sinkron
     loadFromLocalStorage()
     return u
   }
 
   function hasAnyRole(roles: Role[]): boolean {
-    return !!user.value && roles.includes(user.value.role)
+    if (!user.value) return false
+    if (user.value.role === 'superadmin') return true
+    return roles.includes(user.value.role)
   }
 
-  // hydrate otomatis saat store dibuat
   loadFromLocalStorage()
 
   return {

@@ -5,10 +5,16 @@ import { setOgLocale } from '@/utils/seo'
 import id from './id.json'
 import en from './en.json'
 
-const initial =
-  (typeof window !== 'undefined'
-    ? window.localStorage.getItem('locale')
-    : null) ?? 'id'
+type AppLocale = 'id' | 'en'
+
+function normalizeLocale(v: unknown): AppLocale {
+  return v === 'en' ? 'en' : 'id'
+}
+
+const initial: AppLocale =
+  typeof window !== 'undefined'
+    ? normalizeLocale(window.localStorage.getItem('locale'))
+    : 'id'
 
 const i18n = createI18n({
   legacy: false,
@@ -20,16 +26,24 @@ const i18n = createI18n({
 watch(
   () => i18n.global.locale.value,
   (loc) => {
+    const normalized = normalizeLocale(loc)
+    if (loc !== normalized) {
+      i18n.global.locale.value = normalized
+      return
+    }
+
     // persist
     if (typeof window !== 'undefined') {
-      window.localStorage.setItem('locale', String(loc))
+      window.localStorage.setItem('locale', normalized)
     }
+
     // <html lang="...">
     if (typeof document !== 'undefined') {
-      document.documentElement.setAttribute('lang', loc === 'id' ? 'id' : 'en')
+      document.documentElement.setAttribute('lang', normalized)
     }
+
     // og:locale
-    setOgLocale(loc === 'id' ? 'id_ID' : 'en_US')
+    setOgLocale(normalized === 'id' ? 'id_ID' : 'en_US')
   },
   { immediate: true }
 )

@@ -1,6 +1,7 @@
 {
   "nav": {
     "home": "Home",
+    "about": "About",
     "pmv": "PMV",
     "gabi": "GABI",
     "schedule": "Schedule",
@@ -19,6 +20,7 @@
     "error": "Login failed. Check your email and password."
   },
   "admin": {
+    "error_generic": "Something went wrong.",
     "dashboard": {
       "title": "Admin Dashboard",
       "subtitle": "Choose the module you want to manage."
@@ -29,6 +31,7 @@
   },
   "home": {
     "title": "Home",
+    "subtitle": "A brief introduction, community agenda, and latest activities.",
     "error": "Failed to load events. Please try again.",
     "no_events": "No scheduled events.",
     "weekly_quote_title": "Weekly Quote",
@@ -38,15 +41,107 @@
     "about_title": "About the Vihara",
     "about_description": "Vihara Avalokitesvara Pondok Cabe is a Buddhayana temple under the Sangha Agung Indonesia, serving the community since the early 1980s. Located on Jalan Pondok Cabe Raya in Pamulang, South Tangerang, it hosts weekly Sunday services, meditation sessions, and programmes for the youth (PMV) and children (GABI)."
   },
+  "about": {
+    "title": "About the Vihara",
+    "subtitle": "Temple profile, vision & mission, brief history, and leadership information.",
+    "profile": {
+      "badge": "Profile",
+      "title": "Profile, Vision & Mission",
+      "description": "Vihara Avalokitesvara is a place for spiritual cultivation and service—where the community learns the Dhamma, practises virtue, and strengthens harmony in a calm and orderly atmosphere.",
+      "vision_title": "Vision",
+      "vision_text": "To be a temple that nurtures wisdom, compassion, and harmony—serving as a welcoming centre for Dhamma education and community growth.",
+      "mission_title": "Mission",
+      "mission_items": [
+        "Conduct regular services, meditation sessions, and Dhamma learning.",
+        "Encourage character development, discipline, and social care within the community.",
+        "Provide engaging learning spaces for children (GABI) and youth (PMV).",
+        "Cultivate a culture of service (seva) through committees and social programmes."
+      ]
+    },
+    "history": {
+      "badge": "History",
+      "title": "Brief History",
+      "timeline": [
+        {
+          "year": "Early 1980s",
+          "text": "The community began organising simple worship and Dhamma learning activities, gradually growing as the need for a dedicated place of practice increased."
+        },
+        {
+          "year": "Growth",
+          "text": "Regular programmes became more structured; youth (PMV) and children (GABI) initiatives were strengthened to support long-term cultivation."
+        },
+        {
+          "year": "Today",
+          "text": "The temple continues to serve through religious activities, Dhamma education, and community service—grounded in harmony and consistency."
+        }
+      ]
+    },
+    "leadership": {
+      "badge": "Leadership",
+      "title": "Leadership Information",
+      "note": "Leadership and committee structure may be updated over time. For the latest details, please refer to official announcements from the temple.",
+      "name_label": "Name",
+      "items": [
+        {
+          "role": "Temple Chair",
+          "name": "—",
+          "note": "Coordinates temple programmes and community services."
+        },
+        {
+          "role": "Spiritual Advisor / Pandita",
+          "name": "—",
+          "note": "Guides Dhamma learning, spiritual practice, and chanting."
+        },
+        {
+          "role": "Secretary",
+          "name": "—",
+          "note": "Administration, documentation, and activity information."
+        },
+        {
+          "role": "Treasurer",
+          "name": "—",
+          "note": "Funds management, reporting, and operational needs."
+        },
+        {
+          "role": "PMV Coordinator",
+          "name": "—",
+          "note": "Youth development and committee activities."
+        },
+        {
+          "role": "GABI Coordinator",
+          "name": "—",
+          "note": "Children’s programme (Sunday School) and educational activities."
+        }
+      ]
+    }
+  },
   "categories": {
     "all": "All",
     "pmv": "PMV",
     "gabi": "GABI",
     "general": "General"
   },
+  "pmv": {
+    "title_full": "Vihara Youth Association (PMV)",
+    "desc_full": "PMV is the vihara youth association focused on Dhamma learning, character and leadership development, and service through temple committees and social activities.",
+    "activities": "PMV Activities",
+    "empty": "No PMV activities yet."
+  },
+  "gabi": {
+    "title_full": "Indonesian Buddhist Children Group (GABI)",
+    "desc_full": "GABI is the Sunday School programme for Buddhist children at the vihara. Children learn Buddhist values in a fun way through Dhamma stories, simple chanting, educational games, and creative activities.",
+    "activities": "GABI Activities",
+    "empty": "No GABI activities yet."
+  },
   "schedule": {
-    "title": "Weekly Schedule",
+    "title": "Schedule & Events",
+    "subtitle": "General schedule and events. Neatly organised for easy access.",
     "description": "Weekly activities for the community, PMV, and GABI.",
+    "upcoming": "Upcoming",
+    "empty_upcoming": "No upcoming events yet.",
+    "past": "Past",
+    "past_note": "Previous event archive",
+    "empty_past": "No archive yet.",
     "empty": "No schedule is available.",
     "no_items_day": "No activities.",
     "error": "Failed to load the schedule."

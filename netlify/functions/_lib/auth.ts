@@ -1,3 +1,5 @@
+// netlify/functions/_lib/auth.ts
+
 import jwt from 'jsonwebtoken'
 
 export type Role = 'superadmin' | 'pmv_admin' | 'gabi_admin' | 'schedule_admin'

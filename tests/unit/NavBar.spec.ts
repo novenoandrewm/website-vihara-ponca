@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { createI18n } from 'vue-i18n'
 
-import NavBar from '@/components/NavBar.vue'
+import NavBar from '@/components/layout/NavBar.vue'
 import { useAuthStore } from '@/store/auth'
 
 // Import messages i18n (pastikan path ini sesuai struktur project kamu)

@@ -1,3 +1,4 @@
+// src/services/events.ts
 import { fetchJson } from '@/utils/fetchJson'
 import { getAuthHeader } from '@/services/auth'
 

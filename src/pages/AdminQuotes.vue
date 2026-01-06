@@ -1,0 +1,314 @@
+<!-- src/pages/AdminQuotes.vue -->
+<script setup lang="ts">
+import { onMounted, ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+import Container from '@/components/ui/Container.vue'
+import SectionHeader from '@/components/ui/SectionHeader.vue'
+import BaseCard from '@/components/ui/BaseCard.vue'
+import BaseButton from '@/components/ui/BaseButton.vue'
+
+import {
+  getLatestQuote,
+  adminUpdateLatestQuote,
+  type QuoteItem,
+} from '@/services/quotes'
+
+const { t } = useI18n({ useScope: 'global' })
+
+const loading = ref(true)
+const saving = ref(false)
+
+const errorMsg = ref<string | null>(null)
+const successMsg = ref<string | null>(null)
+
+const current = ref<QuoteItem | null>(null)
+
+const text = ref('')
+const source = ref('')
+
+const SECRET_KEY = 'quotes_admin_secret'
+const adminSecret = ref('')
+
+const previewText = computed(() => text.value.trim() || '...')
+const previewSource = computed(() => source.value.trim() || '...')
+
+function toErrMsg(err: unknown): string {
+  if (err instanceof Error) return err.message
+  if (typeof err === 'string' && err.trim()) return err
+  return 'Terjadi kesalahan.'
+}
+
+function getStorage(): Storage | null {
+  try {
+    return typeof localStorage !== 'undefined' ? localStorage : null
+  } catch {
+    return null
+  }
+}
+
+function loadSecretFromStorage(): void {
+  const st = getStorage()
+  const s = st?.getItem(SECRET_KEY)
+  if (s) adminSecret.value = s
+}
+
+function persistSecret(): void {
+  const st = getStorage()
+  if (!st) return
+
+  const s = adminSecret.value.trim()
+  if (s) st.setItem(SECRET_KEY, s)
+  else st.removeItem(SECRET_KEY)
+}
+
+function clearSecret(): void {
+  adminSecret.value = ''
+  const st = getStorage()
+  st?.removeItem(SECRET_KEY)
+}
+
+async function load(): Promise<void> {
+  loading.value = true
+  errorMsg.value = null
+  successMsg.value = null
+
+  try {
+    const q = await getLatestQuote()
+    current.value = q
+    text.value = q.text ?? ''
+    source.value = q.source ?? ''
+  } catch (e: unknown) {
+    errorMsg.value = toErrMsg(e)
+  } finally {
+    loading.value = false
+  }
+}
+
+async function save(): Promise<void> {
+  errorMsg.value = null
+  successMsg.value = null
+
+  const tVal = text.value.trim()
+  const sVal = source.value.trim()
+  const secret = adminSecret.value.trim()
+
+  if (!secret) {
+    errorMsg.value = 'Admin Secret wajib diisi.'
+    return
+  }
+  if (!tVal) {
+    errorMsg.value = 'Teks kutipan wajib diisi.'
+    return
+  }
+  if (!sVal) {
+    errorMsg.value = 'Sumber kutipan wajib diisi.'
+    return
+  }
+
+  saving.value = true
+  try {
+    persistSecret()
+    const updated = await adminUpdateLatestQuote(
+      { text: tVal, source: sVal },
+      secret
+    )
+    current.value = updated
+    successMsg.value = 'Kutipan mingguan berhasil diperbarui.'
+  } catch (e: unknown) {
+    errorMsg.value = toErrMsg(e)
+  } finally {
+    saving.value = false
+  }
+}
+
+onMounted(() => {
+  loadSecretFromStorage()
+  void load()
+})
+</script>
+
+<template>
+  <main id="main" tabindex="-1" class="min-h-[60vh]">
+    <section class="relative overflow-hidden bg-hero-radial py-10 md:py-14">
+      <div class="pointer-events-none absolute inset-0">
+        <div
+          class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-400/25 to-transparent"
+          aria-hidden="true"
+        />
+        <div
+          class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-zinc-950/70 to-transparent"
+          aria-hidden="true"
+        />
+      </div>
+
+      <Container>
+        <SectionHeader
+          as="h1"
+          :showDot="false"
+          :title="t('admin.quotes.title', 'Kelola Kutipan Mingguan')"
+          :subtitle="
+            t(
+              'admin.quotes.subtitle',
+              'Tugas admin quotes: update kutipan yang tampil di halaman Home setiap minggu.'
+            )
+          "
+        />
+      </Container>
+    </section>
+
+    <Container>
+      <section class="grid gap-6 py-10 md:grid-cols-2 md:py-14">
+        <!-- FORM -->
+        <BaseCard hover>
+          <template #header>
+            <div class="space-y-2">
+              <h2
+                class="font-display text-lg font-semibold tracking-[0.06em] text-zinc-100"
+              >
+                Update Kutipan
+              </h2>
+              <div
+                class="h-px w-full bg-gradient-to-r from-transparent via-zinc-800/80 to-transparent"
+                aria-hidden="true"
+              />
+              <p class="text-sm text-zinc-400">
+                Isi “Admin Secret”, lalu update teks & sumber kutipan.
+              </p>
+            </div>
+          </template>
+
+          <div v-if="loading" class="text-sm text-zinc-400">Memuat...</div>
+
+          <div v-else class="space-y-4">
+            <div
+              v-if="errorMsg"
+              role="alert"
+              class="rounded-2xl border border-red-700/40 bg-red-900/20 p-4 text-red-200"
+            >
+              {{ errorMsg }}
+            </div>
+
+            <div
+              v-if="successMsg"
+              role="status"
+              aria-live="polite"
+              class="rounded-2xl border border-green-700/40 bg-green-900/20 p-4 text-green-200"
+            >
+              {{ successMsg }}
+            </div>
+
+            <div>
+              <label class="mb-1 block text-sm text-zinc-200"
+                >Admin Secret</label
+              >
+              <input
+                v-model="adminSecret"
+                type="password"
+                autocomplete="off"
+                class="w-full rounded-xl border border-zinc-700 bg-zinc-900/40 p-2.5 text-zinc-100 outline-none transition focus:border-brand-400/60 focus:ring-2 focus:ring-brand-400/20"
+                placeholder="Masukkan admin secret"
+              />
+              <p class="mt-1 text-xs text-zinc-500">
+                Disimpan lokal di browser (bisa dihapus kapan saja).
+              </p>
+            </div>
+
+            <div>
+              <label class="mb-1 block text-sm text-zinc-200"
+                >Teks Kutipan</label
+              >
+              <textarea
+                v-model="text"
+                rows="5"
+                class="w-full rounded-xl border border-zinc-700 bg-zinc-900/40 p-2.5 text-zinc-100 outline-none transition focus:border-brand-400/60 focus:ring-2 focus:ring-brand-400/20"
+                placeholder="Contoh: Jangan menunda kebaikan..."
+              />
+            </div>
+
+            <div>
+              <label class="mb-1 block text-sm text-zinc-200">Sumber</label>
+              <input
+                v-model="source"
+                type="text"
+                class="w-full rounded-xl border border-zinc-700 bg-zinc-900/40 p-2.5 text-zinc-100 outline-none transition focus:border-brand-400/60 focus:ring-2 focus:ring-brand-400/20"
+                placeholder="Contoh: Sangha Agung Indonesia"
+              />
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3">
+              <BaseButton size="lg" :disabled="saving" @click="save">
+                {{ saving ? 'Menyimpan...' : 'Simpan' }}
+              </BaseButton>
+
+              <BaseButton
+                size="lg"
+                variant="secondary"
+                :disabled="saving"
+                @click="load"
+              >
+                Refresh
+              </BaseButton>
+
+              <BaseButton
+                size="lg"
+                variant="ghost"
+                :disabled="saving"
+                @click="clearSecret"
+              >
+                Hapus Secret
+              </BaseButton>
+            </div>
+
+            <p v-if="current?.updatedAt" class="text-xs text-zinc-500">
+              Terakhir update:
+              <span class="text-zinc-300">{{ current.updatedAt }}</span>
+            </p>
+          </div>
+        </BaseCard>
+
+        <!-- PREVIEW -->
+        <BaseCard hover>
+          <template #header>
+            <div class="space-y-2">
+              <h2
+                class="font-display text-lg font-semibold tracking-[0.06em] text-zinc-100"
+              >
+                Preview (Home)
+              </h2>
+              <div
+                class="h-px w-full bg-gradient-to-r from-transparent via-zinc-800/80 to-transparent"
+                aria-hidden="true"
+              />
+            </div>
+          </template>
+
+          <div class="space-y-4 text-center">
+            <div
+              class="font-display text-base font-semibold tracking-[0.08em] text-zinc-100"
+            >
+              Kutipan Mingguan
+            </div>
+
+            <!-- roda dhamma tetap -->
+            <div class="flex items-center justify-center gap-4">
+              <div class="h-px w-24 bg-gold-line opacity-90 md:w-44" />
+              <span class="text-brand-300/80" aria-hidden="true">☸</span>
+              <div class="h-px w-24 bg-gold-line opacity-90 md:w-44" />
+            </div>
+
+            <blockquote
+              class="font-sutra text-base leading-relaxed text-zinc-200"
+            >
+              “{{ previewText }}”
+            </blockquote>
+
+            <div class="font-sutra text-sm text-zinc-400">
+              — {{ previewSource }}
+            </div>
+          </div>
+        </BaseCard>
+      </section>
+    </Container>
+  </main>
+</template>
