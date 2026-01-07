@@ -1,5 +1,6 @@
 // netlify/functions/quotes.ts
 import { getStore } from '@netlify/blobs'
+import jwt from 'jsonwebtoken'
 
 export type QuoteItem = {
   text: string
@@ -16,6 +17,7 @@ const DEFAULT_QUOTE: QuoteItem = {
   updatedAt: new Date().toISOString(),
 }
 
+// --- Helpers Type Guards ---
 function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null
 }
@@ -36,38 +38,62 @@ function json(body: unknown, status = 200): Response {
   })
 }
 
-function readAdminSecret(req: Request): string {
-  return req.headers.get('X-Admin-Secret')?.trim() ?? ''
+// --- Helper Auth ---
+function checkAuth(req: Request): {
+  ok: boolean
+  role?: string
+  error?: string
+} {
+  const authHeader = req.headers.get('Authorization')
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return { ok: false, error: 'Token tidak ditemukan (Unauthorized).' }
+  }
+
+  const token = authHeader.split(' ')[1]
+  const secret = process.env.JWT_SECRET
+
+  if (!secret) {
+    return { ok: false, error: 'Server Error: JWT_SECRET belum diset.' }
+  }
+
+  try {
+    const decoded = jwt.verify(token, secret) as { role: string }
+    return { ok: true, role: decoded.role }
+  } catch (e) {
+    console.error('JWT Verification Error:', e)
+    return { ok: false, error: 'Token tidak valid atau kadaluarsa.' }
+  }
 }
 
+// --- Main Handler ---
 export default async function handler(req: Request): Promise<Response> {
   const store = getStore({ name: STORE_NAME, consistency: 'strong' })
 
   try {
+    // 1. GET: Public
     if (req.method === 'GET') {
       const stored = await store.get(KEY, { type: 'json' })
       const latest = isQuoteItem(stored) ? stored : DEFAULT_QUOTE
       return json({ latest })
     }
 
+    // 2. POST: Protected
     if (req.method === 'POST') {
-      const expected = process.env.QUOTES_ADMIN_SECRET?.trim() ?? ''
-      const provided = readAdminSecret(req)
+      // Verifikasi Token
+      const { ok, role, error } = checkAuth(req)
+      if (!ok) {
+        return json({ error: error || 'Unauthorized' }, 401)
+      }
 
-      if (!expected) {
+      // Cek Role
+      if (role !== 'superadmin' && role !== 'quotes_admin') {
         return json(
-          {
-            error:
-              'Server belum dikonfigurasi (QUOTES_ADMIN_SECRET belum diset).',
-          },
-          500
+          { error: 'Forbidden: Anda tidak memiliki akses quotes admin.' },
+          403
         )
       }
 
-      if (!provided || provided !== expected) {
-        return json({ error: 'Unauthorized.' }, 401)
-      }
-
+      // Proses Data
       const body = (await req.json().catch(() => null)) as unknown
       if (!isRecord(body)) {
         return json({ error: 'Body JSON tidak valid.' }, 400)

@@ -30,6 +30,14 @@ const canManageSchedule = computed(
     (role.value === 'superadmin' || role.value === 'schedule_admin')
 )
 
+// --- PERUBAHAN 1: Logika akses Quotes Admin ---
+const canManageQuotes = computed(
+  () =>
+    isLoggedIn.value &&
+    (role.value === 'superadmin' || role.value === 'quotes_admin')
+)
+// ---------------------------------------------
+
 const open = ref(false)
 const toggle = () => (open.value = !open.value)
 const close = () => (open.value = false)
@@ -74,7 +82,6 @@ function mobileLinkClass() {
   >
     <Container>
       <div class="flex h-16 items-center justify-between gap-3">
-        <!-- Brand -->
         <router-link to="/" class="group flex items-center gap-3">
           <div
             class="relative grid h-9 w-9 place-items-center rounded-xl border border-zinc-800 bg-zinc-900/60 shadow-insetSoft"
@@ -113,7 +120,6 @@ function mobileLinkClass() {
           </div>
         </router-link>
 
-        <!-- Desktop nav -->
         <nav class="hidden items-center gap-1 md:flex">
           <router-link v-slot="{ isActive }" to="/">
             <span :class="linkClass(isActive)">{{ t('nav.home') }}</span>
@@ -139,7 +145,6 @@ function mobileLinkClass() {
             <span :class="linkClass(isActive)">{{ t('nav.contact') }}</span>
           </router-link>
 
-          <!-- Admin links -->
           <div v-if="isLoggedIn" class="mx-2 h-6 w-px bg-zinc-800/80" />
 
           <router-link
@@ -163,11 +168,17 @@ function mobileLinkClass() {
           >
             {{ t('nav.admin_schedule') }}
           </router-link>
+
+          <router-link
+            v-if="canManageQuotes"
+            to="/admin/quotes"
+            class="rounded-xl px-3 py-2 text-sm text-zinc-200 transition hover:bg-zinc-900/60 hover:text-brand-200"
+          >
+            {{ t('nav.admin_quotes', 'Kelola Quotes') }}
+          </router-link>
         </nav>
 
-        <!-- Right actions -->
         <div class="flex items-center gap-2">
-          <!-- Language (desktop) -->
           <div class="hidden items-center gap-2 md:flex">
             <BaseButton
               size="sm"
@@ -185,7 +196,6 @@ function mobileLinkClass() {
             </BaseButton>
           </div>
 
-          <!-- login/logout -->
           <router-link v-if="!isLoggedIn" to="/login" class="hidden md:block">
             <BaseButton size="sm">{{ t('nav.login') }}</BaseButton>
           </router-link>
@@ -200,7 +210,6 @@ function mobileLinkClass() {
             {{ t('nav.logout') }}
           </BaseButton>
 
-          <!-- Mobile hamburger -->
           <button
             id="menu-button"
             class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-2 text-zinc-100 shadow-insetSoft transition hover:bg-zinc-900 md:hidden"
@@ -215,7 +224,6 @@ function mobileLinkClass() {
         </div>
       </div>
 
-      <!-- Mobile menu -->
       <Transition name="collapse">
         <div
           v-if="open"
@@ -283,6 +291,14 @@ function mobileLinkClass() {
               {{ t('nav.admin_schedule') }}
             </router-link>
 
+            <router-link
+              v-if="canManageQuotes"
+              to="/admin/quotes"
+              :class="mobileLinkClass()"
+              @click="close"
+            >
+              {{ t('nav.admin_quotes', 'Kelola Quotes') }}
+            </router-link>
             <div class="my-1 h-px bg-zinc-800/70" />
 
             <router-link

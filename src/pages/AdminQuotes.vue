@@ -2,6 +2,7 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useAuthStore } from '@/store/auth'
 
 import Container from '@/components/ui/Container.vue'
 import SectionHeader from '@/components/ui/SectionHeader.vue'
@@ -15,6 +16,7 @@ import {
 } from '@/services/quotes'
 
 const { t } = useI18n({ useScope: 'global' })
+const authStore = useAuthStore()
 
 const loading = ref(true)
 const saving = ref(false)
@@ -27,9 +29,6 @@ const current = ref<QuoteItem | null>(null)
 const text = ref('')
 const source = ref('')
 
-const SECRET_KEY = 'quotes_admin_secret'
-const adminSecret = ref('')
-
 const previewText = computed(() => text.value.trim() || '...')
 const previewSource = computed(() => source.value.trim() || '...')
 
@@ -37,35 +36,6 @@ function toErrMsg(err: unknown): string {
   if (err instanceof Error) return err.message
   if (typeof err === 'string' && err.trim()) return err
   return 'Terjadi kesalahan.'
-}
-
-function getStorage(): Storage | null {
-  try {
-    return typeof localStorage !== 'undefined' ? localStorage : null
-  } catch {
-    return null
-  }
-}
-
-function loadSecretFromStorage(): void {
-  const st = getStorage()
-  const s = st?.getItem(SECRET_KEY)
-  if (s) adminSecret.value = s
-}
-
-function persistSecret(): void {
-  const st = getStorage()
-  if (!st) return
-
-  const s = adminSecret.value.trim()
-  if (s) st.setItem(SECRET_KEY, s)
-  else st.removeItem(SECRET_KEY)
-}
-
-function clearSecret(): void {
-  adminSecret.value = ''
-  const st = getStorage()
-  st?.removeItem(SECRET_KEY)
 }
 
 async function load(): Promise<void> {
@@ -91,10 +61,12 @@ async function save(): Promise<void> {
 
   const tVal = text.value.trim()
   const sVal = source.value.trim()
-  const secret = adminSecret.value.trim()
 
-  if (!secret) {
-    errorMsg.value = 'Admin Secret wajib diisi.'
+  // Ambil token dari user yang sedang login
+  const token = authStore.token
+
+  if (!token) {
+    errorMsg.value = 'Sesi habis. Silakan login kembali.'
     return
   }
   if (!tVal) {
@@ -108,10 +80,10 @@ async function save(): Promise<void> {
 
   saving.value = true
   try {
-    persistSecret()
+    // Kirim token ke service, bukan manual secret
     const updated = await adminUpdateLatestQuote(
       { text: tVal, source: sVal },
-      secret
+      token
     )
     current.value = updated
     successMsg.value = 'Kutipan mingguan berhasil diperbarui.'
@@ -123,7 +95,6 @@ async function save(): Promise<void> {
 }
 
 onMounted(() => {
-  loadSecretFromStorage()
   void load()
 })
 </script>
@@ -159,7 +130,6 @@ onMounted(() => {
 
     <Container>
       <section class="grid gap-6 py-10 md:grid-cols-2 md:py-14">
-        <!-- FORM -->
         <BaseCard hover>
           <template #header>
             <div class="space-y-2">
@@ -173,7 +143,7 @@ onMounted(() => {
                 aria-hidden="true"
               />
               <p class="text-sm text-zinc-400">
-                Isi “Admin Secret”, lalu update teks & sumber kutipan.
+                Pastikan Anda login sebagai admin untuk melakukan update.
               </p>
             </div>
           </template>
@@ -196,22 +166,6 @@ onMounted(() => {
               class="rounded-2xl border border-green-700/40 bg-green-900/20 p-4 text-green-200"
             >
               {{ successMsg }}
-            </div>
-
-            <div>
-              <label class="mb-1 block text-sm text-zinc-200"
-                >Admin Secret</label
-              >
-              <input
-                v-model="adminSecret"
-                type="password"
-                autocomplete="off"
-                class="w-full rounded-xl border border-zinc-700 bg-zinc-900/40 p-2.5 text-zinc-100 outline-none transition focus:border-brand-400/60 focus:ring-2 focus:ring-brand-400/20"
-                placeholder="Masukkan admin secret"
-              />
-              <p class="mt-1 text-xs text-zinc-500">
-                Disimpan lokal di browser (bisa dihapus kapan saja).
-              </p>
             </div>
 
             <div>
@@ -249,15 +203,6 @@ onMounted(() => {
               >
                 Refresh
               </BaseButton>
-
-              <BaseButton
-                size="lg"
-                variant="ghost"
-                :disabled="saving"
-                @click="clearSecret"
-              >
-                Hapus Secret
-              </BaseButton>
             </div>
 
             <p v-if="current?.updatedAt" class="text-xs text-zinc-500">
@@ -267,7 +212,6 @@ onMounted(() => {
           </div>
         </BaseCard>
 
-        <!-- PREVIEW -->
         <BaseCard hover>
           <template #header>
             <div class="space-y-2">
@@ -290,7 +234,6 @@ onMounted(() => {
               Kutipan Mingguan
             </div>
 
-            <!-- roda dhamma tetap -->
             <div class="flex items-center justify-center gap-4">
               <div class="h-px w-24 bg-gold-line opacity-90 md:w-44" />
               <span class="text-brand-300/80" aria-hidden="true">☸</span>
@@ -298,12 +241,12 @@ onMounted(() => {
             </div>
 
             <blockquote
-              class="font-sutra text-base leading-relaxed text-zinc-200"
+              class="font-sutra text-lg leading-relaxed text-zinc-200 md:text-xl"
             >
               “{{ previewText }}”
             </blockquote>
 
-            <div class="font-sutra text-sm text-zinc-400">
+            <div class="mt-2 font-sutra text-base text-zinc-400">
               — {{ previewSource }}
             </div>
           </div>

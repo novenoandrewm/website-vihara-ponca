@@ -17,6 +17,9 @@ const canManageGabi = computed(
 const canManageSchedule = computed(
   () => role.value === 'superadmin' || role.value === 'schedule_admin'
 )
+const canManageQuotes = computed(
+  () => role.value === 'superadmin' || role.value === 'quotes_admin'
+)
 </script>
 
 <template>
@@ -75,10 +78,33 @@ const canManageSchedule = computed(
           {{ t('admin.schedule_hint', 'Tambah/ubah jadwal kegiatan rutin.') }}
         </p>
       </router-link>
+
+      <router-link
+        v-if="canManageQuotes"
+        to="/admin/quotes"
+        class="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4 hover:bg-zinc-900/70"
+      >
+        <h2 class="text-lg font-semibold">
+          {{ t('nav.admin_quotes', 'Kelola Kutipan') }}
+        </h2>
+        <p class="mt-1 text-sm text-zinc-300">
+          {{
+            t(
+              'admin.quotes_hint',
+              'Update kutipan mingguan di halaman beranda.'
+            )
+          }}
+        </p>
+      </router-link>
     </section>
 
     <section
-      v-if="!canManagePmv && !canManageGabi && !canManageSchedule"
+      v-if="
+        !canManagePmv &&
+        !canManageGabi &&
+        !canManageSchedule &&
+        !canManageQuotes
+      "
       class="rounded-xl border border-yellow-700/40 bg-yellow-900/20 p-4 text-yellow-200"
       role="status"
     >

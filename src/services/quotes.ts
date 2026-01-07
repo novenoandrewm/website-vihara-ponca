@@ -31,14 +31,14 @@ export async function getLatestQuote(): Promise<QuoteItem> {
 
 export async function adminUpdateLatestQuote(
   input: Pick<QuoteItem, 'text' | 'source'>,
-  adminSecret: string
+  token: string
 ): Promise<QuoteItem> {
   const res = await fetch('/.netlify/functions/quotes', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      'X-Admin-Secret': adminSecret,
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       text: input.text,

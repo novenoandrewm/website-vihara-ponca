@@ -1,4 +1,3 @@
-<!-- src/pages/Home.vue -->
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -53,7 +52,6 @@ function toErrMsg(err: unknown): string | null {
 }
 
 onMounted(async () => {
-  // ===== events =====
   loading.value = true
   errorMsg.value = null
   try {
@@ -68,7 +66,6 @@ onMounted(async () => {
     loading.value = false
   }
 
-  // ===== quote =====
   quoteLoading.value = true
   quoteError.value = null
   try {
@@ -83,26 +80,28 @@ onMounted(async () => {
 </script>
 
 <template>
-  <main id="main" tabindex="-1" class="min-h-[60vh]">
-    <!-- SECTION 1: HERO -->
-    <section class="section-screen">
-      <!-- ornament hijau untuk judul Home dipasang di HeroSection -->
+  <main id="main" tabindex="-1" class="relative min-h-[60vh] bg-zinc-950">
+    <section class="section-screen relative z-0">
       <HeroSection />
     </section>
 
-    <!-- SECTION 2: WEEKLY QUOTES -->
+    <div
+      class="pointer-events-none absolute inset-x-0 z-10 -mt-[150px] h-[300px]"
+      aria-hidden="true"
+    >
+      <div class="bg-gradient-bridge h-full w-full"></div>
+    </div>
     <section
       id="weekly"
-      class="section-screen relative overflow-hidden bg-hero-radial"
+      class="section-screen relative z-20 overflow-hidden bg-hero-radial"
     >
-      <div class="pointer-events-none absolute inset-0">
+      <div class="pointer-events-none absolute inset-0 z-0">
         <div class="section-fade-top" aria-hidden="true" />
         <div class="section-fade-bottom" aria-hidden="true" />
       </div>
 
-      <Container class="relative h-full py-10 md:py-14">
+      <Container class="relative z-10 h-full py-10 md:py-14">
         <div class="grid items-center gap-10 md:grid-cols-2 md:gap-12">
-          <!-- LEFT: circle -->
           <div class="relative flex items-center justify-center">
             <div
               class="absolute left-6 top-6 hidden select-none font-mantra text-[160px] font-semibold leading-none text-brand-300/[0.06] md:block"
@@ -124,7 +123,6 @@ onMounted(async () => {
             </div>
           </div>
 
-          <!-- RIGHT: quote content -->
           <div class="mx-auto w-full max-w-xl text-center">
             <h2
               class="quote-title font-display font-semibold tracking-[0.08em] text-zinc-100"
@@ -132,7 +130,6 @@ onMounted(async () => {
               {{ t('home.weekly_quote_title', 'Kutipan Mingguan') }}
             </h2>
 
-            <!-- ✅ tetap Roda Dhamma (☸) -->
             <div class="mt-4 flex items-center justify-center gap-4">
               <div
                 class="h-[2px] w-24 rounded-full bg-gold-line opacity-90 md:w-44"
@@ -173,17 +170,16 @@ onMounted(async () => {
       </Container>
     </section>
 
-    <!-- SECTION 3: EVENTS -->
     <section
       id="events"
-      class="section-screen relative bg-gradient-to-b from-zinc-950 via-zinc-950 to-black"
+      class="section-screen relative z-20 bg-gradient-to-b from-zinc-950 via-zinc-950 to-black"
     >
-      <div class="pointer-events-none absolute inset-0">
+      <div class="pointer-events-none absolute inset-0 z-0">
         <div class="section-fade-top" aria-hidden="true" />
         <div class="section-fade-bottom" aria-hidden="true" />
       </div>
 
-      <Container class="relative h-full py-10 md:py-14">
+      <Container class="relative z-10 h-full py-10 md:py-14">
         <div class="flex h-full flex-col">
           <SectionHeader
             as="h1"
@@ -258,17 +254,36 @@ onMounted(async () => {
   min-height: calc(100vh - 64px);
 }
 
+.bg-gradient-bridge {
+  background: linear-gradient(
+    to bottom,
+    rgba(9, 9, 11, 0) 0%,
+    rgba(9, 9, 11, 1) 40%,
+    rgba(9, 9, 11, 1) 60%,
+    rgba(9, 9, 11, 0) 100%
+  );
+}
+
 .section-fade-top {
   position: absolute;
   inset: 0 0 auto 0;
-  height: 84px;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), transparent);
+  height: 150px;
+  background: linear-gradient(
+    to bottom,
+    rgba(9, 9, 11, 1) 0%,
+    rgba(9, 9, 11, 0) 100%
+  );
 }
+
 .section-fade-bottom {
   position: absolute;
   inset: auto 0 0 0;
-  height: 120px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.65), transparent);
+  height: 150px;
+  background: linear-gradient(
+    to top,
+    rgba(9, 9, 11, 1) 0%,
+    rgba(9, 9, 11, 0) 100%
+  );
 }
 
 .circle-shift {
@@ -340,10 +355,11 @@ onMounted(async () => {
   line-height: 1.08;
 }
 .quote-text {
-  font-size: 15px;
+  font-size: 18px;
+  line-height: 1.625;
 }
 .quote-source {
-  font-size: 13px;
+  font-size: 16px;
 }
 
 @media (min-width: 768px) {
@@ -351,10 +367,11 @@ onMounted(async () => {
     font-size: 30px;
   }
   .quote-text {
-    font-size: 16px;
+    font-size: 20px;
+    line-height: 1.75;
   }
   .quote-source {
-    font-size: 13px;
+    font-size: 16px;
   }
 }
 </style>
