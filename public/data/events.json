@@ -10,16 +10,6 @@
     "time": "10:00"
   },
   {
-    "id": "e2",
-    "title": "Kegiatan PMV",
-    "date": "2025-11-05",
-    "location": "Aula Bakti Sala",
-    "category": "pmv",
-    "description": "Puja Bakti Muda Mudi",
-    "image": "/images/pmv.jpg",
-    "time": "08:00"
-  },
-  {
     "id": "e3",
     "title": "Kegiatan GABI",
     "date": "2025-11-07",
@@ -28,5 +18,15 @@
     "description": "Kegiatan Gelanggang Anak Buddhis Indonesia di Ponca",
     "image": "/images/gabi.jpg",
     "time": "10:00"
+  },
+  {
+    "id": "e2",
+    "title": "Kegiatan PMV",
+    "date": "2026-01-09",
+    "location": "Aula Bakti Sala",
+    "category": "pmv",
+    "description": "Puja Bakti Muda Mudi",
+    "image": "/images/pmv.jpg",
+    "time": "08:00"
   }
 ]
