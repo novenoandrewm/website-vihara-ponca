@@ -21,11 +21,12 @@
   },
   {
     "id": "07c8d055-5cd4-41c8-b380-9e087e76549c",
-    "title": "Puja Bakti Umum Minggaun",
+    "title": "Puja Bakti Umum Mingguan",
     "date": "2026-01-17",
     "location": "Aula Bakti Sala - Vihara Avalokitesvara Pondok Cabe",
     "category": "general",
-    "description": "Puja bakti rutin mingguan"
+    "description": "Puja bakti rutin mingguan",
+    "time": "10:00"
   },
   {
     "id": "e2",
