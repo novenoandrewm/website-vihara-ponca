@@ -15,7 +15,8 @@
     "location": "Aula Bakti Sala",
     "category": "pmv",
     "description": "Puja Bakti Muda Mudi",
-    "image": "/images/pmv.jpg"
+    "image": "/images/pmv.jpg",
+    "time": "08:00"
   },
   {
     "id": "e3",
