@@ -1,15 +1,5 @@
 [
   {
-    "id": "e1",
-    "title": "Puja Bakti Umum Mingguan",
-    "date": "2025-11-02",
-    "location": "Aula Bakti Sala - Vihara Avalokitesvara Pondok Cabe",
-    "category": "general",
-    "description": "Puja bakti rutin untuk umat umum.",
-    "image": "/images/puja.jpg",
-    "time": "10:00"
-  },
-  {
     "id": "e3",
     "title": "Kegiatan GABI",
     "date": "2025-11-07",
