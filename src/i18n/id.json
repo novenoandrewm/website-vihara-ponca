@@ -1,21 +1,44 @@
 {
+  "common": {
+    "activity_info": "Info Kegiatan",
+    "view_detail": "Lihat detail",
+    "detail": "Detail",
+    "date": "Tanggal",
+    "time": "Waktu",
+    "location": "Lokasi",
+    "open_link": "Buka",
+    "contact_via": "Hubungi"
+  },
+  "social": {
+    "wa_admin": "WhatsApp Admin",
+    "vihara_ig": "Instagram Vihara",
+    "pmv_ig": "Instagram PMV",
+    "pmv_tiktok": "TikTok PMV",
+    "gabi_ig": "Instagram GABI"
+  },
   "nav": {
     "home": "Beranda",
     "about": "Tentang Vihara",
     "pmv": "PMV",
     "gabi": "GABI",
-    "schedule": "Jadwal",
+    "schedule": "Umum",
+    "general": "Umum",
     "contact": "Kontak",
     "login": "Masuk",
     "logout": "Keluar",
     "admin_pmv": "Kelola PMV",
     "admin_gabi": "Kelola GABI",
-    "admin_schedule": "Kelola Jadwal"
+    "admin_schedule": "Kelola Jadwal",
+    "admin_quotes": "Kelola Quotes",
+    "tagline": "Tenang • Modern • Komunitas",
+    "skip_to_content": "Lompat ke konten"
   },
   "login": {
     "title": "Masuk",
     "email": "Email",
+    "email_placeholder": "nama@email.com",
     "password": "Kata sandi",
+    "password_placeholder": "Masukkan kata sandi",
     "submit": "Masuk",
     "error": "Login gagal. Cek email dan kata sandi."
   },
@@ -23,15 +46,87 @@
     "error_generic": "Terjadi kesalahan.",
     "dashboard": {
       "title": "Dashboard Admin",
-      "subtitle": "Pilih modul yang ingin kamu kelola."
+      "subtitle": "Pilih modul yang ingin kamu kelola.",
+      "signed_in_as": "Masuk sebagai",
+      "pmv_hint": "Tambah/ubah informasi kegiatan PMV.",
+      "gabi_hint": "Tambah/ubah informasi kegiatan GABI.",
+      "schedule_hint": "Tambah/ubah jadwal kegiatan rutin.",
+      "quotes_hint": "Update kutipan mingguan di halaman beranda.",
+      "no_permissions": "Akun Anda belum memiliki akses modul admin."
     },
     "pmv": { "title": "Kelola Kegiatan PMV" },
     "gabi": { "title": "Kelola Kegiatan GABI" },
-    "schedule": { "title": "Kelola Jadwal" }
+    "schedule": { "title": "Kelola Jadwal" },
+    "field_title": "Judul",
+    "field_date": "Tanggal",
+    "field_time": "Waktu",
+    "field_location": "Lokasi",
+    "field_description": "Deskripsi",
+    "field_image": "Path Gambar (opsional)",
+    "add": "Tambah",
+    "edit": "Edit",
+    "save": "Simpan",
+    "saving": "Menyimpan...",
+    "create": "Buat",
+    "cancel": "Batal",
+    "delete": "Hapus",
+    "list": "Daftar",
+    "refresh": "Refresh",
+    "loading": "Memuat...",
+    "empty": "Belum ada data.",
+    "confirm_delete": "Hapus item ini?",
+    "events_desc": "Tambah, edit, dan hapus event.",
+    "quotes": {
+      "title": "Kelola Kutipan Mingguan",
+      "subtitle": "Tugas admin quotes: update kutipan yang tampil di halaman Home setiap minggu.",
+      "section_update": "Update Kutipan",
+      "login_note": "Pastikan Anda login sebagai admin untuk melakukan update.",
+      "label_text": "Teks Kutipan",
+      "label_source": "Sumber",
+      "placeholder_text": "Contoh: Jangan menunda kebaikan...",
+      "placeholder_source": "Contoh: Sangha Agung Indonesia",
+      "section_preview": "Preview (Home)",
+      "preview_title": "Kutipan Mingguan",
+      "last_update": "Terakhir update:",
+      "error_session": "Sesi habis. Silakan login kembali.",
+      "error_text_req": "Teks kutipan wajib diisi.",
+      "error_source_req": "Sumber kutipan wajib diisi.",
+      "success_update": "Kutipan mingguan berhasil diperbarui."
+    }
+  },
+  "hero": {
+    "badge": "Harmoni • Welas Asih • Kedamaian",
+    "description": "Informasi kegiatan rutin, PMV, dan GABI. Temukan aktivitas terbaru di komunitas — Vihara Avalokitesvara Ponca.",
+    "btn_pmv": "Lihat PMV",
+    "btn_gabi": "Lihat GABI",
+    "btn_general": "Lihat Kegiatan Umum",
+    "mantra_sub": "Semoga Semua Makhluk Berbahagia"
+  },
+  "follow_us": {
+    "title": "Ikuti Kami",
+    "subtitle": "Temukan kanal resmi vihara untuk informasi kegiatan terbaru, dokumentasi, dan pengumuman penting.",
+    "wa_title": "Butuh respons cepat?",
+    "wa_desc": "Chat admin via WhatsApp.",
+    "wa_btn": "Chat WhatsApp",
+    "social_title": "Sosial Media",
+    "tap_hint": "Tap untuk membuka",
+    "validity_note": "*Pastikan mengikuti akun resmi untuk informasi valid."
+  },
+  "footer": {
+    "tagline": "Membangun kedamaian batin dan komunitas yang welas asih dalam harmoni modernitas.",
+    "menu_title": "Menu",
+    "connect_title": "Sosial Media",
+    "visit_btn": "Kunjungi",
+    "made_with": "Dibuat dengan Metta & Kode",
+    "privacy": "Privasi",
+    "terms": "Syarat",
+    "sitemap": "Peta Situs",
+    "rights": "Hak cipta dilindungi.",
+    "sub_tagline": "Tenang • Modern"
   },
   "home": {
-    "title": "Beranda",
-    "subtitle": "Informasi ringkas, agenda komunitas, dan kegiatan terbaru.",
+    "title": "Event & Kegiatan",
+    "subtitle": "Informasi ringkas, agenda, dan kegiatan terbaru.",
     "error": "Gagal memuat data acara. Silakan coba muat ulang.",
     "no_events": "Belum ada kegiatan terjadwal.",
     "weekly_quote_title": "Kutipan Mingguan",
@@ -158,10 +253,16 @@
   "contact": {
     "title": "Kontak & Lokasi",
     "description": "Silakan hubungi kami atau kunjungi alamat kami.",
+    "form_title": "Kirim Pesan",
+    "form_subtitle": "Kami akan membalas secepatnya.",
     "name": "Nama",
+    "name_placeholder": "Nama Lengkap",
     "email": "Email",
+    "email_placeholder": "nama@email.com",
     "message": "Pesan",
-    "submit": "Kirim",
+    "message_placeholder": "Tulis pesan Anda di sini...",
+    "submit": "Kirim Pesan",
+    "privacy_note": "Data Anda aman bersama kami.",
     "location": "Lokasi",
     "map_placeholder": "Peta akan ditampilkan di sini",
     "address_label": "Alamat",
@@ -174,5 +275,9 @@
     "not_found": "Acara tidak ditemukan.",
     "error_load": "Gagal memuat detail acara.",
     "back": "Kembali ke Beranda"
+  },
+  "not_found": {
+    "message": "Halaman tidak ditemukan.",
+    "back_btn": "Kembali ke Beranda"
   }
 }

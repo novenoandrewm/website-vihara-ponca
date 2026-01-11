@@ -46,11 +46,6 @@ export function requireAuth(authHeader?: string | null): AuthUser | null {
   }
 }
 
-/**
- * RBAC: siapa boleh edit kategori event apa
- * NOTE: kalau "schedule_admin" TIDAK boleh edit event umum,
- * ubah return-nya jadi false.
- */
 export function canManageEventCategory(role: Role, category: string): boolean {
   if (role === 'superadmin') return true
   if (role === 'pmv_admin') return category === 'pmv'

@@ -1,8 +1,11 @@
 <!-- src/components/sections/HeroSection.vue -->
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import Container from '@/components/ui/Container.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import TitleOrnament from '@/components/ui/TitleOrnament.vue'
+
+const { t } = useI18n({ useScope: 'global' })
 </script>
 
 <template>
@@ -32,40 +35,47 @@ import TitleOrnament from '@/components/ui/TitleOrnament.vue'
     <Container>
       <div class="relative py-18 md:py-22">
         <div
-          class="max-w-3xl animate-fadeUp space-y-7 motion-reduce:animate-none"
+          class="max-w-4xl animate-fadeUp space-y-7 motion-reduce:animate-none"
         >
           <p
             class="inline-flex items-center gap-2 rounded-full border border-zinc-800/70 bg-zinc-950/30 px-3 py-1 text-sm text-brand-200 backdrop-blur"
           >
             <span class="h-1.5 w-1.5 rounded-full bg-brand-300" />
-            Harmoni • Welas Asih • Kedamaian
+            {{ t('hero.badge') }}
           </p>
 
-          <h1
-            class="text-balance font-display text-4xl font-semibold tracking-[0.045em] text-zinc-50 md:text-6xl"
-          >
-            Vihara Avalokitesvara<span class="text-brand-300"></span>
-          </h1>
+          <div class="flex w-fit flex-col gap-8">
+            <h1
+              class="font-display text-3xl font-semibold uppercase tracking-[0.045em] text-zinc-50 md:text-5xl"
+            >
+              Vihara Avalokitesvara<span class="text-brand-300"></span>
+            </h1>
 
-          <TitleOrnament tone="jade" align="start" size="lg" symbol="卍" />
+            <TitleOrnament
+              tone="jade"
+              align="start"
+              size="lg"
+              symbol="卍"
+              class="hero-ornament"
+            />
+          </div>
 
           <p
             class="max-w-2xl text-balance text-base leading-relaxed text-zinc-300 md:text-lg"
           >
-            Informasi kegiatan rutin, PMV, dan GABI. Temukan aktivitas terbaru
-            di komunitas — dengan suasana yang tenang, modern, dan tertata.
+            {{ t('hero.description') }}
           </p>
 
           <div class="flex flex-wrap items-center gap-3">
             <router-link to="/pmv">
               <BaseButton size="lg">
-                Lihat PMV <span aria-hidden="true">→</span>
+                {{ t('hero.btn_pmv') }} <span aria-hidden="true">→</span>
               </BaseButton>
             </router-link>
 
             <router-link to="/gabi">
               <BaseButton size="lg" variant="secondary">
-                Lihat GABI <span aria-hidden="true">→</span>
+                {{ t('hero.btn_gabi') }} <span aria-hidden="true">→</span>
               </BaseButton>
             </router-link>
 
@@ -73,51 +83,28 @@ import TitleOrnament from '@/components/ui/TitleOrnament.vue'
               to="/schedule"
               class="rounded-xl px-3 py-2 text-sm text-zinc-200 underline decoration-zinc-600 transition hover:text-brand-200 hover:decoration-brand-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 motion-reduce:transition-none"
             >
-              Lihat Jadwal
+              {{ t('hero.btn_general') }}
             </router-link>
           </div>
 
-          <div class="mt-10 grid gap-3 sm:grid-cols-3">
-            <div
-              class="group rounded-2xl border border-zinc-800/70 bg-zinc-950/40 p-4 shadow-soft backdrop-blur transition hover:-translate-y-0.5 hover:border-brand-400/30 hover:shadow-glow motion-reduce:transform-none motion-reduce:transition-none"
+          <div class="!mt-16 border-l-4 border-brand-500 pl-6">
+            <h2
+              class="font-display text-xl font-semibold tracking-wide md:text-3xl lg:leading-tight"
             >
-              <div class="text-sm text-zinc-400">Kegiatan</div>
-              <div
-                class="mt-1 font-display text-lg font-semibold tracking-[0.04em] text-zinc-100"
+              <span
+                class="bg-gradient-to-r from-brand-200 via-brand-100 to-brand-300 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(245,181,72,0.25)]"
               >
-                PMV
-              </div>
-              <div class="mt-2 text-xs text-zinc-500">
-                Pembinaan & aktivitas rutin
-              </div>
-            </div>
+                “Sabbe Satta Bhavantu Sukhitatta”
+              </span>
+            </h2>
 
-            <div
-              class="group rounded-2xl border border-zinc-800/70 bg-zinc-950/40 p-4 shadow-soft backdrop-blur transition hover:-translate-y-0.5 hover:border-brand-400/30 hover:shadow-glow motion-reduce:transform-none motion-reduce:transition-none"
-            >
-              <div class="text-sm text-zinc-400">Komunitas</div>
-              <div
-                class="mt-1 font-display text-lg font-semibold tracking-[0.04em] text-zinc-100"
+            <div class="mt-3 flex items-center gap-3">
+              <span class="h-px w-8 bg-brand-400"></span>
+              <p
+                class="font-sans text-sm font-semibold uppercase tracking-[0.15em] text-zinc-100 drop-shadow-md"
               >
-                GABI
-              </div>
-              <div class="mt-2 text-xs text-zinc-500">
-                Kebersamaan & pengembangan
-              </div>
-            </div>
-
-            <div
-              class="group rounded-2xl border border-zinc-800/70 bg-zinc-950/40 p-4 shadow-soft backdrop-blur transition hover:-translate-y-0.5 hover:border-brand-400/30 hover:shadow-glow motion-reduce:transform-none motion-reduce:transition-none"
-            >
-              <div class="text-sm text-zinc-400">Informasi</div>
-              <div
-                class="mt-1 font-display text-lg font-semibold tracking-[0.04em] text-zinc-100"
-              >
-                Jadwal & Event
-              </div>
-              <div class="mt-2 text-xs text-zinc-500">
-                Update kegiatan terbaru
-              </div>
+                {{ t('hero.mantra_sub') }}
+              </p>
             </div>
           </div>
         </div>
@@ -125,7 +112,18 @@ import TitleOrnament from '@/components/ui/TitleOrnament.vue'
     </Container>
 
     <div
-      class="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-zinc-950/70 to-transparent"
+      class="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-zinc-950 via-zinc-950/80 to-transparent"
     />
   </section>
 </template>
+
+<style scoped>
+:deep(.hero-ornament) {
+  width: 100%;
+}
+
+:deep(.hero-ornament .ornament__line) {
+  width: auto !important;
+  flex: 1;
+}
+</style>

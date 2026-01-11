@@ -6,9 +6,10 @@ export type EventItem = {
   id: string
   title: string
   date: string
+  time?: string
   location: string
   description?: string
-  category: string
+  category: 'pmv' | 'gabi' | 'general' | string
   image?: string
 }
 
@@ -25,22 +26,25 @@ function baseUrl(): string {
   return import.meta.env.BASE_URL ?? '/'
 }
 
-/** PUBLIC: ambil events dari API, fallback ke public JSON */
 export async function getUpcomingEvents(): Promise<EventItem[]> {
   const base = baseUrl()
+  let apiData: EventItem[] = []
 
   try {
-    const api = await fetchJson<EventItem[]>(`${base}api/events`)
-    if (Array.isArray(api)) return sortByDate(api)
+    const res = await fetchJson<EventItem[]>(`${base}api/events`)
+    if (Array.isArray(res)) apiData = res
   } catch {
-    // fallback
+    try {
+      const fallback = await fetchJson<EventItem[]>(`${base}data/events.json`)
+      if (Array.isArray(fallback)) apiData = fallback
+    } catch {
+      apiData = []
+    }
   }
 
-  const data = await fetchJson<EventItem[]>(`${base}data/events.json`)
-  return sortByDate(data)
+  return sortByDate(apiData)
 }
 
-/** PUBLIC: ambil event by id */
 export async function getEventById(id: string): Promise<EventItem | null> {
   const base = baseUrl()
 
@@ -49,7 +53,7 @@ export async function getEventById(id: string): Promise<EventItem | null> {
       `${base}api/events/${encodeURIComponent(id)}`
     )
   } catch {
-    // fallback
+    // ignore error
   }
 
   const events = await getUpcomingEvents()

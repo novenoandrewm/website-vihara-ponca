@@ -35,7 +35,7 @@ const previewSource = computed(() => source.value.trim() || '...')
 function toErrMsg(err: unknown): string {
   if (err instanceof Error) return err.message
   if (typeof err === 'string' && err.trim()) return err
-  return 'Terjadi kesalahan.'
+  return t('admin.error_generic', 'Terjadi kesalahan.')
 }
 
 async function load(): Promise<void> {
@@ -62,31 +62,41 @@ async function save(): Promise<void> {
   const tVal = text.value.trim()
   const sVal = source.value.trim()
 
-  // Ambil token dari user yang sedang login
   const token = authStore.token
 
   if (!token) {
-    errorMsg.value = 'Sesi habis. Silakan login kembali.'
+    errorMsg.value = t(
+      'admin.quotes.error_session',
+      'Sesi habis. Silakan login kembali.'
+    )
     return
   }
   if (!tVal) {
-    errorMsg.value = 'Teks kutipan wajib diisi.'
+    errorMsg.value = t(
+      'admin.quotes.error_text_req',
+      'Teks kutipan wajib diisi.'
+    )
     return
   }
   if (!sVal) {
-    errorMsg.value = 'Sumber kutipan wajib diisi.'
+    errorMsg.value = t(
+      'admin.quotes.error_source_req',
+      'Sumber kutipan wajib diisi.'
+    )
     return
   }
 
   saving.value = true
   try {
-    // Kirim token ke service, bukan manual secret
     const updated = await adminUpdateLatestQuote(
       { text: tVal, source: sVal },
       token
     )
     current.value = updated
-    successMsg.value = 'Kutipan mingguan berhasil diperbarui.'
+    successMsg.value = t(
+      'admin.quotes.success_update',
+      'Kutipan mingguan berhasil diperbarui.'
+    )
   } catch (e: unknown) {
     errorMsg.value = toErrMsg(e)
   } finally {
@@ -136,19 +146,26 @@ onMounted(() => {
               <h2
                 class="font-display text-lg font-semibold tracking-[0.06em] text-zinc-100"
               >
-                Update Kutipan
+                {{ t('admin.quotes.section_update', 'Update Kutipan') }}
               </h2>
               <div
                 class="h-px w-full bg-gradient-to-r from-transparent via-zinc-800/80 to-transparent"
                 aria-hidden="true"
               />
               <p class="text-sm text-zinc-400">
-                Pastikan Anda login sebagai admin untuk melakukan update.
+                {{
+                  t(
+                    'admin.quotes.login_note',
+                    'Pastikan Anda login sebagai admin untuk melakukan update.'
+                  )
+                }}
               </p>
             </div>
           </template>
 
-          <div v-if="loading" class="text-sm text-zinc-400">Memuat...</div>
+          <div v-if="loading" class="text-sm text-zinc-400">
+            {{ t('admin.loading', 'Memuat...') }}
+          </div>
 
           <div v-else class="space-y-4">
             <div
@@ -169,30 +186,46 @@ onMounted(() => {
             </div>
 
             <div>
-              <label class="mb-1 block text-sm text-zinc-200"
-                >Teks Kutipan</label
-              >
+              <label class="mb-1 block text-sm text-zinc-200">
+                {{ t('admin.quotes.label_text', 'Teks Kutipan') }}
+              </label>
               <textarea
                 v-model="text"
                 rows="5"
                 class="w-full rounded-xl border border-zinc-700 bg-zinc-900/40 p-2.5 text-zinc-100 outline-none transition focus:border-brand-400/60 focus:ring-2 focus:ring-brand-400/20"
-                placeholder="Contoh: Jangan menunda kebaikan..."
+                :placeholder="
+                  t(
+                    'admin.quotes.placeholder_text',
+                    'Contoh: Jangan menunda kebaikan...'
+                  )
+                "
               />
             </div>
 
             <div>
-              <label class="mb-1 block text-sm text-zinc-200">Sumber</label>
+              <label class="mb-1 block text-sm text-zinc-200">
+                {{ t('admin.quotes.label_source', 'Sumber') }}
+              </label>
               <input
                 v-model="source"
                 type="text"
                 class="w-full rounded-xl border border-zinc-700 bg-zinc-900/40 p-2.5 text-zinc-100 outline-none transition focus:border-brand-400/60 focus:ring-2 focus:ring-brand-400/20"
-                placeholder="Contoh: Sangha Agung Indonesia"
+                :placeholder="
+                  t(
+                    'admin.quotes.placeholder_source',
+                    'Contoh: Sangha Agung Indonesia'
+                  )
+                "
               />
             </div>
 
             <div class="flex flex-wrap items-center gap-3">
               <BaseButton size="lg" :disabled="saving" @click="save">
-                {{ saving ? 'Menyimpan...' : 'Simpan' }}
+                {{
+                  saving
+                    ? t('admin.saving', 'Menyimpan...')
+                    : t('admin.save', 'Simpan')
+                }}
               </BaseButton>
 
               <BaseButton
@@ -201,12 +234,12 @@ onMounted(() => {
                 :disabled="saving"
                 @click="load"
               >
-                Refresh
+                {{ t('admin.refresh', 'Refresh') }}
               </BaseButton>
             </div>
 
             <p v-if="current?.updatedAt" class="text-xs text-zinc-500">
-              Terakhir update:
+              {{ t('admin.quotes.last_update', 'Terakhir update:') }}
               <span class="text-zinc-300">{{ current.updatedAt }}</span>
             </p>
           </div>
@@ -218,7 +251,7 @@ onMounted(() => {
               <h2
                 class="font-display text-lg font-semibold tracking-[0.06em] text-zinc-100"
               >
-                Preview (Home)
+                {{ t('admin.quotes.section_preview', 'Preview (Home)') }}
               </h2>
               <div
                 class="h-px w-full bg-gradient-to-r from-transparent via-zinc-800/80 to-transparent"
@@ -231,7 +264,7 @@ onMounted(() => {
             <div
               class="font-display text-base font-semibold tracking-[0.08em] text-zinc-100"
             >
-              Kutipan Mingguan
+              {{ t('admin.quotes.preview_title', 'Kutipan Mingguan') }}
             </div>
 
             <div class="flex items-center justify-center gap-4">

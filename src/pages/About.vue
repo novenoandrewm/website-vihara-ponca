@@ -35,11 +35,18 @@ const leaders = computed(
 </script>
 
 <template>
-  <div class="min-h-[60vh]">
-    <!-- Header -->
-    <section class="relative overflow-hidden bg-hero-radial py-10 md:py-14">
+  <div class="min-h-[60vh] bg-zinc-950">
+    <section
+      class="relative overflow-hidden bg-hero-radial pb-12 pt-6 md:pb-16 md:pt-10"
+    >
       <div class="pointer-events-none absolute inset-0">
-        <!-- sacred watermark -->
+        <div
+          class="absolute -left-40 -top-40 h-[700px] w-[700px] rounded-full bg-brand-500/30 blur-[120px]"
+        />
+        <div
+          class="absolute -right-40 -top-40 h-[700px] w-[700px] rounded-full bg-jade-500/30 blur-[120px]"
+        />
+
         <div
           class="absolute left-6 top-8 hidden select-none font-mantra text-[140px] font-semibold leading-none text-brand-300/[0.05] md:block"
           aria-hidden="true"
@@ -47,33 +54,31 @@ const leaders = computed(
           ॐ
         </div>
 
-        <!-- top line -->
         <div
           class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-400/25 to-transparent"
           aria-hidden="true"
         />
-        <!-- bottom fade -->
+
         <div
-          class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-zinc-950/70 to-transparent"
+          class="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent"
           aria-hidden="true"
         />
       </div>
 
-      <Container>
+      <Container class="relative z-10">
         <div class="mx-auto max-w-4xl text-center">
           <h1
-            class="font-display text-3xl font-semibold tracking-[0.08em] text-zinc-100 md:text-5xl"
+            class="text-balance bg-gradient-to-r from-amber-200 via-orange-100 to-amber-400 bg-clip-text font-display text-2xl font-semibold tracking-[0.08em] text-transparent drop-shadow-sm md:text-4xl"
           >
             {{ pageTitle }}
           </h1>
 
-          <!-- ✅ ornament gold glow + swastika -->
           <div class="mt-4 flex justify-center">
-            <TitleOrnament tone="gold" align="center" size="md" symbol="卍" />
+            <TitleOrnament tone="gold" align="center" size="sm" symbol="卍" />
           </div>
 
           <p
-            class="mx-auto mt-5 max-w-3xl text-balance text-base leading-relaxed text-zinc-300 md:text-lg"
+            class="mx-auto mt-4 max-w-3xl text-balance text-sm leading-relaxed text-zinc-300 md:text-base"
           >
             {{ pageDesc }}
           </p>
@@ -81,9 +86,8 @@ const leaders = computed(
       </Container>
     </section>
 
-    <Container>
-      <section class="space-y-8 py-10 md:py-14">
-        <!-- (1) Profil + Visi Misi -->
+    <Container class="relative z-10 mt-8">
+      <section class="space-y-8 pb-20">
         <BaseCard tone="gold" :hover="false">
           <template #header>
             <div class="flex items-center justify-between gap-3">
@@ -139,7 +143,6 @@ const leaders = computed(
           </div>
         </BaseCard>
 
-        <!-- (2) Sejarah Singkat -->
         <BaseCard tone="neutral" :hover="false">
           <template #header>
             <div class="flex items-center justify-between gap-3">
@@ -175,7 +178,6 @@ const leaders = computed(
           </div>
         </BaseCard>
 
-        <!-- (3) Informasi Pimpinan -->
         <BaseCard tone="jade" :hover="false">
           <template #header>
             <div class="flex items-center justify-between gap-3">

@@ -2,9 +2,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import NavBar from '@/components/layout/NavBar.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 
+const { t } = useI18n({ useScope: 'global' })
 const route = useRoute()
 
 // Key transition
@@ -13,12 +15,11 @@ const viewKey = computed(() => route.fullPath)
 
 <template>
   <div class="flex min-h-screen flex-col">
-    <!-- Skip link (a11y) -->
     <a
       href="#main"
       class="sr-only focus:not-sr-only focus:absolute focus:m-2 focus:rounded-xl focus:bg-zinc-900/80 focus:px-3 focus:py-2 focus:text-white focus:shadow-soft"
     >
-      Lompat ke konten
+      {{ t('nav.skip_to_content', 'Lompat ke konten') }}
     </a>
 
     <NavBar />

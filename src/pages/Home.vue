@@ -1,3 +1,4 @@
+<!-- src/pages/Home.vue -->
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -40,6 +41,14 @@ function setCategory(cat: CategoryFilter): void {
   selectedCategory.value = cat
 }
 
+function getCategoryLabel(cat: CategoryFilter): string {
+  if (cat === 'all') return t('categories.all', 'Semua')
+  if (cat === 'pmv') return t('categories.pmv', 'PMV')
+  if (cat === 'gabi') return t('categories.gabi', 'GABI')
+  if (cat === 'general') return t('categories.general', 'Umum')
+  return cat
+}
+
 const filteredEvents = computed<EventItem[]>(() => {
   if (selectedCategory.value === 'all') return events.value
   return events.value.filter((e) => e.category === selectedCategory.value)
@@ -51,7 +60,15 @@ function toErrMsg(err: unknown): string | null {
   return null
 }
 
+function getEventLink(category: string): string {
+  const cat = (category || '').toLowerCase()
+  if (cat === 'pmv') return '/pmv'
+  if (cat === 'gabi') return '/gabi'
+  return '/schedule'
+}
+
 onMounted(async () => {
+  // events
   loading.value = true
   errorMsg.value = null
   try {
@@ -66,6 +83,7 @@ onMounted(async () => {
     loading.value = false
   }
 
+  // quote
   quoteLoading.value = true
   quoteError.value = null
   try {
@@ -85,19 +103,21 @@ onMounted(async () => {
       <HeroSection />
     </section>
 
-    <div
-      class="pointer-events-none absolute inset-x-0 z-10 -mt-[150px] h-[300px]"
-      aria-hidden="true"
-    >
-      <div class="bg-gradient-bridge h-full w-full"></div>
-    </div>
     <section
       id="weekly"
-      class="section-screen relative z-20 overflow-hidden bg-hero-radial"
+      class="section-screen relative z-20 -mt-40 overflow-hidden pt-32"
     >
-      <div class="pointer-events-none absolute inset-0 z-0">
-        <div class="section-fade-top" aria-hidden="true" />
-        <div class="section-fade-bottom" aria-hidden="true" />
+      <div class="pointer-events-none absolute inset-0 -z-20 overflow-hidden">
+        <div
+          class="absolute inset-0 bg-gradient-to-b from-transparent via-zinc-950/80 to-zinc-950"
+        ></div>
+
+        <div
+          class="absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-jade-900/10 to-transparent opacity-60 mix-blend-screen"
+        ></div>
+        <div
+          class="absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-brand-900/10 to-transparent opacity-60 mix-blend-screen"
+        ></div>
       </div>
 
       <Container class="relative z-10 h-full py-10 md:py-14">
@@ -124,46 +144,73 @@ onMounted(async () => {
           </div>
 
           <div class="mx-auto w-full max-w-xl text-center">
-            <h2
-              class="quote-title font-display font-semibold tracking-[0.08em] text-zinc-100"
+            <div
+              class="relative rounded-3xl bg-gradient-to-br from-brand-300/40 via-white/10 to-brand-300/5 p-px shadow-2xl backdrop-blur-md"
             >
-              {{ t('home.weekly_quote_title', 'Kutipan Mingguan') }}
-            </h2>
-
-            <div class="mt-4 flex items-center justify-center gap-4">
               <div
-                class="h-[2px] w-24 rounded-full bg-gold-line opacity-90 md:w-44"
-              />
-              <span class="text-brand-300/80" aria-hidden="true">☸</span>
-              <div
-                class="h-[2px] w-24 rounded-full bg-gold-line opacity-90 md:w-44"
-              />
-            </div>
+                class="relative h-full w-full rounded-3xl bg-zinc-800/60 p-8 md:p-10"
+              >
+                <div
+                  class="absolute left-0 top-0 h-8 w-8 rounded-tl-3xl border-l-2 border-t-2 border-brand-400/30"
+                />
+                <div
+                  class="absolute right-0 top-0 h-8 w-8 rounded-tr-3xl border-r-2 border-t-2 border-brand-400/30"
+                />
+                <div
+                  class="absolute bottom-0 left-0 h-8 w-8 rounded-bl-3xl border-b-2 border-l-2 border-brand-400/30"
+                />
+                <div
+                  class="absolute bottom-0 right-0 h-8 w-8 rounded-br-3xl border-b-2 border-r-2 border-brand-400/30"
+                />
 
-            <div class="mt-6">
-              <p v-if="quoteError" class="text-red-200">
-                {{ quoteError }}
-              </p>
-
-              <p v-else-if="quoteLoading" class="text-zinc-400">
-                {{ t('home.quote_loading', 'Memuat kutipan...') }}
-              </p>
-
-              <div v-else-if="quote" class="space-y-3">
-                <blockquote
-                  class="quote-text font-sutra leading-relaxed text-zinc-200"
+                <h2
+                  class="quote-title font-display font-semibold tracking-[0.08em] text-zinc-100 drop-shadow-md"
                 >
-                  “{{ quote.text }}”
-                </blockquote>
+                  {{ t('home.weekly_quote_title', 'Kutipan Mingguan') }}
+                </h2>
 
-                <footer class="quote-source font-sutra text-zinc-400">
-                  — {{ quote.source }}
-                </footer>
+                <div class="mt-4 flex items-center justify-center gap-3">
+                  <div
+                    class="h-px w-24 bg-gradient-to-r from-transparent to-brand-400/50 md:w-40"
+                  ></div>
+                  <span
+                    class="text-brand-300 drop-shadow-[0_0_10px_rgba(245,181,72,0.5)]"
+                    aria-hidden="true"
+                    >☸</span
+                  >
+                  <div
+                    class="h-px w-24 bg-gradient-to-l from-transparent to-brand-400/50 md:w-40"
+                  ></div>
+                </div>
+
+                <div class="relative mt-8">
+                  <p v-if="quoteError" class="text-red-200">
+                    {{ quoteError }}
+                  </p>
+
+                  <p v-else-if="quoteLoading" class="text-zinc-400">
+                    {{ t('home.quote_loading', 'Memuat kutipan...') }}
+                  </p>
+
+                  <div v-else-if="quote" class="space-y-6">
+                    <blockquote
+                      class="quote-text font-sutra italic leading-relaxed text-zinc-50 drop-shadow-sm"
+                    >
+                      “{{ quote.text }}”
+                    </blockquote>
+
+                    <footer
+                      class="quote-source font-sutra text-sm font-medium tracking-wider text-brand-200/90 md:text-base"
+                    >
+                      — {{ quote.source }}
+                    </footer>
+                  </div>
+
+                  <p v-else class="text-zinc-400">
+                    {{ t('home.no_quote', 'Belum ada kutipan minggu ini.') }}
+                  </p>
+                </div>
               </div>
-
-              <p v-else class="text-zinc-400">
-                {{ t('home.no_quote', 'Belum ada kutipan minggu ini.') }}
-              </p>
             </div>
           </div>
         </div>
@@ -175,8 +222,9 @@ onMounted(async () => {
       class="section-screen relative z-20 bg-gradient-to-b from-zinc-950 via-zinc-950 to-black"
     >
       <div class="pointer-events-none absolute inset-0 z-0">
-        <div class="section-fade-top" aria-hidden="true" />
-        <div class="section-fade-bottom" aria-hidden="true" />
+        <div
+          class="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-zinc-950 to-transparent"
+        />
       </div>
 
       <Container class="relative z-10 h-full py-10 md:py-14">
@@ -184,7 +232,7 @@ onMounted(async () => {
           <SectionHeader
             as="h1"
             :showDot="false"
-            :title="t('home.title', 'Beranda')"
+            :title="t('home.title', 'Event & Kegiatan')"
             :subtitle="
               t(
                 'home.subtitle',
@@ -226,7 +274,7 @@ onMounted(async () => {
                   :variant="selectedCategory === cat ? 'primary' : 'ghost'"
                   @click="setCategory(cat)"
                 >
-                  {{ t('categories.' + cat) }}
+                  {{ getCategoryLabel(cat) }}
                 </BaseButton>
               </div>
 
@@ -236,9 +284,12 @@ onMounted(async () => {
                   :key="e.id"
                   :title="e.title"
                   :date="e.date"
+                  :time="e.time"
                   :location="e.location"
                   :description="e.description"
                   :image="e.image"
+                  :category="e.category"
+                  :to="getEventLink(e.category)"
                 />
               </div>
             </section>
@@ -252,38 +303,6 @@ onMounted(async () => {
 <style scoped>
 .section-screen {
   min-height: calc(100vh - 64px);
-}
-
-.bg-gradient-bridge {
-  background: linear-gradient(
-    to bottom,
-    rgba(9, 9, 11, 0) 0%,
-    rgba(9, 9, 11, 1) 40%,
-    rgba(9, 9, 11, 1) 60%,
-    rgba(9, 9, 11, 0) 100%
-  );
-}
-
-.section-fade-top {
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 150px;
-  background: linear-gradient(
-    to bottom,
-    rgba(9, 9, 11, 1) 0%,
-    rgba(9, 9, 11, 0) 100%
-  );
-}
-
-.section-fade-bottom {
-  position: absolute;
-  inset: auto 0 0 0;
-  height: 150px;
-  background: linear-gradient(
-    to top,
-    rgba(9, 9, 11, 1) 0%,
-    rgba(9, 9, 11, 0) 100%
-  );
 }
 
 .circle-shift {
@@ -301,11 +320,10 @@ onMounted(async () => {
   position: relative;
   overflow: hidden;
   border-radius: 9999px;
-
   box-shadow:
     0 18px 46px rgba(0, 0, 0, 0.52),
-    0 0 0 4px rgba(52, 211, 153, 0.42),
-    0 0 70px rgba(52, 211, 153, 0.26);
+    0 0 0 4px rgba(52, 211, 153, 0.6),
+    0 0 80px rgba(52, 211, 153, 0.4);
 }
 
 .circle-wrap::before {
@@ -314,7 +332,7 @@ onMounted(async () => {
   inset: 14px;
   border-radius: 9999px;
   box-shadow:
-    inset 0 0 0 1px rgba(52, 211, 153, 0.18),
+    inset 0 0 0 1px rgba(52, 211, 153, 0.2),
     inset 0 0 30px rgba(0, 0, 0, 0.35);
   pointer-events: none;
 }
@@ -333,11 +351,11 @@ onMounted(async () => {
   background:
     radial-gradient(
       circle at 45% 40%,
-      rgba(255, 255, 255, 0.07) 0%,
-      rgba(0, 0, 0, 0.18) 52%,
-      rgba(0, 0, 0, 0.48) 100%
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(0, 0, 0, 0.2) 52%,
+      rgba(0, 0, 0, 0.6) 100%
     ),
-    linear-gradient(180deg, rgba(52, 211, 153, 0.08), rgba(0, 0, 0, 0));
+    linear-gradient(180deg, rgba(52, 211, 153, 0.05), rgba(0, 0, 0, 0.1));
   pointer-events: none;
 }
 

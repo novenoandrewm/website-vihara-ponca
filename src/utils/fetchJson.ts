@@ -1,3 +1,4 @@
+// src/utils/fetchJson.ts
 export class HttpError extends Error {
   status: number
   statusText: string
@@ -38,7 +39,6 @@ export async function fetchJson<T>(
     throw new HttpError(res.status, res.statusText, msg)
   }
 
-  // kalau body kosong
   if (!text) return undefined as T
 
   const parsed = safeJsonParse<T>(text)

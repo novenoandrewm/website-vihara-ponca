@@ -26,7 +26,6 @@ export default [
       ...vue.configs['vue3-recommended'].rules,
       ...ts.configs.recommended.rules,
 
-      // TS sudah handle undefined identifier type seperti RequestInit/Response
       'no-undef': 'off',
 
       // Unused vars (TS)

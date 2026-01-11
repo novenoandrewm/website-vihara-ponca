@@ -58,7 +58,6 @@ export default {
         ],
         display: ['Cinzel', 'ui-serif', 'Georgia', 'serif'],
         sutra: ['"Noto Serif"', 'ui-serif', 'Georgia', 'serif'],
-        // biar class font-mantra beneran ada (dipakai watermark ॐ)
         mantra: ['Cinzel', 'ui-serif', 'Georgia', 'serif'],
       },
 

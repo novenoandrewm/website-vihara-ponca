@@ -8,7 +8,7 @@ import EventCard from '@/components/cards/EventCard.vue'
 import SkeletonCard from '@/components/cards/SkeletonCard.vue'
 import TitleOrnament from '@/components/ui/TitleOrnament.vue'
 
-import { listEvents, type EventItem } from '@/services/eventsApi'
+import { getUpcomingEvents, type EventItem } from '@/services/events'
 
 const { t } = useI18n({ useScope: 'global' })
 
@@ -36,29 +36,18 @@ function isoTime(iso: string): number {
 
 const todayIso = computed<string>(() => new Date().toISOString().slice(0, 10))
 
-const scheduleItems = computed<EventItem[]>(() => {
+const upcoming = computed<EventItem[]>(() => {
   return all.value
-    .filter((e) => e.category === 'general')
+    .filter((e) => e.category === 'general' && e.date >= todayIso.value)
     .slice()
     .sort((a, b) => isoTime(a.date) - isoTime(b.date))
 })
-
-const upcoming = computed<EventItem[]>(() =>
-  scheduleItems.value.filter((e) => e.date >= todayIso.value)
-)
-
-const past = computed<EventItem[]>(() =>
-  scheduleItems.value
-    .filter((e) => e.date < todayIso.value)
-    .slice()
-    .sort((a, b) => isoTime(b.date) - isoTime(a.date))
-)
 
 async function refresh(): Promise<void> {
   loading.value = true
   errorMsg.value = null
   try {
-    all.value = await listEvents()
+    all.value = await getUpcomingEvents()
   } catch (err: unknown) {
     errorMsg.value =
       getErrMsg(err) ?? t('admin.error_generic', 'Terjadi kesalahan.')
@@ -71,44 +60,59 @@ onMounted(refresh)
 </script>
 
 <template>
-  <div class="min-h-[60vh]">
-    <section class="relative overflow-hidden bg-hero-radial py-10 md:py-14">
-      <div class="pointer-events-none absolute inset-0">
+  <div class="relative min-h-[80vh] bg-zinc-950">
+    <section
+      class="relative z-10 overflow-hidden pb-48 pt-10 md:pb-64 md:pt-14"
+    >
+      <div class="absolute inset-0 -z-20 bg-hero-radial opacity-100" />
+
+      <div class="pointer-events-none absolute inset-0 z-0">
+        <div
+          class="absolute -left-32 -top-32 h-[600px] w-[600px] rounded-full bg-brand-500/20 blur-[100px]"
+        />
+        <div
+          class="absolute -right-32 -top-32 h-[600px] w-[600px] rounded-full bg-jade-500/20 blur-[100px]"
+        />
+      </div>
+
+      <div class="pointer-events-none absolute inset-0 z-10">
         <div
           class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-400/25 to-transparent"
           aria-hidden="true"
         />
+
         <div
-          class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-zinc-950/70 to-transparent"
-          aria-hidden="true"
-        />
-        <div
-          class="absolute left-1/2 top-10 hidden -translate-x-1/2 select-none font-display text-[140px] font-semibold tracking-[0.10em] text-brand-300/[0.04] md:block"
+          class="absolute left-1/2 top-0 hidden -translate-x-1/2 select-none font-display text-[160px] font-semibold tracking-[0.10em] text-brand-300/[0.15] md:block"
           aria-hidden="true"
         >
-          ॐ
+          卍
         </div>
+
+        <div
+          class="absolute inset-x-0 bottom-0 h-[500px] bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent"
+          aria-hidden="true"
+        />
       </div>
 
-      <Container>
+      <Container class="relative z-20">
         <div class="mx-auto max-w-4xl text-center">
           <h1
-            class="font-display text-3xl font-semibold tracking-[0.08em] text-zinc-100 md:text-5xl"
+            class="text-balance bg-gradient-to-r from-emerald-300 via-teal-200 to-emerald-400 bg-clip-text font-display text-2xl font-semibold tracking-[0.06em] text-transparent drop-shadow-[0_2px_10px_rgba(52,211,153,0.5)] md:text-4xl"
           >
-            {{ t('schedule.title', 'Jadwal & Event') }}
+            {{ t('schedule.title', 'Kegiatan Umum') }}
           </h1>
 
           <div class="mt-4 flex justify-center">
-            <TitleOrnament tone="gold" align="center" size="md" symbol="卍" />
+            <TitleOrnament tone="jade" align="center" size="sm" symbol="卍" />
           </div>
 
           <p
-            class="mx-auto mt-5 max-w-3xl text-sm leading-relaxed text-zinc-300 md:text-base"
+            class="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-zinc-400 md:text-lg"
           >
             {{
               t(
                 'schedule.subtitle',
-                'Jadwal kegiatan dan event umum. Update disusun rapi agar mudah diikuti.'
+                'Temukan jadwal kegiatan rutin, puja bakti, dan agenda umum vihara di sini.'
               )
             }}
           </p>
@@ -116,82 +120,73 @@ onMounted(refresh)
       </Container>
     </section>
 
-    <Container>
-      <section class="py-10 md:py-14">
+    <Container class="relative z-10 -mt-32 pb-20 md:-mt-48">
+      <div
+        v-if="errorMsg"
+        role="alert"
+        class="mx-auto max-w-2xl rounded-2xl border border-red-500/20 bg-red-900/10 p-6 text-center text-red-200 backdrop-blur"
+      >
+        {{ errorMsg }}
+      </div>
+
+      <div v-if="loading" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <SkeletonCard v-for="i in 6" :key="i" :lines="3" />
+      </div>
+
+      <template v-else>
         <div
-          v-if="errorMsg"
-          role="alert"
-          class="mb-6 rounded-2xl border border-red-700/40 bg-red-900/20 p-4 text-red-200"
+          v-if="upcoming.length === 0"
+          class="flex min-h-[300px] flex-col items-center justify-center rounded-3xl border border-dashed border-zinc-800 bg-zinc-900/30 p-10 text-center backdrop-blur-sm"
         >
-          {{ errorMsg }}
-        </div>
-
-        <div v-if="loading" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <SkeletonCard v-for="i in 6" :key="i" :lines="3" />
-        </div>
-
-        <template v-else>
-          <div class="mb-6">
-            <h2
-              class="font-display text-2xl font-semibold tracking-[0.06em] text-zinc-100"
-            >
-              {{ t('schedule.upcoming', 'Upcoming') }}
-            </h2>
-            <div
-              class="mt-3 h-px w-full bg-gradient-to-r from-transparent via-zinc-800/80 to-transparent"
-              aria-hidden="true"
-            />
-          </div>
-
           <div
-            v-if="upcoming.length === 0"
-            class="rounded-2xl border border-zinc-800/70 bg-zinc-950/40 p-6 text-zinc-300"
+            class="flex h-16 w-16 items-center justify-center rounded-full bg-zinc-800/50 text-zinc-600"
           >
-            {{ t('schedule.empty_upcoming', 'Belum ada jadwal terdekat.') }}
-          </div>
-
-          <div v-else class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <EventCard
-              v-for="e in upcoming"
-              :key="e.id"
-              :title="e.title"
-              :date="e.date"
-              :location="e.location"
-              :description="e.description"
-              :image="e.image"
-            />
-          </div>
-
-          <div class="mt-12">
-            <div class="mb-4 flex items-center justify-between">
-              <h2
-                class="font-display text-xl font-semibold tracking-[0.06em] text-zinc-100"
-              >
-                {{ t('schedule.past', 'Past') }}
-              </h2>
-              <span class="text-xs text-zinc-500">
-                {{ t('schedule.past_note', 'Arsip event sebelumnya') }}
-              </span>
-            </div>
-
-            <div v-if="past.length === 0" class="text-sm text-zinc-400">
-              {{ t('schedule.empty_past', 'Belum ada arsip.') }}
-            </div>
-
-            <div v-else class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              <EventCard
-                v-for="e in past"
-                :key="e.id"
-                :title="e.title"
-                :date="e.date"
-                :location="e.location"
-                :description="e.description"
-                :image="e.image"
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="h-8 w-8"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
               />
-            </div>
+            </svg>
           </div>
-        </template>
-      </section>
+          <h3 class="mt-4 font-display text-lg font-medium text-zinc-300">
+            {{ t('schedule.empty', 'Tidak ada kegiatan') }}
+          </h3>
+          <p class="mt-2 text-sm text-zinc-500">
+            {{
+              t(
+                'schedule.empty_upcoming',
+                'Belum ada jadwal kegiatan umum terdekat.'
+              )
+            }}
+          </p>
+        </div>
+
+        <div
+          v-else
+          class="grid animate-fadeUp gap-6 sm:grid-cols-2 lg:grid-cols-3"
+        >
+          <EventCard
+            v-for="e in upcoming"
+            :key="e.id"
+            :title="e.title"
+            :date="e.date"
+            :time="e.time"
+            :location="e.location"
+            :description="e.description"
+            :image="e.image"
+            :category="e.category"
+            :to="'/events/' + e.id"
+          />
+        </div>
+      </template>
     </Container>
   </div>
 </template>

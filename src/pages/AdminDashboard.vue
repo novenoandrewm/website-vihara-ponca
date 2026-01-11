@@ -1,3 +1,4 @@
+<!-- src/pages/AdminDashboard.vue -->
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useAuthStore } from '@/store/auth'
@@ -26,14 +27,16 @@ const canManageQuotes = computed(
   <main id="main" tabindex="-1" class="mx-auto max-w-6xl space-y-6 p-6">
     <header class="space-y-1">
       <h1 class="text-2xl font-semibold">
-        {{ t('admin.dashboard_title', 'Dashboard Admin') }}
+        {{ t('admin.dashboard.title', 'Dashboard Admin') }}
       </h1>
       <p class="text-zinc-300">
-        {{ t('admin.dashboard_desc', 'Pilih modul yang ingin Anda kelola.') }}
+        {{
+          t('admin.dashboard.subtitle', 'Pilih modul yang ingin Anda kelola.')
+        }}
       </p>
 
       <p v-if="auth.user" class="text-sm text-zinc-400">
-        {{ t('admin.signed_in_as', 'Masuk sebagai') }}:
+        {{ t('admin.dashboard.signed_in_as', 'Masuk sebagai') }}:
         <span class="font-medium text-zinc-200">{{ auth.user.name }}</span>
         <span class="text-zinc-500">({{ auth.user.role }})</span>
       </p>
@@ -49,7 +52,9 @@ const canManageQuotes = computed(
           {{ t('nav.admin_pmv', 'Kelola PMV') }}
         </h2>
         <p class="mt-1 text-sm text-zinc-300">
-          {{ t('admin.pmv_hint', 'Tambah/ubah informasi kegiatan PMV.') }}
+          {{
+            t('admin.dashboard.pmv_hint', 'Tambah/ubah informasi kegiatan PMV.')
+          }}
         </p>
       </router-link>
 
@@ -62,7 +67,12 @@ const canManageQuotes = computed(
           {{ t('nav.admin_gabi', 'Kelola GABI') }}
         </h2>
         <p class="mt-1 text-sm text-zinc-300">
-          {{ t('admin.gabi_hint', 'Tambah/ubah informasi kegiatan GABI.') }}
+          {{
+            t(
+              'admin.dashboard.gabi_hint',
+              'Tambah/ubah informasi kegiatan GABI.'
+            )
+          }}
         </p>
       </router-link>
 
@@ -75,7 +85,12 @@ const canManageQuotes = computed(
           {{ t('nav.admin_schedule', 'Kelola Jadwal') }}
         </h2>
         <p class="mt-1 text-sm text-zinc-300">
-          {{ t('admin.schedule_hint', 'Tambah/ubah jadwal kegiatan rutin.') }}
+          {{
+            t(
+              'admin.dashboard.schedule_hint',
+              'Tambah/ubah jadwal kegiatan rutin.'
+            )
+          }}
         </p>
       </router-link>
 
@@ -90,7 +105,7 @@ const canManageQuotes = computed(
         <p class="mt-1 text-sm text-zinc-300">
           {{
             t(
-              'admin.quotes_hint',
+              'admin.dashboard.quotes_hint',
               'Update kutipan mingguan di halaman beranda.'
             )
           }}
@@ -109,7 +124,10 @@ const canManageQuotes = computed(
       role="status"
     >
       {{
-        t('admin.no_permissions', 'Akun Anda belum memiliki akses modul admin.')
+        t(
+          'admin.dashboard.no_permissions',
+          'Akun Anda belum memiliki akses modul admin.'
+        )
       }}
     </section>
   </main>

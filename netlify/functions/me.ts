@@ -5,7 +5,6 @@ import { requireAuth } from './_lib/auth'
 
 export const handler: Handler = async (event) => {
   try {
-    // optional tapi bagus: batasi method
     if (event.httpMethod === 'OPTIONS') {
       return json(200, { ok: true }, { Allow: 'GET,OPTIONS' })
     }

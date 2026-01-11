@@ -33,7 +33,7 @@ export function orgSchema() {
   }
 }
 
-// --- Event list (ItemList dari Event)
+// --- Event list
 export type EventItem = {
   id: string | number
   title: string

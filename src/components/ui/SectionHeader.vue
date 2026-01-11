@@ -35,13 +35,11 @@ const wrapAlign = computed(() =>
 
 const titleGradient = computed(() => {
   if (props.tone === 'jade') {
-    // jade + warm highlight (tetap premium, tidak neon)
     return 'bg-gradient-to-r from-jade-200 via-jade-100 to-brand-200'
   }
   if (props.tone === 'neutral') {
     return 'bg-gradient-to-r from-zinc-100 via-zinc-200 to-zinc-100'
   }
-  // premium gold text gradient (dari tailwind.config: gold-text)
   return 'bg-gold-text'
 })
 
@@ -69,7 +67,6 @@ const subtitleSizeClass = computed(() => {
 })
 
 const lineWidthClass = computed(() => {
-  // biar divider “keliatan” dan elegan (center)
   if (props.size === 'hero') return 'w-64 md:w-[560px]'
   if (props.size === 'page') return 'w-64 md:w-[520px]'
   return 'w-48 md:w-72'
@@ -77,7 +74,6 @@ const lineWidthClass = computed(() => {
 
 const lineClass = computed(() => {
   if (props.separator === 'line') {
-    // GOLD divider mewah (dari tailwind.config: gold-line)
     return [
       'bg-gold-line',
       'h-[2px] md:h-[3px]',
@@ -87,7 +83,6 @@ const lineClass = computed(() => {
     ].join(' ')
   }
 
-  // MANTRA divider
   if (props.tone === 'jade') {
     return 'bg-gradient-to-r from-transparent via-brand-400/45 to-transparent'
   }

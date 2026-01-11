@@ -1,21 +1,44 @@
 {
+  "common": {
+    "activity_info": "Activity Info",
+    "view_detail": "View details",
+    "detail": "Details",
+    "date": "Date",
+    "time": "Time",
+    "location": "Location",
+    "open_link": "Open",
+    "contact_via": "Contact"
+  },
+  "social": {
+    "wa_admin": "WhatsApp Admin",
+    "vihara_ig": "Instagram Temple",
+    "pmv_ig": "Instagram Youth",
+    "pmv_tiktok": "TikTok Youth",
+    "gabi_ig": "Instagram Children Group"
+  },
   "nav": {
     "home": "Home",
-    "about": "About",
-    "pmv": "PMV",
-    "gabi": "GABI",
-    "schedule": "Schedule",
+    "about": "About Temple",
+    "pmv": "Youth",
+    "gabi": "Children Group",
+    "schedule": "General",
+    "general": "General",
     "contact": "Contact",
     "login": "Login",
     "logout": "Logout",
-    "admin_pmv": "Manage PMV",
-    "admin_gabi": "Manage GABI",
-    "admin_schedule": "Manage Schedule"
+    "admin_pmv": "Manage Youth",
+    "admin_gabi": "Manage Children Group",
+    "admin_schedule": "Manage Schedule",
+    "admin_quotes": "Manage Quotes",
+    "tagline": "Calm • Modern • Community",
+    "skip_to_content": "Skip to content"
   },
   "login": {
     "title": "Login",
     "email": "Email",
+    "email_placeholder": "name@email.com",
     "password": "Password",
+    "password_placeholder": "Enter your password",
     "submit": "Login",
     "error": "Login failed. Check your email and password."
   },
@@ -23,15 +46,87 @@
     "error_generic": "Something went wrong.",
     "dashboard": {
       "title": "Admin Dashboard",
-      "subtitle": "Choose the module you want to manage."
+      "subtitle": "Choose the module you want to manage.",
+      "signed_in_as": "Signed in as",
+      "pmv_hint": "Add/edit PMV activity information.",
+      "gabi_hint": "Add/edit GABI activity information.",
+      "schedule_hint": "Add/edit regular activity schedules.",
+      "quotes_hint": "Update the weekly quote on the home page.",
+      "no_permissions": "Your account does not have admin module access."
     },
-    "pmv": { "title": "Manage PMV Activities" },
-    "gabi": { "title": "Manage GABI Activities" },
-    "schedule": { "title": "Manage Schedule" }
+    "pmv": { "title": "Manage Youth Activities" },
+    "gabi": { "title": "Manage Buddhist Children Group Activities" },
+    "schedule": { "title": "Manage Schedule" },
+    "field_title": "Title",
+    "field_date": "Date",
+    "field_time": "Time",
+    "field_location": "Location",
+    "field_description": "Description",
+    "field_image": "Image Path (optional)",
+    "add": "Add",
+    "edit": "Edit",
+    "save": "Save",
+    "saving": "Saving...",
+    "create": "Create",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "list": "List",
+    "refresh": "Refresh",
+    "loading": "Loading...",
+    "empty": "No data available.",
+    "confirm_delete": "Delete this item?",
+    "events_desc": "Add, edit, and delete events.",
+    "quotes": {
+      "title": "Manage Weekly Quotes",
+      "subtitle": "Admin task: update the quote displayed on the Home page every week.",
+      "section_update": "Update Quote",
+      "login_note": "Ensure you are logged in as admin to update.",
+      "label_text": "Quote Text",
+      "label_source": "Source",
+      "placeholder_text": "Example: Do not delay doing good...",
+      "placeholder_source": "Example: Sangha Agung Indonesia",
+      "section_preview": "Preview (Home)",
+      "preview_title": "Weekly Quote",
+      "last_update": "Last updated:",
+      "error_session": "Session expired. Please login again.",
+      "error_text_req": "Quote text is required.",
+      "error_source_req": "Quote source is required.",
+      "success_update": "Weekly quote updated successfully."
+    }
+  },
+  "hero": {
+    "badge": "Harmony • Compassion • Peace",
+    "description": "Information on regular activities, Youth, and Buddhist Children Group. Discover the latest community activities — Vihara Avalokitesvara Ponca.",
+    "btn_pmv": "View Youth",
+    "btn_gabi": "View Children Group",
+    "btn_general": "View General Events",
+    "mantra_sub": "May All Beings Be Happy"
+  },
+  "follow_us": {
+    "title": "Follow Us",
+    "subtitle": "Find official temple channels for the latest activity information, documentation, and important announcements.",
+    "wa_title": "Need a quick response?",
+    "wa_desc": "Chat with admin via WhatsApp.",
+    "wa_btn": "Chat on WhatsApp",
+    "social_title": "Social Media",
+    "tap_hint": "Tap to open",
+    "validity_note": "*Ensure you follow official accounts for valid information."
+  },
+  "footer": {
+    "tagline": "Building inner peace and a compassionate community within modern harmony.",
+    "menu_title": "Menu",
+    "connect_title": "Social Media",
+    "visit_btn": "Visit",
+    "made_with": "Made with Metta & Code",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "sitemap": "Sitemap",
+    "rights": "All rights reserved.",
+    "sub_tagline": "Calm • Modern"
   },
   "home": {
-    "title": "Home",
-    "subtitle": "A brief introduction, community agenda, and latest activities.",
+    "title": "Event & Activities",
+    "subtitle": "A brief introduction, agenda, and latest activities.",
     "error": "Failed to load events. Please try again.",
     "no_events": "No scheduled events.",
     "weekly_quote_title": "Weekly Quote",
@@ -39,23 +134,23 @@
     "quote_error": "Failed to load weekly quote.",
     "no_quote": "No quote available this week.",
     "about_title": "About the Vihara",
-    "about_description": "Vihara Avalokitesvara Pondok Cabe is a Buddhayana temple under the Sangha Agung Indonesia, serving the community since the early 1980s. Located on Jalan Pondok Cabe Raya in Pamulang, South Tangerang, it hosts weekly Sunday services, meditation sessions, and programmes for the youth (PMV) and children (GABI)."
+    "about_description": "Vihara Avalokitesvara Pondok Cabe is a Buddhayana temple under the Sangha Agung Indonesia, serving the community since the early 1980s. Located on Jalan Pondok Cabe Raya in Pamulang, South Tangerang, it hosts weekly Sunday services, meditation sessions, and programs for the youth (PMV) and children (GABI)."
   },
   "about": {
-    "title": "About the Vihara",
+    "title": "About the Temple",
     "subtitle": "Temple profile, vision & mission, brief history, and leadership information.",
     "profile": {
       "badge": "Profile",
       "title": "Profile, Vision & Mission",
-      "description": "Vihara Avalokitesvara is a place for spiritual cultivation and service—where the community learns the Dhamma, practises virtue, and strengthens harmony in a calm and orderly atmosphere.",
+      "description": "Avalokitesvara Temple is a place for spiritual cultivation and service—where the community learns the Dhamma, practices virtue, and strengthens harmony in a calm and orderly atmosphere.",
       "vision_title": "Vision",
-      "vision_text": "To be a temple that nurtures wisdom, compassion, and harmony—serving as a welcoming centre for Dhamma education and community growth.",
+      "vision_text": "To be a temple that nurtures wisdom, compassion, and harmony—serving as a welcoming center for Dhamma education and community growth.",
       "mission_title": "Mission",
       "mission_items": [
         "Conduct regular services, meditation sessions, and Dhamma learning.",
         "Encourage character development, discipline, and social care within the community.",
-        "Provide engaging learning spaces for children (GABI) and youth (PMV).",
-        "Cultivate a culture of service (seva) through committees and social programmes."
+        "Provide engaging learning spaces for children and youth.",
+        "Cultivate a culture of service (seva) through committees and social programs."
       ]
     },
     "history": {
@@ -64,11 +159,11 @@
       "timeline": [
         {
           "year": "Early 1980s",
-          "text": "The community began organising simple worship and Dhamma learning activities, gradually growing as the need for a dedicated place of practice increased."
+          "text": "The community began organizing simple worship and Dhamma learning activities, gradually growing as the need for a dedicated place of practice increased."
         },
         {
           "year": "Growth",
-          "text": "Regular programmes became more structured; youth (PMV) and children (GABI) initiatives were strengthened to support long-term cultivation."
+          "text": "Regular programs became more structured; youth and children initiatives were strengthened to support long-term cultivation."
         },
         {
           "year": "Today",
@@ -85,7 +180,7 @@
         {
           "role": "Temple Chair",
           "name": "—",
-          "note": "Coordinates temple programmes and community services."
+          "note": "Coordinates temple programs and community services."
         },
         {
           "role": "Spiritual Advisor / Pandita",
@@ -103,40 +198,40 @@
           "note": "Funds management, reporting, and operational needs."
         },
         {
-          "role": "PMV Coordinator",
+          "role": "Youth Coordinator",
           "name": "—",
           "note": "Youth development and committee activities."
         },
         {
-          "role": "GABI Coordinator",
+          "role": "Buddhist Children Group Coordinator",
           "name": "—",
-          "note": "Children’s programme (Sunday School) and educational activities."
+          "note": "Children’s program (Sunday School) and educational activities."
         }
       ]
     }
   },
   "categories": {
     "all": "All",
-    "pmv": "PMV",
-    "gabi": "GABI",
+    "pmv": "Youth",
+    "gabi": "Children Group",
     "general": "General"
   },
   "pmv": {
-    "title_full": "Vihara Youth Association (PMV)",
-    "desc_full": "PMV is the vihara youth association focused on Dhamma learning, character and leadership development, and service through temple committees and social activities.",
-    "activities": "PMV Activities",
-    "empty": "No PMV activities yet."
+    "title_full": "Temple Youth Association",
+    "desc_full": "The Temple Youth Association focuses on Dhamma learning, character and leadership development, and service through temple committees and social activities.",
+    "activities": "Activities",
+    "empty": "No activities yet."
   },
   "gabi": {
-    "title_full": "Indonesian Buddhist Children Group (GABI)",
-    "desc_full": "GABI is the Sunday School programme for Buddhist children at the vihara. Children learn Buddhist values in a fun way through Dhamma stories, simple chanting, educational games, and creative activities.",
-    "activities": "GABI Activities",
-    "empty": "No GABI activities yet."
+    "title_full": "Indonesian Buddhist Children Group",
+    "desc_full": "The Indonesian Buddhist Children Group is a Sunday School program for Buddhist children at the temple. Children learn Buddhist values in a fun way through Dhamma stories, simple chanting, educational games, and creative activities.",
+    "activities": "Activities",
+    "empty": "No activities yet."
   },
   "schedule": {
     "title": "Schedule & Events",
-    "subtitle": "General schedule and events. Neatly organised for easy access.",
-    "description": "Weekly activities for the community, PMV, and GABI.",
+    "subtitle": "General schedule and events. Neatly organized for easy access.",
+    "description": "Weekly activities for the community, Temple Youth Association, and Indonesian Buddhist Children Group.",
     "upcoming": "Upcoming",
     "empty_upcoming": "No upcoming events yet.",
     "past": "Past",
@@ -158,10 +253,16 @@
   "contact": {
     "title": "Contact & Location",
     "description": "Please contact us or visit our address.",
+    "form_title": "Send Message",
+    "form_subtitle": "We will reply as soon as possible.",
     "name": "Name",
+    "name_placeholder": "Full Name",
     "email": "Email",
+    "email_placeholder": "name@email.com",
     "message": "Message",
-    "submit": "Submit",
+    "message_placeholder": "Write your message here...",
+    "submit": "Send Message",
+    "privacy_note": "Your data is safe with us.",
     "location": "Location",
     "map_placeholder": "Map will be displayed here",
     "address_label": "Address",
@@ -174,5 +275,9 @@
     "not_found": "Event not found.",
     "error_load": "Failed to load event details.",
     "back": "Back to Home"
+  },
+  "not_found": {
+    "message": "Page not found.",
+    "back_btn": "Back to Home"
   }
 }

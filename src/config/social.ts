@@ -1,17 +1,55 @@
+// src/config/social.ts
 export type SocialLink = {
-  key: 'instagram' | 'facebook' | 'youtube' | 'tiktok' | 'whatsapp'
-  label: string
+  key: string
+  labelKey: string
   href: string
+  category: 'vihara' | 'pmv' | 'gabi'
 }
 
-export const SOCIAL_LINKS: SocialLink[] = [
+// 1. Social Media Vihara
+const viharaSocials: SocialLink[] = [
   {
-    key: 'instagram',
-    label: 'Instagram',
-    href: 'https://www.instagram.com/avalokitesvaraponca/',
+    key: 'whatsapp',
+    labelKey: 'social.wa_admin',
+    href: 'https://wa.me/62217401177',
+    category: 'vihara',
   },
-  { key: 'facebook', label: 'Facebook', href: 'https://facebook.com/...' },
-  { key: 'youtube', label: 'YouTube', href: 'https://youtube.com/@...' },
-  { key: 'tiktok', label: 'TikTok', href: 'https://tiktok.com/@...' },
-  { key: 'whatsapp', label: 'WhatsApp', href: 'https://wa.me/62xxxxxxxxxx' },
+  {
+    key: 'vihara-ig',
+    labelKey: 'social.vihara_ig',
+    href: 'https://www.instagram.com/avalokitesvaraponca/',
+    category: 'vihara',
+  },
+]
+
+// 2. Social Media PMV
+const pmvSocials: SocialLink[] = [
+  {
+    key: 'pmv-ig',
+    labelKey: 'social.pmv_ig',
+    href: 'https://www.instagram.com/pmvavalokitesvaraponca/',
+    category: 'pmv',
+  },
+  {
+    key: 'pmv-tiktok',
+    labelKey: 'social.pmv_tiktok',
+    href: 'https://www.tiktok.com/@pmvavalokitesvaraponca?lang=en',
+    category: 'pmv',
+  },
+]
+
+// 3. Social Media GABI
+const gabiSocials: SocialLink[] = [
+  {
+    key: 'gabi-ig',
+    labelKey: 'social.gabi_ig',
+    href: 'https://www.instagram.com/gabi_avalokitesvaraponca/',
+    category: 'gabi',
+  },
+]
+
+export const SOCIAL_LINKS: SocialLink[] = [
+  ...viharaSocials,
+  ...pmvSocials,
+  ...gabiSocials,
 ]

@@ -58,7 +58,7 @@ const routes: RouteRecordRaw[] = [
 
   // ===== EVENT DETAIL =====
   {
-    path: '/event/:id',
+    path: '/events/:id',
     name: 'event-detail',
     component: () => import('@/pages/EventDetail.vue'),
     meta: { title: 'Detail Acara', description: 'Detail acara.' },
@@ -164,7 +164,7 @@ router.beforeEach((to) => {
     return true
   }
 
-  // 🎯 Role-based access
+  // Role-based access
   const allowedRoles = to.meta.roles as string[] | undefined
   if (!allowedRoles || allowedRoles.length === 0) {
     return true

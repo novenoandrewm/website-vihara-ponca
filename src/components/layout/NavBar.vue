@@ -30,13 +30,11 @@ const canManageSchedule = computed(
     (role.value === 'superadmin' || role.value === 'schedule_admin')
 )
 
-// --- PERUBAHAN 1: Logika akses Quotes Admin ---
 const canManageQuotes = computed(
   () =>
     isLoggedIn.value &&
     (role.value === 'superadmin' || role.value === 'quotes_admin')
 )
-// ---------------------------------------------
 
 const open = ref(false)
 const toggle = () => (open.value = !open.value)
@@ -115,7 +113,7 @@ function mobileLinkClass() {
             </div>
 
             <div class="text-[11px] text-zinc-400">
-              Calm • Modern • Community
+              {{ t('nav.tagline') }}
             </div>
           </div>
         </router-link>
@@ -138,7 +136,9 @@ function mobileLinkClass() {
           </router-link>
 
           <router-link v-slot="{ isActive }" to="/schedule">
-            <span :class="linkClass(isActive)">{{ t('nav.schedule') }}</span>
+            <span :class="linkClass(isActive)">{{
+              t('nav.general', 'Umum')
+            }}</span>
           </router-link>
 
           <router-link v-slot="{ isActive }" to="/contact">
@@ -254,7 +254,7 @@ function mobileLinkClass() {
               to="/schedule"
               :class="mobileLinkClass()"
               @click="close"
-              >{{ t('nav.schedule') }}</router-link
+              >{{ t('nav.general', 'Umum') }}</router-link
             >
 
             <router-link

@@ -8,34 +8,20 @@
 [functions]
   directory = "netlify/functions"
 
-# ===== API redirects =====
+# ===== 1. API Redirects (Backend Proxy) =====
 [[redirects]]
-  from = "/api/login"
-  to = "/.netlify/functions/login"
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
   status = 200
+  force = true
 
-[[redirects]]
-  from = "/api/me"
-  to = "/.netlify/functions/me"
-  status = 200
-
-[[redirects]]
-  from = "/api/events"
-  to = "/.netlify/functions/events"
-  status = 200
-
-[[redirects]]
-  from = "/api/events/*"
-  to = "/.netlify/functions/events/:splat"
-  status = 200
-
-# ===== SPA fallback =====
+# ===== 2. SPA Fallback (Frontend Routing) =====
 [[redirects]]
   from = "/*"
   to   = "/index.html"
   status = 200
 
-# ===== Security headers =====
+# ===== 3. Security Headers (CSP Single Line) =====
 [[headers]]
   for = "/*"
   [headers.values]
@@ -45,7 +31,7 @@
     Permissions-Policy = "geolocation=(), microphone=(), camera=()"
     Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
 
-    Content-Security-Policy = "default-src 'self'; base-uri 'self'; frame-ancestors 'none'; frame-src 'self' https://www.google.com https://www.google.com/maps https://maps.google.com; img-src 'self' data: https:; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self';"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; frame-ancestors 'none'; connect-src 'self' https://viharaavalokitesvara.netlify.app; script-src 'self' 'unsafe-inline' https://maps.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https: blob:; frame-src 'self' https://www.google.com https://maps.google.com;"
 
     Cache-Control = "public, max-age=0, must-revalidate"
 
@@ -53,8 +39,3 @@
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-  for = "/index.html"
-  [headers.values]
-    Cache-Control = "no-cache"

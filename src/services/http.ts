@@ -26,12 +26,12 @@ export async function fetchJson<T>(
 
   headers.set('Accept', 'application/json')
 
-  // set Content-Type jika body ada dan belum diset
+  // set Content-Type
   if (init.body && !headers.has('Content-Type')) {
     headers.set('Content-Type', 'application/json')
   }
 
-  // inject Authorization dari session jika ada
+  // inject Authorization
   const authHeaders = getAuthHeader()
   for (const [k, v] of Object.entries(authHeaders)) {
     headers.set(k, v)

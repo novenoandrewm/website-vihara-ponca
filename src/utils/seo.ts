@@ -28,7 +28,6 @@ export function setPageMeta({ title, description, image }: MetaSpec) {
   if (image) {
     const abs = toAbsolute(image)
     upsert('meta[property="og:image"]', 'property', 'og:image', abs)
-    // sinkron Twitter
     upsert(
       'meta[name="twitter:card"]',
       'name',
@@ -82,9 +81,7 @@ function upsertLink(sel: string, rel: string, href: string) {
 }
 
 function toAbsolute(path: string) {
-  // sudah absolut
   if (/^https?:\/\//i.test(path)) return path
-  // relatif -> absolut berbasis origin
   if (typeof location === 'undefined') return path
   return new URL(path, location.origin).toString()
 }

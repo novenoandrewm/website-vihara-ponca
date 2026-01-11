@@ -1,9 +1,12 @@
 <!-- src/components/cards/ActivityCard.vue -->
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import type { RouteLocationRaw } from 'vue-router'
 import BaseCard from '@/components/ui/BaseCard.vue'
 import Badge from '@/components/ui/Badge.vue'
+
+const { t } = useI18n({ useScope: 'global' })
 
 type Tone = 'gold' | 'neutral' | 'jade'
 
@@ -20,7 +23,6 @@ const props = withDefaults(
   { tone: 'neutral' }
 )
 
-// divider emas premium
 const ornamentLine = computed<string>(() => {
   return [
     'bg-gradient-to-r from-transparent via-brand-400/70 to-transparent',
@@ -66,15 +68,14 @@ const linkRing = computed(() => {
     class="group"
     :class="isLink ? 'cursor-pointer' : ''"
   >
-    <!-- FULL clickable overlay -->
     <RouterLink
       v-if="isLink"
       :to="props.to!"
       class="absolute inset-0 z-10 rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
       :class="linkRing"
-      :aria-label="`Buka detail: ${props.title}`"
+      :aria-label="`${t('common.view_detail', 'Lihat detail')}: ${props.title}`"
     >
-      <span class="sr-only">Buka detail</span>
+      <span class="sr-only">{{ t('common.view_detail', 'Lihat detail') }}</span>
     </RouterLink>
 
     <template #header>
@@ -108,12 +109,14 @@ const linkRing = computed(() => {
 
     <template #footer>
       <div class="flex items-center justify-between font-sutra">
-        <span class="text-xs text-zinc-500">Info kegiatan</span>
+        <span class="text-xs text-zinc-500">{{
+          t('common.activity_info', 'Info Kegiatan')
+        }}</span>
         <span
           v-if="isLink"
           class="text-xs text-brand-200 transition group-hover:text-brand-100"
         >
-          Detail →
+          {{ t('common.detail', 'Detail') }} →
         </span>
       </div>
     </template>

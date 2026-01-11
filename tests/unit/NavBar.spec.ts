@@ -6,7 +6,6 @@ import { createI18n } from 'vue-i18n'
 import NavBar from '@/components/layout/NavBar.vue'
 import { useAuthStore } from '@/store/auth'
 
-// Import messages i18n (pastikan path ini sesuai struktur project kamu)
 import id from '@/i18n/id.json'
 import en from '@/i18n/en.json'
 
@@ -37,7 +36,6 @@ function mountNavBar() {
 describe('NavBar', () => {
   beforeEach(() => {
     localStorage.clear()
-    // reset locale tiap test biar konsisten
     i18n.global.locale.value = 'id'
   })
 
@@ -50,7 +48,7 @@ describe('NavBar', () => {
     await burger.trigger('click')
     expect(burger.attributes('aria-expanded')).toBe('true')
 
-    // klik EN
+    // Click EN
     const btnEN = wrapper
       .findAll('button')
       .find((b) => b.text().trim() === 'EN')
@@ -61,7 +59,7 @@ describe('NavBar', () => {
     expect(i18n.global.locale.value).toBe('en')
     expect(localStorage.getItem('locale')).toBe('en')
 
-    // klik ID
+    // Click ID
     const btnID = wrapper
       .findAll('button')
       .find((b) => b.text().trim() === 'ID')

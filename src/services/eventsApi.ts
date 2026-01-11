@@ -7,6 +7,7 @@ export type EventItem = {
   id: string
   title: string
   date: string
+  time?: string
   location: string
   category: EventCategory
   description: string

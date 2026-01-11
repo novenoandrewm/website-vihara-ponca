@@ -77,15 +77,12 @@ export default async function handler(req: Request): Promise<Response> {
       return json({ latest })
     }
 
-    // 2. POST: Protected
     if (req.method === 'POST') {
-      // Verifikasi Token
       const { ok, role, error } = checkAuth(req)
       if (!ok) {
         return json({ error: error || 'Unauthorized' }, 401)
       }
 
-      // Cek Role
       if (role !== 'superadmin' && role !== 'quotes_admin') {
         return json(
           { error: 'Forbidden: Anda tidak memiliki akses quotes admin.' },
@@ -93,7 +90,6 @@ export default async function handler(req: Request): Promise<Response> {
         )
       }
 
-      // Proses Data
       const body = (await req.json().catch(() => null)) as unknown
       if (!isRecord(body)) {
         return json({ error: 'Body JSON tidak valid.' }, 400)

@@ -21,7 +21,7 @@ vi.mock('@/services/events', () => ({
 
 it('menyembunyikan skeleton dan menampilkan dua kartu', async () => {
   const wrapper = mount(Home)
-  await flushPromises() // tunggu onMounted + promise service
+  await flushPromises()
   expect(wrapper.html()).not.toMatch(/skeleton/i)
   expect(wrapper.text()).toContain('Puja Bakti Umum Mingguan')
   expect(wrapper.text()).toContain('Kegiatan PMV')

@@ -89,7 +89,6 @@ const topShine = computed(() => {
   return 'bg-gradient-to-r from-transparent via-white/10 to-transparent'
 })
 
-// subtle lacquer aura (lebih elegan)
 const auraGlow = computed(() => {
   if (props.tone === 'jade') return 'bg-jade-500/8'
   if (props.tone === 'gold') return 'bg-brand-500/9'
@@ -102,6 +101,7 @@ const outerClassName = computed(() =>
     frameClass.value,
     props.hover ? 'hover:shadow-glow' : '',
     props.interactive ? 'outline-none' : '',
+    'h-full',
   ]
     .filter(Boolean)
     .join(' ')
@@ -114,6 +114,7 @@ const innerClassName = computed(() =>
     paddingClass.value,
     hoverClass.value,
     interactiveClass.value,
+    'h-full flex flex-col',
   ]
     .filter(Boolean)
     .join(' ')
@@ -124,23 +125,19 @@ const tabIndex = computed(() => (props.interactive ? 0 : -1))
 
 <template>
   <component :is="as" :class="outerClassName" :tabindex="tabIndex">
-    <!-- inner surface -->
     <div :class="innerClassName">
-      <!-- subtle inner ring -->
       <div
         aria-hidden="true"
         class="pointer-events-none absolute inset-0 rounded-2xl ring-1"
         :class="ringTint"
       />
 
-      <!-- top shine -->
       <div
         aria-hidden="true"
         class="pointer-events-none absolute inset-x-0 top-0 h-px"
         :class="topShine"
       />
 
-      <!-- premium corner aura -->
       <div
         aria-hidden="true"
         class="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full blur-3xl"
@@ -151,15 +148,18 @@ const tabIndex = computed(() => (props.interactive ? 0 : -1))
         class="bg-brand-500/4 pointer-events-none absolute -bottom-16 -left-16 h-64 w-64 rounded-full blur-3xl"
       />
 
-      <header v-if="$slots.header" class="mb-4">
+      <header v-if="$slots.header" class="mb-4 shrink-0">
         <slot name="header" />
       </header>
 
-      <div>
+      <div class="flex flex-1 flex-col">
         <slot />
       </div>
 
-      <footer v-if="$slots.footer" class="mt-5 text-sm text-zinc-300">
+      <footer
+        v-if="$slots.footer"
+        class="mt-auto shrink-0 pt-5 text-sm text-zinc-300"
+      >
         <slot name="footer" />
       </footer>
     </div>

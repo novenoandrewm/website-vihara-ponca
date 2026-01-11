@@ -1,5 +1,4 @@
 <!-- src/cpmponents/admin/AdminEventsManager.vue -->
-
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -33,6 +32,7 @@ const items = computed(() =>
 const editingId = ref<string | null>(null)
 const title = ref('')
 const date = ref('')
+const time = ref('')
 const location = ref('')
 const description = ref('')
 const image = ref('')
@@ -54,6 +54,7 @@ function resetForm() {
   editingId.value = null
   title.value = ''
   date.value = ''
+  time.value = ''
   location.value = ''
   description.value = ''
   image.value = ''
@@ -63,6 +64,7 @@ function startEdit(e: EventItem) {
   editingId.value = e.id
   title.value = e.title
   date.value = e.date
+  time.value = e.time ?? ''
   location.value = e.location
   description.value = e.description
   image.value = e.image ?? ''
@@ -86,6 +88,7 @@ async function submit() {
   const payload = {
     title: title.value.trim(),
     date: date.value,
+    time: time.value.trim() || undefined,
     location: location.value.trim(),
     description: description.value.trim(),
     image: image.value.trim() || undefined,
@@ -146,7 +149,6 @@ onMounted(() => void refresh())
     </div>
 
     <section class="grid gap-6 md:grid-cols-2">
-      <!-- Form -->
       <form
         class="space-y-3 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4"
         @submit.prevent="() => void submit()"
@@ -168,17 +170,31 @@ onMounted(() => void refresh())
           />
         </div>
 
-        <div>
-          <label class="mb-1 block text-sm" for="date">{{
-            t('admin.field_date', 'Tanggal')
-          }}</label>
-          <input
-            id="date"
-            v-model="date"
-            type="date"
-            class="w-full rounded border border-zinc-600 bg-zinc-800 p-2 text-zinc-200"
-            required
-          />
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="mb-1 block text-sm" for="date">{{
+              t('admin.field_date', 'Tanggal')
+            }}</label>
+            <input
+              id="date"
+              v-model="date"
+              type="date"
+              class="w-full rounded border border-zinc-600 bg-zinc-800 p-2 text-zinc-200"
+              required
+            />
+          </div>
+
+          <div>
+            <label class="mb-1 block text-sm" for="time">{{
+              t('admin.field_time', 'Waktu')
+            }}</label>
+            <input
+              id="time"
+              v-model="time"
+              type="time"
+              class="w-full rounded border border-zinc-600 bg-zinc-800 p-2 text-zinc-200"
+            />
+          </div>
         </div>
 
         <div>
@@ -240,7 +256,6 @@ onMounted(() => void refresh())
         </div>
       </form>
 
-      <!-- List -->
       <section
         class="space-y-3 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4"
       >
@@ -272,7 +287,11 @@ onMounted(() => void refresh())
               <div>
                 <h3 class="font-semibold">{{ e.title }}</h3>
                 <p class="mt-1 text-sm text-zinc-300">
-                  {{ e.date }} • {{ e.location }}
+                  {{ e.date }}
+                  <span v-if="e.time" class="text-brand-300">
+                    ({{ e.time }})
+                  </span>
+                  • {{ e.location }}
                 </p>
                 <p class="mt-2 line-clamp-3 text-sm text-zinc-300">
                   {{ e.description }}
@@ -302,4 +321,3 @@ onMounted(() => void refresh())
     </section>
   </main>
 </template>
-<style scoped></style>
