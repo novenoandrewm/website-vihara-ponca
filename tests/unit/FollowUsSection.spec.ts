@@ -64,7 +64,7 @@ describe('FollowUsSection.vue', () => {
     const wrapper = mount(FollowUsSection, { global: globalOptions })
     const waLink = wrapper.find('a[href="https://wa.me/628123"]')
     expect(waLink.exists()).toBe(true)
-    expect(waLink.text()).toContain('social.wa_admin')
+    expect(waLink.text()).toContain('follow_us.wa_btn')
   })
 
   it('menampilkan sisa sosial media di grid kanan', () => {
