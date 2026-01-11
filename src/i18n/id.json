@@ -36,7 +36,7 @@
   "login": {
     "title": "Masuk",
     "email": "Email",
-    "email_placeholder": "nama@email.com",
+    "email_placeholder": "nama{'@'}email.com",
     "password": "Kata sandi",
     "password_placeholder": "Masukkan kata sandi",
     "submit": "Masuk",
@@ -258,7 +258,7 @@
     "name": "Nama",
     "name_placeholder": "Nama Lengkap",
     "email": "Email",
-    "email_placeholder": "nama@email.com",
+    "email_placeholder": "nama{'@'}email.com",
     "message": "Pesan",
     "message_placeholder": "Tulis pesan Anda di sini...",
     "submit": "Kirim Pesan",

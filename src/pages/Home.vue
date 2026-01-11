@@ -105,7 +105,7 @@ onMounted(async () => {
 
     <section
       id="weekly"
-      class="section-screen relative z-20 -mt-40 overflow-hidden pt-32"
+      class="section-screen relative z-20 -mt-40 overflow-hidden pt-24 md:pt-32"
     >
       <div class="pointer-events-none absolute inset-0 -z-20 overflow-hidden">
         <div
@@ -120,8 +120,8 @@ onMounted(async () => {
         ></div>
       </div>
 
-      <Container class="relative z-10 h-full py-10 md:py-14">
-        <div class="grid items-center gap-10 md:grid-cols-2 md:gap-12">
+      <Container class="relative z-10 h-full py-8 md:py-14">
+        <div class="grid items-center gap-6 md:grid-cols-2 md:gap-12">
           <div class="relative flex items-center justify-center">
             <div
               class="absolute left-6 top-6 hidden select-none font-mantra text-[160px] font-semibold leading-none text-brand-300/[0.06] md:block"
@@ -148,7 +148,7 @@ onMounted(async () => {
               class="relative rounded-3xl bg-gradient-to-br from-brand-300/40 via-white/10 to-brand-300/5 p-px shadow-2xl backdrop-blur-md"
             >
               <div
-                class="relative h-full w-full rounded-3xl bg-zinc-800/60 p-8 md:p-10"
+                class="relative h-full w-full rounded-3xl bg-zinc-800/60 p-6 md:p-10"
               >
                 <div
                   class="absolute left-0 top-0 h-8 w-8 rounded-tl-3xl border-l-2 border-t-2 border-brand-400/30"
@@ -183,7 +183,7 @@ onMounted(async () => {
                   ></div>
                 </div>
 
-                <div class="relative mt-8">
+                <div class="relative mt-6 md:mt-8">
                   <p v-if="quoteError" class="text-red-200">
                     {{ quoteError }}
                   </p>
@@ -192,7 +192,7 @@ onMounted(async () => {
                     {{ t('home.quote_loading', 'Memuat kutipan...') }}
                   </p>
 
-                  <div v-else-if="quote" class="space-y-6">
+                  <div v-else-if="quote" class="space-y-4 md:space-y-6">
                     <blockquote
                       class="quote-text font-sutra italic leading-relaxed text-zinc-50 drop-shadow-sm"
                     >
@@ -361,10 +361,11 @@ onMounted(async () => {
 
 @media (max-width: 767px) {
   .circle-wrap {
-    height: min(560px, 60vh);
+    height: min(340px, 42vh);
+    margin-inline: auto;
   }
   .circle-img {
-    object-position: center 22%;
+    object-position: center 15%;
   }
 }
 

@@ -36,7 +36,7 @@
   "login": {
     "title": "Login",
     "email": "Email",
-    "email_placeholder": "name@email.com",
+    "email_placeholder": "name{'@'}email.com",
     "password": "Password",
     "password_placeholder": "Enter your password",
     "submit": "Login",
@@ -258,7 +258,7 @@
     "name": "Name",
     "name_placeholder": "Full Name",
     "email": "Email",
-    "email_placeholder": "name@email.com",
+    "email_placeholder": "name{'@'}email.com",
     "message": "Message",
     "message_placeholder": "Write your message here...",
     "submit": "Send Message",
