@@ -3,7 +3,14 @@ import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi } from 'vitest'
 import FollowUsSection from '@/components/sections/FollowUsSection.vue'
 
-// 1. Mock Data Config
+// 1. Mock vue-i18n
+vi.mock('vue-i18n', () => ({
+  useI18n: () => ({
+    t: (key: string) => key,
+  }),
+}))
+
+// 2. Mock Data Config
 vi.mock('@/config/social', () => ({
   SOCIAL_LINKS: [
     {
@@ -27,12 +34,8 @@ vi.mock('@/config/social', () => ({
   ],
 }))
 
-// 2. Mock Helper i18n
-const t = (key: string) => key
-
 describe('FollowUsSection.vue', () => {
   const globalOptions = {
-    mocks: { t },
     stubs: {
       BaseButton: { template: '<button><slot /></button>' },
       Icon: true,
@@ -49,27 +52,25 @@ describe('FollowUsSection.vue', () => {
     const wrapper = mount(FollowUsSection, {
       global: globalOptions,
       props: {
-        title: 'Hubungi Kami',
-        subtitle: 'Silakan kontak admin',
+        title: 'Halo Dunia',
+        subtitle: 'Ini Subtitle',
       },
     })
-    expect(wrapper.text()).toContain('Hubungi Kami')
-    expect(wrapper.text()).toContain('Silakan kontak admin')
+    expect(wrapper.text()).toContain('Halo Dunia')
+    expect(wrapper.text()).toContain('Ini Subtitle')
   })
 
   it('memisahkan WhatsApp ke bagian kiri (tombol besar)', () => {
     const wrapper = mount(FollowUsSection, { global: globalOptions })
     const waLink = wrapper.find('a[href="https://wa.me/628123"]')
     expect(waLink.exists()).toBe(true)
-    expect(waLink.text()).toContain('follow_us.wa_btn')
+    expect(waLink.text()).toContain('social.wa_admin')
   })
 
   it('menampilkan sisa sosial media di grid kanan', () => {
     const wrapper = mount(FollowUsSection, { global: globalOptions })
     const gridLinks = wrapper.findAll('.grid.gap-3 a')
-
     expect(gridLinks.length).toBe(2)
-
     const hrefs = gridLinks.map((l) => l.attributes('href'))
     expect(hrefs).toContain('https://ig.com/vihara')
     expect(hrefs).toContain('https://fb.com/vihara')
