@@ -1,3 +1,4 @@
+// netlify/functions/_lib/github.ts
 type GitHubContentResponse = {
   sha: string
   content: string
@@ -30,12 +31,32 @@ function ghHeaders(): Record<string, string> {
   }
 }
 
+export function getRepoConfig() {
+  let repo = mustEnv('GITHUB_REPO')
+  let owner = process.env.GITHUB_OWNER
+
+  // Handle format "username/repo"
+  if (repo.includes('/')) {
+    const parts = repo.split('/')
+    owner = parts[0]
+    repo = parts[1]
+  }
+
+  if (!owner) {
+    throw new Error(
+      'GITHUB_OWNER is not set and GITHUB_REPO does not contain owner/repo format'
+    )
+  }
+
+  const branch = process.env.GITHUB_BRANCH || 'main'
+
+  return { owner, repo, branch }
+}
+
 export async function readRepoJson<T>(
   path: string
 ): Promise<{ data: T; sha: string }> {
-  const owner = mustEnv('GITHUB_OWNER')
-  const repo = mustEnv('GITHUB_REPO')
-  const branch = process.env.GITHUB_BRANCH || 'main'
+  const { owner, repo, branch } = getRepoConfig()
 
   const encodedPath = encodeGitHubPath(path)
   const url =
@@ -46,6 +67,7 @@ export async function readRepoJson<T>(
 
   if (!res.ok) {
     const text = await res.text()
+    console.error(`GitHub Read Error (${res.status}): ${url}`, text)
     throw new Error(`GitHub read failed: ${res.status} ${text}`)
   }
 
@@ -60,9 +82,7 @@ export async function writeRepoJson(
   sha: string,
   message: string
 ): Promise<unknown> {
-  const owner = mustEnv('GITHUB_OWNER')
-  const repo = mustEnv('GITHUB_REPO')
-  const branch = process.env.GITHUB_BRANCH || 'main'
+  const { owner, repo, branch } = getRepoConfig()
 
   const encodedPath = encodeGitHubPath(path)
   const url = `${GH_API}/repos/${owner}/${repo}/contents/${encodedPath}`
@@ -83,6 +103,7 @@ export async function writeRepoJson(
 
   if (!res.ok) {
     const text = await res.text()
+    console.error(`GitHub Write Error (${res.status}): ${url}`, text)
     throw new Error(`GitHub write failed: ${res.status} ${text}`)
   }
 

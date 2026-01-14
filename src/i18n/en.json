@@ -30,7 +30,7 @@
     "admin_gabi": "Manage Children Group",
     "admin_schedule": "Manage Schedule",
     "admin_quotes": "Manage Quotes",
-    "tagline": "Calm • Modern • Community",
+    "tagline": "Harmony • Compassion • Peace",
     "skip_to_content": "Skip to content"
   },
   "login": {
@@ -117,7 +117,7 @@
     "menu_title": "Menu",
     "connect_title": "Social Media",
     "visit_btn": "Visit",
-    "made_with": "Made with Metta & Code",
+    "made_with": "Made with Metta",
     "privacy": "Privacy",
     "terms": "Terms",
     "sitemap": "Sitemap",
@@ -230,7 +230,7 @@
   },
   "schedule": {
     "title": "Schedule & Events",
-    "subtitle": "General schedule and events. Neatly organized for easy access.",
+    "subtitle": "General schedule and events.",
     "description": "Weekly activities for the community, Temple Youth Association, and Indonesian Buddhist Children Group.",
     "upcoming": "Upcoming",
     "empty_upcoming": "No upcoming events yet.",

@@ -30,7 +30,7 @@
     "admin_gabi": "Kelola GABI",
     "admin_schedule": "Kelola Jadwal",
     "admin_quotes": "Kelola Quotes",
-    "tagline": "Tenang • Modern • Komunitas",
+    "tagline": "Harmoni • Welas Asih • Kedamaian",
     "skip_to_content": "Lompat ke konten"
   },
   "login": {
@@ -117,7 +117,7 @@
     "menu_title": "Menu",
     "connect_title": "Sosial Media",
     "visit_btn": "Kunjungi",
-    "made_with": "Dibuat dengan Metta & Kode",
+    "made_with": "Dibuat dengan Metta",
     "privacy": "Privasi",
     "terms": "Syarat",
     "sitemap": "Peta Situs",
@@ -230,7 +230,7 @@
   },
   "schedule": {
     "title": "Jadwal & Event",
-    "subtitle": "Jadwal kegiatan dan event umum. Update disusun rapi agar mudah diikuti.",
+    "subtitle": "Jadwal kegiatan dan event umum.",
     "description": "Jadwal kegiatan rutin untuk umat, PMV, dan GABI.",
     "upcoming": "Upcoming",
     "empty_upcoming": "Belum ada jadwal terdekat.",

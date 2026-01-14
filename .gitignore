@@ -48,3 +48,5 @@ Thumbs.db
 
 # Deno
 deno.lock
+
+check-token.js

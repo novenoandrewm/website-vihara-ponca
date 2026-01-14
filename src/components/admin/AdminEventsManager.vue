@@ -10,6 +10,7 @@ import {
   updateEvent,
   deleteEvent,
 } from '@/services/eventsApi'
+import { uploadEventImage } from '@/services/events'
 
 const props = defineProps<{
   category: EventCategory
@@ -37,6 +38,10 @@ const location = ref('')
 const description = ref('')
 const image = ref('')
 
+// State for upload file
+const selectedFile = ref<File | null>(null)
+const imagePreview = ref<string | null>(null)
+
 const isEditing = computed(() => editingId.value !== null)
 
 function getErrMsg(err: unknown): string | null {
@@ -58,6 +63,10 @@ function resetForm() {
   location.value = ''
   description.value = ''
   image.value = ''
+
+  // Reset state file upload
+  selectedFile.value = null
+  imagePreview.value = null
 }
 
 function startEdit(e: EventItem) {
@@ -68,6 +77,26 @@ function startEdit(e: EventItem) {
   location.value = e.location
   description.value = e.description
   image.value = e.image ?? ''
+
+  // Set preview image if exists
+  imagePreview.value = e.image ?? null
+  selectedFile.value = null
+}
+
+function handleFileChange(event: Event) {
+  const target = event.target as HTMLInputElement
+  if (target.files && target.files.length > 0) {
+    const file = target.files[0]
+    selectedFile.value = file
+    imagePreview.value = URL.createObjectURL(file)
+  }
+}
+
+// Handler to delete selected/existing image
+function clearImage() {
+  selectedFile.value = null
+  imagePreview.value = null
+  image.value = ''
 }
 
 async function refresh() {
@@ -85,25 +114,32 @@ async function refresh() {
 async function submit() {
   errorMsg.value = null
 
-  const payload = {
-    title: title.value.trim(),
-    date: date.value,
-    time: time.value.trim() || undefined,
-    location: location.value.trim(),
-    description: description.value.trim(),
-    image: image.value.trim() || undefined,
-    category: props.category,
-  }
-
-  if (
-    !payload.title ||
-    !payload.date ||
-    !payload.location ||
-    !payload.description
-  )
-    return
-
   try {
+    let finalImagePath = image.value
+
+    if (selectedFile.value) {
+      finalImagePath = await uploadEventImage(selectedFile.value)
+    }
+
+    // Prepare the payload with the final image URL.
+    const payload = {
+      title: title.value.trim(),
+      date: date.value,
+      time: time.value.trim() || undefined,
+      location: location.value.trim(),
+      description: description.value.trim(),
+      image: finalImagePath || undefined,
+      category: props.category,
+    }
+
+    if (
+      !payload.title ||
+      !payload.date ||
+      !payload.location ||
+      !payload.description
+    )
+      return
+
     if (isEditing.value && editingId.value) {
       await updateEvent(editingId.value, payload)
     } else {
@@ -224,22 +260,46 @@ onMounted(() => void refresh())
         </div>
 
         <div>
-          <label class="mb-1 block text-sm" for="image">{{
-            t('admin.field_image', 'Path Gambar (opsional)')
-          }}</label>
+          <label class="mb-1 block text-sm" for="imageFile">
+            {{ t('admin.field_image', 'Gambar Event (opsional)') }}
+          </label>
+
           <input
-            id="image"
-            v-model="image"
-            type="text"
-            class="w-full rounded border border-zinc-600 bg-zinc-800 p-2 text-zinc-200"
-            placeholder="/images/xxx.jpg"
+            id="imageFile"
+            type="file"
+            accept="image/*"
+            class="w-full rounded border border-zinc-600 bg-zinc-800 p-2 text-zinc-200 file:mr-4 file:rounded file:border-0 file:bg-brand-500 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-brand-600"
+            @change="handleFileChange"
           />
+
+          <div v-if="imagePreview" class="mt-3">
+            <div class="mb-1 flex items-center justify-between">
+              <p class="text-xs text-zinc-400">Pratinjau:</p>
+              <button
+                type="button"
+                class="text-xs text-red-400 hover:text-red-300 hover:underline"
+                @click="clearImage"
+              >
+                Hapus Gambar
+              </button>
+            </div>
+            <div
+              class="relative h-48 w-full overflow-hidden rounded-lg border border-zinc-700 bg-black/50"
+            >
+              <img
+                :src="imagePreview"
+                alt="Preview"
+                class="h-full w-full object-contain"
+              />
+            </div>
+          </div>
         </div>
 
-        <div class="flex gap-2">
+        <div class="flex gap-2 pt-2">
           <button
             type="submit"
-            class="rounded bg-brand-500 px-4 py-2 text-white hover:bg-brand-600"
+            class="rounded bg-brand-500 px-4 py-2 text-white hover:bg-brand-600 disabled:opacity-50"
+            :disabled="loading"
           >
             {{
               isEditing ? t('admin.save', 'Simpan') : t('admin.create', 'Buat')
@@ -295,6 +355,9 @@ onMounted(() => void refresh())
                 </p>
                 <p class="mt-2 line-clamp-3 text-sm text-zinc-300">
                   {{ e.description }}
+                </p>
+                <p v-if="e.image" class="mt-1 text-xs text-brand-400">
+                  Has Image
                 </p>
               </div>
 

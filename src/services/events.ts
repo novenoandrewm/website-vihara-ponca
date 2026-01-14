@@ -102,3 +102,50 @@ export async function deleteEvent(id: string): Promise<{ ok: true }> {
     }
   )
 }
+
+// --- Helper to convert File to Base64 ---
+function toBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => resolve(reader.result as string)
+    reader.onerror = (error) => reject(error)
+  })
+}
+
+/* ADMIN: upload image (UPDATED: Sends JSON Base64) */
+export async function uploadEventImage(file: File): Promise<string> {
+  const base = baseUrl()
+
+  // 1. Convert physical file to Base64 string
+  const base64String = await toBase64(file)
+  const content = base64String.split(',')[1]
+
+  // 2. Send to endpoint as JSON
+  const res = await fetch(`${base}api/upload`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeader(),
+    },
+    body: JSON.stringify({
+      filename: file.name,
+      filetype: file.type,
+      content: content,
+    }),
+  })
+
+  if (!res.ok) {
+    let msg = 'Gagal mengunggah gambar'
+    try {
+      const errData = await res.json()
+      if (errData.error) msg = errData.error
+    } catch {
+      // ignore json parse error
+    }
+    throw new Error(msg)
+  }
+
+  const data = await res.json()
+  return data.url
+}

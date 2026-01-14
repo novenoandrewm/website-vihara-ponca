@@ -121,7 +121,7 @@ onMounted(async () => {
       </div>
 
       <Container class="relative z-10 h-full py-8 md:py-14">
-        <div class="grid items-center gap-6 md:grid-cols-2 md:gap-12">
+        <div class="grid items-center gap-6 md:grid-cols-2 md:gap-20 lg:gap-32">
           <div class="relative flex items-center justify-center">
             <div
               class="absolute left-6 top-6 hidden select-none font-mantra text-[160px] font-semibold leading-none text-brand-300/[0.06] md:block"
@@ -306,8 +306,10 @@ onMounted(async () => {
 }
 
 .circle-shift {
-  transform: translateX(10px);
+  /* Mobile */
+  transform: translateX(0);
 }
+
 @media (min-width: 768px) {
   .circle-shift {
     transform: translateX(18px);
@@ -359,6 +361,7 @@ onMounted(async () => {
   pointer-events: none;
 }
 
+/* MOBILE */
 @media (max-width: 767px) {
   .circle-wrap {
     height: min(340px, 42vh);
