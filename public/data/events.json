@@ -19,6 +19,15 @@
     "time": "10:00"
   },
   {
+    "id": "6ce200a6-16f7-42f6-aa4d-4d3509ce052d",
+    "title": "Perayaan Imlek",
+    "date": "2026-02-16",
+    "location": "Vihara Kwan In Thang",
+    "category": "general",
+    "description": "* Barongsai & Wushu : 20.00 WIB\n* Puja Bakti oleh Anggota Sangha : 21.00 WIB\n* Pembagian Angpao oleh Chai Sen : 22.30 WIB",
+    "image": "https://raw.githubusercontent.com/novenoandrewm/website-vihara-ponca/main/public/uploads/1768416259608-whatsapp-image-2026-01-14-at-9.09.37-am.jpeg"
+  },
+  {
     "id": "e2",
     "title": "Kegiatan PMV",
     "date": "2026-02-23",
