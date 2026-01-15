@@ -196,7 +196,7 @@ const pageDesc = computed(() =>
             :location="e.location"
             :description="e.description"
             :image="e.image"
-            :category="e.category"
+            :category="e.category as 'pmv' | 'gabi' | 'general'"
             :to="'/events/' + e.id"
           />
         </div>
