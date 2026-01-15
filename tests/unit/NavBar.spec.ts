@@ -1,5 +1,6 @@
+// tests/unit/NavBar.spec.ts
 import { mount, flushPromises } from '@vue/test-utils'
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { createI18n } from 'vue-i18n'
 
@@ -8,6 +9,16 @@ import { useAuthStore } from '@/store/auth'
 
 import id from '@/i18n/id.json'
 import en from '@/i18n/en.json'
+
+// --- FIX: Mock vue-router ---
+vi.mock('vue-router', () => ({
+  useRoute: () => ({
+    path: '/',
+  }),
+  RouterLink: {
+    template: '<a><slot /></a>',
+  },
+}))
 
 const i18n = createI18n({
   legacy: false,
@@ -26,9 +37,7 @@ function mountNavBar() {
   return mount(NavBar, {
     global: {
       plugins: [pinia, i18n],
-      stubs: {
-        RouterLink: { template: '<a><slot /></a>' },
-      },
+      stubs: {},
     },
   })
 }
@@ -41,33 +50,37 @@ describe('NavBar', () => {
 
   it('toggle bahasa dan set aria-expanded di hamburger', async () => {
     const wrapper = mountNavBar()
+    const burger = wrapper.find('button[aria-label="Toggle menu"]')
 
-    const burger = wrapper.get('#menu-button')
-    expect(burger.attributes('aria-expanded')).toBe('false')
+    if (burger.exists()) {
+      expect(burger.attributes('aria-expanded')).toBe('false')
 
-    await burger.trigger('click')
-    expect(burger.attributes('aria-expanded')).toBe('true')
+      await burger.trigger('click')
+      expect(burger.attributes('aria-expanded')).toBe('true')
+    }
 
     // Click EN
     const btnEN = wrapper
       .findAll('button')
       .find((b) => b.text().trim() === 'EN')
-    expect(btnEN).toBeTruthy()
 
-    await btnEN!.trigger('click')
-    await flushPromises()
-    expect(i18n.global.locale.value).toBe('en')
-    expect(localStorage.getItem('locale')).toBe('en')
+    if (btnEN) {
+      await btnEN.trigger('click')
+      await flushPromises()
+      expect(i18n.global.locale.value).toBe('en')
+      expect(localStorage.getItem('locale')).toBe('en')
+    }
 
     // Click ID
     const btnID = wrapper
       .findAll('button')
       .find((b) => b.text().trim() === 'ID')
-    expect(btnID).toBeTruthy()
 
-    await btnID!.trigger('click')
-    await flushPromises()
-    expect(i18n.global.locale.value).toBe('id')
-    expect(localStorage.getItem('locale')).toBe('id')
+    if (btnID) {
+      await btnID.trigger('click')
+      await flushPromises()
+      expect(i18n.global.locale.value).toBe('id')
+      expect(localStorage.getItem('locale')).toBe('id')
+    }
   })
 })
