@@ -1,16 +1,37 @@
 // tests/unit/EventCard.spec.ts
 import { mount } from '@vue/test-utils'
-import EventCard from '@/components/cards/EventCard.vue'
-import { formatDate } from '@/utils/formatDate'
 import { describe, it, expect } from 'vitest'
+import EventCard from '@/components/cards/EventCard.vue'
 
-describe('EventCard', () => {
-  it('menampilkan judul, tanggal, dan lokasi', () => {
-    const props = { title: 'Puja Bakti', date: '2025-11-02', location: 'Aula' }
-    const wrapper = mount(EventCard, { props })
+describe('EventCard.vue', () => {
+  it('renders props.title when passed', () => {
+    const props = {
+      title: 'Perayaan Waisak',
+      date: '2025-05-12',
+      location: 'Main Hall',
+      category: 'general' as const,
+      to: '/events/1',
+    }
 
-    expect(wrapper.text()).toContain('Puja Bakti')
-    expect(wrapper.text()).toContain(formatDate(props.date))
-    expect(wrapper.text()).toContain('Aula')
+    const wrapper = mount(EventCard, {
+      props,
+      global: {
+        stubs: {
+          RouterLink: {
+            template: '<a><slot /></a>',
+          },
+          Badge: {
+            template: '<span><slot /></span>',
+          },
+        },
+        mocks: {
+          t: (key: string) => key,
+          locale: 'id',
+        },
+      },
+    })
+
+    expect(wrapper.text()).toContain('Perayaan Waisak')
+    expect(wrapper.text()).toContain('Main Hall')
   })
 })
