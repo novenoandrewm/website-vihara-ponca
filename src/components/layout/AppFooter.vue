@@ -55,7 +55,7 @@ function getCategoryColor(category: string) {
 
 <template>
   <footer
-    class="relative mt-32 border-t border-brand-500/40 bg-zinc-900/90 text-zinc-300 backdrop-blur-xl"
+    class="content-visibility-auto contain-intrinsic-size-[600px] relative mt-32 border-t border-brand-500/40 bg-zinc-900/90 text-zinc-300 backdrop-blur-xl"
     role="contentinfo"
     aria-label="Informasi situs"
   >
@@ -65,11 +65,11 @@ function getCategoryColor(category: string) {
     />
 
     <div
-      class="pointer-events-none absolute inset-x-0 top-0 -mt-24 flex justify-center opacity-15"
+      class="pointer-events-none absolute inset-x-0 top-0 -mt-24 flex justify-center overflow-hidden opacity-15"
       aria-hidden="true"
     >
       <div
-        class="h-[300px] w-[600px] rounded-full bg-brand-400/20 blur-[120px]"
+        class="h-[300px] w-[600px] transform-gpu rounded-full bg-brand-400/20 blur-[120px] will-change-transform"
       />
     </div>
 
@@ -127,12 +127,12 @@ function getCategoryColor(category: string) {
             </div>
           </div>
 
-          <nav class="grid gap-1 text-sm" aria-label="Footer navigation">
+          <nav class="grid gap-2 text-sm" aria-label="Footer navigation">
             <RouterLink
               v-for="l in menuLinks"
               :key="l.to"
               :to="l.to"
-              class="group flex items-center justify-between rounded-lg px-3 py-2 text-zinc-400 transition-all duration-300 hover:bg-white/10 hover:pl-5 hover:text-brand-200"
+              class="group flex min-h-[44px] items-center justify-between rounded-lg px-3 py-2 text-zinc-400 transition-all duration-300 hover:bg-white/10 hover:pl-5 hover:text-brand-200 active:bg-white/20"
             >
               <span class="font-medium">{{ t(l.labelKey) }}</span>
               <svg
@@ -162,7 +162,7 @@ function getCategoryColor(category: string) {
             </div>
           </div>
 
-          <div class="grid gap-2">
+          <div class="grid gap-3">
             <a
               v-for="s in currentSocials"
               :key="s.key"
@@ -170,7 +170,7 @@ function getCategoryColor(category: string) {
               target="_blank"
               rel="noopener noreferrer"
               :aria-label="`${t('common.open_link')} ${t(s.labelKey)}`"
-              class="group flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-300 transition-all duration-300 hover:border-brand-500/40 hover:bg-white/10 hover:shadow-[0_0_15px_-5px_rgba(253,186,116,0.15)]"
+              class="group flex min-h-[52px] transform-gpu items-center gap-3 rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-300 transition-all duration-300 hover:border-brand-500/40 hover:bg-white/10 hover:shadow-[0_0_15px_-5px_rgba(253,186,116,0.15)] active:scale-[0.98]"
             >
               <div
                 class="flex h-5 w-5 shrink-0 items-center justify-center transition-transform duration-300 group-hover:scale-110"
@@ -216,18 +216,29 @@ function getCategoryColor(category: string) {
         class="flex flex-col items-center justify-between gap-4 border-t border-white/10 py-8 text-xs text-zinc-500 md:flex-row"
       >
         <span>{{ t('footer.made_with') }}</span>
-        <div class="flex gap-6">
-          <span class="cursor-pointer transition hover:text-zinc-300">{{
-            t('footer.privacy')
-          }}</span>
-          <span class="cursor-pointer transition hover:text-zinc-300">{{
-            t('footer.terms')
-          }}</span>
-          <span class="cursor-pointer transition hover:text-zinc-300">{{
-            t('footer.sitemap')
-          }}</span>
+        <div class="flex flex-wrap justify-center gap-6">
+          <span
+            class="-m-2 cursor-pointer p-2 transition hover:text-zinc-300"
+            >{{ t('footer.privacy') }}</span
+          >
+          <span
+            class="-m-2 cursor-pointer p-2 transition hover:text-zinc-300"
+            >{{ t('footer.terms') }}</span
+          >
+          <span
+            class="-m-2 cursor-pointer p-2 transition hover:text-zinc-300"
+            >{{ t('footer.sitemap') }}</span
+          >
         </div>
       </div>
     </Container>
   </footer>
 </template>
+
+<style scoped>
+/* Content Visibility Helper */
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 600px;
+}
+</style>

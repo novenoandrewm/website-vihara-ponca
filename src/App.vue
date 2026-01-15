@@ -4,31 +4,24 @@ import MainLayout from '@/layouts/MainLayout.vue'
 </script>
 
 <template>
-  <!-- Global background wrapper -->
   <div class="min-h-screen bg-zinc-950 font-ui text-zinc-100 antialiased">
-    <!-- Sacred ambient layers -->
-    <div class="pointer-events-none fixed inset-0 -z-10">
-      <!-- base vignette  -->
+    <div class="pointer-events-none fixed inset-0 -z-10 transform-gpu">
       <div class="vignette absolute inset-0" />
 
-      <!-- glows -->
       <div
-        class="bg-brand-500/12 absolute -left-28 -top-32 h-[520px] w-[520px] rounded-full blur-3xl"
+        class="bg-brand-500/12 absolute -left-28 -top-32 h-[520px] w-[520px] transform-gpu rounded-full blur-3xl will-change-transform"
       />
       <div
-        class="absolute -right-32 top-24 h-[560px] w-[560px] rounded-full bg-jade-500/10 blur-3xl"
+        class="absolute -right-32 top-24 h-[560px] w-[560px] transform-gpu rounded-full bg-jade-500/10 blur-3xl will-change-transform"
       />
       <div
-        class="bg-brand-500/7 absolute bottom-[-220px] left-1/3 h-[520px] w-[520px] rounded-full blur-3xl"
+        class="bg-brand-500/7 absolute bottom-[-220px] left-1/3 h-[520px] w-[520px] transform-gpu rounded-full blur-3xl will-change-transform"
       />
 
-      <!-- sacred pattern -->
-      <div class="mandala absolute inset-0 opacity-[0.10]" />
+      <div class="mandala absolute inset-0 hidden opacity-[0.10] md:block" />
 
-      <!-- subtle grain -->
-      <div class="grain absolute inset-0 opacity-[0.05]" />
+      <div class="grain absolute inset-0 hidden opacity-[0.05] md:block" />
 
-      <!-- top incense line -->
       <div
         class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-400/20 to-transparent"
       />

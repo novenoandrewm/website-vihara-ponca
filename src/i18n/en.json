@@ -7,7 +7,8 @@
     "time": "Time",
     "location": "Location",
     "open_link": "Open",
-    "contact_via": "Contact"
+    "contact_via": "Contact",
+    "read_more": "Read More"
   },
   "social": {
     "wa_admin": "WhatsApp Admin",
@@ -274,7 +275,10 @@
   "event": {
     "not_found": "Event not found.",
     "error_load": "Failed to load event details.",
-    "back": "Back to Home"
+    "back": "Back to Home",
+    "back_pmv": "Back to Youth",
+    "back_gabi": "Back to Children Group",
+    "back_schedule": "Back to Schedule"
   },
   "not_found": {
     "message": "Page not found.",

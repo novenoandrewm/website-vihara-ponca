@@ -47,10 +47,12 @@ async function handleSubmit() {
     tabindex="-1"
     class="relative flex min-h-screen flex-col items-center justify-start overflow-hidden bg-zinc-950 px-4 pt-12 md:pt-20"
   >
-    <div class="pointer-events-none absolute inset-0 overflow-hidden">
+    <div
+      class="pointer-events-none absolute inset-0 transform-gpu overflow-hidden"
+    >
       <div class="absolute inset-0 flex items-center justify-center">
         <div
-          class="select-none font-display text-[400px] leading-none text-brand-500/[0.08] blur-[1px] md:text-[700px]"
+          class="transform-gpu select-none font-display text-[400px] leading-none text-brand-500/[0.08] blur-[1px] will-change-transform md:text-[700px]"
           aria-hidden="true"
         >
           ☸
@@ -58,10 +60,10 @@ async function handleSubmit() {
       </div>
 
       <div
-        class="absolute -left-40 -top-40 h-[600px] w-[600px] rounded-full bg-brand-500/10 blur-[100px]"
+        class="absolute -left-40 -top-40 h-[600px] w-[600px] transform-gpu rounded-full bg-brand-500/10 blur-[100px] will-change-transform"
       />
       <div
-        class="absolute -right-40 bottom-0 h-[600px] w-[600px] rounded-full bg-jade-500/10 blur-[100px]"
+        class="absolute -right-40 bottom-0 h-[600px] w-[600px] transform-gpu rounded-full bg-jade-500/10 blur-[100px] will-change-transform"
       />
 
       <div
@@ -107,7 +109,7 @@ async function handleSubmit() {
             type="email"
             autocomplete="email"
             required
-            class="w-full rounded-xl border border-zinc-700/50 bg-zinc-950/50 p-3.5 text-zinc-100 placeholder-zinc-600 outline-none transition-all duration-300 focus:border-brand-500/50 focus:bg-zinc-950/80 focus:ring-2 focus:ring-brand-500/20"
+            class="w-full rounded-xl border border-zinc-700/50 bg-zinc-950/50 p-3.5 text-base text-zinc-100 placeholder-zinc-600 outline-none transition-all duration-300 focus:border-brand-500/50 focus:bg-zinc-950/80 focus:ring-2 focus:ring-brand-500/20"
             :placeholder="t('login.email_placeholder', 'nama@email.com')"
           />
         </div>
@@ -125,7 +127,7 @@ async function handleSubmit() {
             type="password"
             autocomplete="current-password"
             required
-            class="w-full rounded-xl border border-zinc-700/50 bg-zinc-950/50 p-3.5 text-zinc-100 placeholder-zinc-600 outline-none transition-all duration-300 focus:border-brand-500/50 focus:bg-zinc-950/80 focus:ring-2 focus:ring-brand-500/20"
+            class="w-full rounded-xl border border-zinc-700/50 bg-zinc-950/50 p-3.5 text-base text-zinc-100 placeholder-zinc-600 outline-none transition-all duration-300 focus:border-brand-500/50 focus:bg-zinc-950/80 focus:ring-2 focus:ring-brand-500/20"
             :placeholder="
               t('login.password_placeholder', 'Masukkan kata sandi')
             "

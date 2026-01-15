@@ -3,6 +3,7 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import { useAuthStore } from '@/store/auth'
 import { setPageMeta } from '@/utils/seo'
 
+// Lazy loaded components for better performance
 const routes: RouteRecordRaw[] = [
   // ===== PUBLIC =====
   {
@@ -65,6 +66,7 @@ const routes: RouteRecordRaw[] = [
   },
 
   // ===== ADMIN =====
+  // Grouping admin routes is possible but individual lazy loading is fine too
   {
     path: '/admin',
     name: 'dashboard',
@@ -140,7 +142,11 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
   scrollBehavior(_to, _from, savedPosition) {
-    if (savedPosition) return { ...savedPosition, behavior: 'smooth' }
+    // Optimization: If there is a saved position (back button), return to it instantly.
+    if (savedPosition) {
+      return savedPosition
+    }
+    // Otherwise, scroll to top smoothly
     return { top: 0, behavior: 'smooth' }
   },
 })
@@ -164,7 +170,7 @@ router.beforeEach((to) => {
     return true
   }
 
-  // Role-based access
+  // Role-based access check
   const allowedRoles = to.meta.roles as string[] | undefined
   if (!allowedRoles || allowedRoles.length === 0) {
     return true

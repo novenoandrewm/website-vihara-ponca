@@ -37,13 +37,17 @@ const viewKey = computed(() => route.fullPath)
 </template>
 
 <style>
-/* Page transition: sacred */
+/* Page transition: Optimized for Mobile */
 .page-enter-active,
 .page-leave-active {
   transition:
     opacity 260ms ease,
     transform 260ms ease,
     filter 260ms ease;
+  /* Optimization: Hints browser to use GPU */
+  will-change: transform, opacity, filter;
+  /* Optimization: Fix for Safari flickering */
+  backface-visibility: hidden;
 }
 
 .page-enter-from {

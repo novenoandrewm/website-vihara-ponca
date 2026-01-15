@@ -68,10 +68,10 @@ onMounted(refresh)
 
       <div class="pointer-events-none absolute inset-0 z-0">
         <div
-          class="absolute -left-32 -top-32 h-[600px] w-[600px] rounded-full bg-brand-500/20 blur-[100px]"
+          class="absolute -left-32 -top-32 h-[600px] w-[600px] transform-gpu rounded-full bg-brand-500/20 blur-[100px] will-change-transform"
         />
         <div
-          class="absolute -right-32 -top-32 h-[600px] w-[600px] rounded-full bg-jade-500/20 blur-[100px]"
+          class="absolute -right-32 -top-32 h-[600px] w-[600px] transform-gpu rounded-full bg-jade-500/20 blur-[100px] will-change-transform"
         />
       </div>
 
@@ -120,7 +120,9 @@ onMounted(refresh)
       </Container>
     </section>
 
-    <Container class="relative z-10 -mt-32 pb-20 md:-mt-48">
+    <Container
+      class="content-visibility-auto contain-intrinsic-size-[600px] relative z-10 -mt-32 pb-20 md:-mt-48"
+    >
       <div
         v-if="errorMsg"
         role="alert"
@@ -190,3 +192,11 @@ onMounted(refresh)
     </Container>
   </div>
 </template>
+
+<style scoped>
+/* Performance helper */
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 600px;
+}
+</style>

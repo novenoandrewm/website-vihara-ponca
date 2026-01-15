@@ -41,10 +41,10 @@ const leaders = computed(
     >
       <div class="pointer-events-none absolute inset-0">
         <div
-          class="absolute -left-40 -top-40 h-[700px] w-[700px] rounded-full bg-brand-500/30 blur-[120px]"
+          class="absolute -left-40 -top-40 h-[700px] w-[700px] transform-gpu rounded-full bg-brand-500/30 blur-[120px] will-change-transform"
         />
         <div
-          class="absolute -right-40 -top-40 h-[700px] w-[700px] rounded-full bg-jade-500/30 blur-[120px]"
+          class="absolute -right-40 -top-40 h-[700px] w-[700px] transform-gpu rounded-full bg-jade-500/30 blur-[120px] will-change-transform"
         />
 
         <div
@@ -87,7 +87,9 @@ const leaders = computed(
     </section>
 
     <Container class="relative z-10 mt-8">
-      <section class="space-y-8 pb-20">
+      <section
+        class="content-visibility-auto contain-intrinsic-size-[1000px] space-y-8 pb-20"
+      >
         <BaseCard tone="gold" :hover="false">
           <template #header>
             <div class="flex items-center justify-between gap-3">
@@ -234,3 +236,10 @@ const leaders = computed(
     </Container>
   </div>
 </template>
+
+<style scoped>
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 1000px;
+}
+</style>

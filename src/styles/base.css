@@ -2,7 +2,56 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  /* 1. Global Settings & Mobile Optimization */
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+    scrollbar-color: #27272a #09090b; /* Thumb(zinc-800) Track(zinc-950) */
+  }
+
+  body {
+    @apply bg-zinc-950 text-zinc-100 antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+
+  /* 2. Custom Scrollbar (Chrome, Edge, Safari, WebKit) */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #09090b; /* Match bg-zinc-950 */
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #27272a; /* Match bg-zinc-800 */
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3f3f46; /* Match bg-zinc-700 */
+  }
+
+  /* 3. Selection Color (Sesuai Brand Vihara) */
+  ::selection {
+    background-color: rgba(245, 181, 72, 0.2); /* Brand Gold Opacity */
+    color: #fcd34d; /* Brand Light */
+  }
+}
+
+/* 4. Accessibility Focus */
 :focus-visible {
   outline: 2px solid #5b6cff;
   outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

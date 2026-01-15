@@ -1,2 +1,49 @@
+# --- GLOBAL SECURITY HEADERS ---
+
 /\*
-Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https:;
+Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; img-src 'self' data: blob: https:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https:;
+
+# 2. Security Headers
+
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: strict-origin-when-cross-origin
+Permissions-Policy: geolocation=(self), microphone=()
+
+# --- CACHING STRATEGY (Mobile Performance) ---
+
+/assets/\*
+Cache-Control: public, max-age=31536000, immutable
+
+# 2. Gambar & Font Statis
+
+/uploads/_
+Cache-Control: public, max-age=31536000, immutable
+/icons/_
+Cache-Control: public, max-age=31536000, immutable
+/_.ico
+Cache-Control: public, max-age=31536000, immutable
+/_.png
+Cache-Control: public, max-age=31536000, immutable
+/_.svg
+Cache-Control: public, max-age=31536000, immutable
+/_.woff2
+Cache-Control: public, max-age=31536000, immutable
+
+# 3. Data JSON: Short chace (1 hour)
+
+/data/\*.json
+Cache-Control: public, max-age=3600, must-revalidate
+
+# 4. HTML & App Shell: Always validate
+
+/\*.html
+Cache-Control: public, max-age=0, must-revalidate
+/
+Cache-Control: public, max-age=0, must-revalidate
+
+# 5. Manifest & Service Worker: Always validate
+
+/manifest.json
+Cache-Control: public, max-age=0, must-revalidate

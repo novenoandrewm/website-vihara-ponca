@@ -39,10 +39,10 @@ const showSuccess = computed(() => route.query.success === '1')
 
       <div class="pointer-events-none absolute inset-0 z-0">
         <div
-          class="absolute -left-32 -top-32 h-[600px] w-[600px] rounded-full bg-brand-500/20 blur-[100px]"
+          class="absolute -left-32 -top-32 h-[600px] w-[600px] transform-gpu rounded-full bg-brand-500/20 blur-[100px] will-change-transform"
         />
         <div
-          class="absolute -right-32 -top-32 h-[600px] w-[600px] rounded-full bg-jade-500/20 blur-[100px]"
+          class="absolute -right-32 -top-32 h-[600px] w-[600px] transform-gpu rounded-full bg-jade-500/20 blur-[100px] will-change-transform"
         />
       </div>
 
@@ -95,7 +95,9 @@ const showSuccess = computed(() => route.query.success === '1')
       </Container>
     </section>
 
-    <Container class="relative z-10 -mt-32 pb-20 md:-mt-48">
+    <Container
+      class="content-visibility-auto contain-intrinsic-size-[800px] relative z-10 -mt-32 pb-20 md:-mt-48"
+    >
       <section class="grid gap-8 md:grid-cols-2">
         <div
           class="group relative overflow-hidden rounded-3xl border border-zinc-800/60 bg-zinc-900/60 p-6 shadow-2xl backdrop-blur-xl transition-all hover:border-brand-500/30 hover:shadow-[0_0_40px_rgba(245,181,72,0.05)] md:p-8"
@@ -353,3 +355,11 @@ const showSuccess = computed(() => route.query.success === '1')
     </Container>
   </main>
 </template>
+
+<style scoped>
+/* Performance Helper: Helps browser skip rendering off-screen content */
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 800px;
+}
+</style>

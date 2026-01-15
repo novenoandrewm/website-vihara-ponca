@@ -111,12 +111,11 @@ onMounted(async () => {
         <div
           class="absolute inset-0 bg-gradient-to-b from-transparent via-zinc-950/80 to-zinc-950"
         ></div>
-
         <div
-          class="absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-jade-900/10 to-transparent opacity-60 mix-blend-screen"
+          class="absolute inset-y-0 left-0 w-1/4 transform-gpu bg-gradient-to-r from-jade-900/10 to-transparent opacity-60 mix-blend-screen"
         ></div>
         <div
-          class="absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-brand-900/10 to-transparent opacity-60 mix-blend-screen"
+          class="absolute inset-y-0 right-0 w-1/4 transform-gpu bg-gradient-to-l from-brand-900/10 to-transparent opacity-60 mix-blend-screen"
         ></div>
       </div>
 
@@ -131,12 +130,13 @@ onMounted(async () => {
             </div>
 
             <div class="circle-shift">
-              <div class="circle-wrap">
+              <div class="circle-wrap transform-gpu">
                 <img
                   :src="buddhaQuotesImg"
                   alt="Weekly quote visual"
                   class="circle-img"
                   loading="lazy"
+                  decoding="async"
                 />
                 <div class="circle-overlay" aria-hidden="true" />
               </div>
@@ -219,7 +219,7 @@ onMounted(async () => {
 
     <section
       id="events"
-      class="section-screen relative z-20 bg-gradient-to-b from-zinc-950 via-zinc-950 to-black"
+      class="section-screen content-visibility-auto contain-intrinsic-size-[800px] relative z-20 bg-gradient-to-b from-zinc-950 via-zinc-950 to-black"
     >
       <div class="pointer-events-none absolute inset-0 z-0">
         <div
@@ -266,12 +266,17 @@ onMounted(async () => {
             </section>
 
             <section v-else class="space-y-5">
-              <div class="flex flex-wrap gap-2">
+              <div class="flex flex-wrap gap-3">
                 <BaseButton
                   v-for="cat in CATEGORIES"
                   :key="cat"
-                  size="sm"
-                  :variant="selectedCategory === cat ? 'primary' : 'ghost'"
+                  size="md"
+                  :variant="selectedCategory === cat ? 'primary' : 'secondary'"
+                  :class="[
+                    selectedCategory !== cat
+                      ? '!border-zinc-600 !bg-zinc-800 !text-zinc-100 transition-all hover:!border-zinc-500 hover:!bg-zinc-700 hover:shadow-lg'
+                      : 'shadow-lg shadow-brand-500/30',
+                  ]"
                   @click="setCategory(cat)"
                 >
                   {{ getCategoryLabel(cat) }}
@@ -288,7 +293,7 @@ onMounted(async () => {
                   :location="e.location"
                   :description="e.description"
                   :image="e.image"
-                  :category="e.category"
+                  :category="e.category as 'pmv' | 'gabi' | 'general'"
                   :to="getEventLink(e.category)"
                 />
               </div>
@@ -301,6 +306,12 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+/* Content Visibility Helper for Events */
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 800px;
+}
+
 .section-screen {
   min-height: calc(100vh - 64px);
 }

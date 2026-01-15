@@ -50,6 +50,7 @@ const titleClass = computed<string>(() => {
     tint,
     'bg-clip-text text-transparent',
     'drop-shadow-[0_1px_0_rgba(0,0,0,0.55)]',
+    'line-clamp-2',
   ].join(' ')
 })
 
@@ -65,7 +66,7 @@ const linkRing = computed(() => {
   <BaseCard
     hover
     :tone="props.tone"
-    class="group"
+    class="backface-hidden group transform-gpu"
     :class="isLink ? 'cursor-pointer' : ''"
   >
     <RouterLink
@@ -84,7 +85,7 @@ const linkRing = computed(() => {
           {{ props.title }}
         </h3>
 
-        <Badge v-if="props.badge" :tone="props.tone" size="sm">
+        <Badge v-if="props.badge" :tone="props.tone" size="sm" class="shrink-0">
           {{ props.badge }}
         </Badge>
       </div>
@@ -94,7 +95,7 @@ const linkRing = computed(() => {
       >
         <span class="font-sutra">{{ props.date }}</span>
         <span class="text-zinc-600" aria-hidden="true">•</span>
-        <span class="font-sutra">{{ props.location }}</span>
+        <span class="line-clamp-1 font-sutra">{{ props.location }}</span>
       </div>
 
       <div class="mt-4 h-px w-full" :class="ornamentLine" aria-hidden="true" />
@@ -122,3 +123,11 @@ const linkRing = computed(() => {
     </template>
   </BaseCard>
 </template>
+
+<style scoped>
+/* Utility to prevent flickering on mobile transitions */
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+</style>

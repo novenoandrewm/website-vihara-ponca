@@ -1,7 +1,7 @@
 <!-- src/pages/EventDetail.vue -->
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute, RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 import Container from '@/components/ui/Container.vue'
@@ -13,7 +13,6 @@ import { getEventById, type EventItem } from '@/services/events'
 import { formatDate } from '@/utils/formatDate'
 
 const route = useRoute()
-const router = useRouter()
 const { t, locale } = useI18n({ useScope: 'global' })
 
 const event = ref<EventItem | null>(null)
@@ -26,6 +25,29 @@ const categoryTone = computed(() => {
   if (cat === 'pmv') return 'gold'
   if (cat === 'gabi') return 'jade'
   return 'neutral'
+})
+
+const backNavigation = computed(() => {
+  const cat = event.value?.category
+
+  if (cat === 'pmv') {
+    return {
+      text: t('event.back_pmv', 'Kembali ke PMV'),
+      to: '/pmv',
+    }
+  }
+
+  if (cat === 'gabi') {
+    return {
+      text: t('event.back_gabi', 'Kembali ke GABI'),
+      to: '/gabi',
+    }
+  }
+
+  return {
+    text: t('event.back_schedule', 'Kembali ke Jadwal'),
+    to: '/schedule',
+  }
 })
 
 onMounted(async () => {
@@ -43,10 +65,6 @@ onMounted(async () => {
     loading.value = false
   }
 })
-
-function goBack() {
-  router.back()
-}
 </script>
 
 <template>
@@ -57,17 +75,17 @@ function goBack() {
   >
     <div class="pointer-events-none absolute inset-0 overflow-hidden">
       <div
-        class="absolute -left-40 -top-40 h-[600px] w-[600px] rounded-full bg-brand-500/10 blur-[100px]"
+        class="absolute -left-40 -top-40 h-[600px] w-[600px] transform-gpu rounded-full bg-brand-500/10 blur-[100px] will-change-transform"
       />
       <div
-        class="absolute right-0 top-40 h-[500px] w-[500px] rounded-full bg-jade-500/10 blur-[120px]"
+        class="absolute right-0 top-40 h-[500px] w-[500px] transform-gpu rounded-full bg-jade-500/10 blur-[120px] will-change-transform"
       />
     </div>
 
     <Container class="relative z-10 max-w-4xl">
       <div v-if="loading" class="animate-pulse space-y-8">
         <div class="h-8 w-32 rounded bg-zinc-800"></div>
-        <div class="aspect-video w-full rounded-2xl bg-zinc-800"></div>
+        <div class="aspect-video w-full rounded-3xl bg-zinc-800"></div>
         <div class="space-y-4">
           <div class="h-10 w-3/4 rounded bg-zinc-800"></div>
           <div class="h-4 w-1/2 rounded bg-zinc-800"></div>
@@ -81,15 +99,17 @@ function goBack() {
         class="rounded-2xl border border-red-500/20 bg-red-900/10 p-8 text-center"
       >
         <p class="text-lg text-red-200">{{ errorMsg }}</p>
-        <BaseButton class="mt-4" variant="secondary" @click="goBack">
-          {{ t('event.back', 'Kembali') }}
-        </BaseButton>
+        <RouterLink to="/" class="mt-4 inline-block">
+          <BaseButton variant="secondary">
+            {{ t('common.home', 'Beranda') }}
+          </BaseButton>
+        </RouterLink>
       </div>
 
       <article v-else-if="event" class="animate-fadeUp space-y-8">
-        <button
+        <RouterLink
+          :to="backNavigation.to"
           class="group inline-flex items-center gap-2 text-sm font-medium text-zinc-400 transition hover:text-brand-300"
-          @click="goBack"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -103,20 +123,33 @@ function goBack() {
               clip-rule="evenodd"
             />
           </svg>
-          {{ t('event.back', 'Kembali') }}
-        </button>
+          {{ backNavigation.text }}
+        </RouterLink>
 
         <div
           class="overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-900/60 shadow-2xl backdrop-blur-sm"
         >
-          <div v-if="event.image" class="relative aspect-video w-full">
+          <div
+            v-if="event.image"
+            class="relative aspect-[4/5] w-full overflow-hidden bg-zinc-950 md:aspect-video"
+          >
+            <img
+              :src="event.image"
+              alt=""
+              aria-hidden="true"
+              class="absolute inset-0 h-full w-full object-cover opacity-50 blur-2xl transition-transform duration-1000 will-change-transform hover:scale-110"
+              fetchpriority="high"
+              decoding="sync"
+            />
             <img
               :src="event.image"
               :alt="event.title"
-              class="h-full w-full object-cover"
+              class="relative z-10 h-full w-full object-contain"
+              fetchpriority="high"
+              decoding="sync"
             />
             <div
-              class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent opacity-80"
+              class="pointer-events-none absolute inset-0 z-20 bg-gradient-to-t from-zinc-950/80 via-transparent to-transparent opacity-60"
             />
           </div>
 

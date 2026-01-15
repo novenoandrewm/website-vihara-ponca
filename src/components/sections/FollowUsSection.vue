@@ -6,6 +6,7 @@ import { Icon } from '@iconify/vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { SOCIAL_LINKS } from '@/config/social'
 
+// Import icons statically for better tree-shaking
 import instagramIcon from '@iconify-icons/skill-icons/instagram'
 import tiktokIcon from '@iconify-icons/logos/tiktok-icon'
 import whatsappIcon from '@iconify-icons/logos/whatsapp-icon'
@@ -35,12 +36,15 @@ function isTikTok(key: string) {
 </script>
 
 <template>
-  <section class="relative">
+  <section
+    class="content-visibility-auto contain-intrinsic-size-[400px] relative"
+  >
     <div
-      class="group relative overflow-hidden rounded-3xl border border-zinc-800/60 bg-zinc-900/60 p-6 shadow-2xl backdrop-blur-xl transition-all hover:border-zinc-700/50 hover:shadow-[0_0_40px_rgba(255,255,255,0.03)] md:p-10"
+      class="group relative overflow-hidden rounded-3xl border border-zinc-800/60 bg-zinc-900/60 p-6 shadow-xl backdrop-blur-md transition-all duration-500 hover:border-zinc-700/50 hover:shadow-2xl md:p-10 md:backdrop-blur-xl"
     >
       <div
         class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"
+        aria-hidden="true"
       />
 
       <div class="grid items-start gap-10 lg:grid-cols-2 lg:gap-16">
@@ -53,6 +57,7 @@ function isTikTok(key: string) {
             </h2>
             <div
               class="h-1 w-12 rounded-full bg-gradient-to-r from-brand-500 to-brand-400"
+              aria-hidden="true"
             />
             <p class="text-base leading-relaxed text-zinc-400">
               {{ displaySubtitle }}
@@ -61,7 +66,7 @@ function isTikTok(key: string) {
 
           <div
             v-if="whatsapp"
-            class="rounded-2xl border border-zinc-800/80 bg-zinc-950/40 p-5 transition hover:bg-zinc-950/60"
+            class="rounded-2xl border border-zinc-800/80 bg-zinc-950/40 p-5 transition-colors hover:bg-zinc-950/60"
           >
             <div
               class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
@@ -80,7 +85,7 @@ function isTikTok(key: string) {
                 target="_blank"
                 rel="noopener noreferrer"
                 :aria-label="`${t('common.contact_via')} ${t(whatsapp.labelKey)}`"
-                class="group/btn flex items-center gap-4"
+                class="group/btn flex transform-gpu items-center gap-4"
               >
                 <Icon
                   :icon="whatsappIcon"
@@ -119,10 +124,11 @@ function isTikTok(key: string) {
               target="_blank"
               rel="noopener noreferrer"
               :aria-label="`${t('common.open_link')} ${t(s.labelKey)}`"
-              class="group/item relative flex items-center justify-between overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950/50 px-4 py-3.5 transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-500/30 hover:bg-zinc-900 hover:shadow-lg"
+              class="group/item relative flex min-h-[60px] transform-gpu items-center justify-between overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950/50 px-4 py-3.5 transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-500/30 hover:bg-zinc-900 hover:shadow-lg"
             >
               <div
                 class="absolute inset-0 bg-gradient-to-r from-brand-500/5 to-transparent opacity-0 transition-opacity group-hover/item:opacity-100"
+                aria-hidden="true"
               />
 
               <div class="relative flex items-center gap-3">
@@ -172,3 +178,10 @@ function isTikTok(key: string) {
     </div>
   </section>
 </template>
+
+<style scoped>
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 400px;
+}
+</style>

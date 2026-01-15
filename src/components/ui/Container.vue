@@ -28,7 +28,16 @@ const maxW = computed(() => {
   return map[props.size]
 })
 
-const padding = computed(() => (props.padded ? 'px-4 sm:px-6 lg:px-8' : ''))
+// Optimization: Mobile Safe Area (Notch) Support
+const padding = computed(() => {
+  if (!props.padded) return ''
+  return [
+    'pl-[max(1rem,env(safe-area-inset-left))]', // Left padding + notch safety
+    'pr-[max(1rem,env(safe-area-inset-right))]', // Right padding + notch safety
+    'sm:px-6', // Tablet padding overrides
+    'lg:px-8', // Desktop padding overrides
+  ].join(' ')
+})
 
 const cls = computed(() =>
   ['mx-auto w-full', maxW.value, padding.value].filter(Boolean).join(' ')

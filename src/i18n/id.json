@@ -7,7 +7,8 @@
     "time": "Waktu",
     "location": "Lokasi",
     "open_link": "Buka",
-    "contact_via": "Hubungi"
+    "contact_via": "Hubungi",
+    "read_more": "Selengkapnya"
   },
   "social": {
     "wa_admin": "WhatsApp Admin",
@@ -274,7 +275,10 @@
   "event": {
     "not_found": "Acara tidak ditemukan.",
     "error_load": "Gagal memuat detail acara.",
-    "back": "Kembali ke Beranda"
+    "back": "Kembali ke Beranda",
+    "back_pmv": "Kembali ke PMV",
+    "back_gabi": "Kembali ke GABI",
+    "back_schedule": "Kembali ke Jadwal"
   },
   "not_found": {
     "message": "Halaman tidak ditemukan.",
