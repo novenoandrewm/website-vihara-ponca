@@ -16,7 +16,9 @@
     "location": "Bakti Sala",
     "category": "general",
     "description": "Puja bakti mingguan umum",
-    "image": "https://raw.githubusercontent.com/novenoandrewm/website-vihara-ponca/main/public/uploads/1768672798876-wallpaperdog-20523645-(1).jpg"
+    "image": "https://raw.githubusercontent.com/novenoandrewm/website-vihara-ponca/main/public/uploads/1768672798876-wallpaperdog-20523645-(1).jpg",
+    "time": "10:10",
+    "isRoutine": true
   },
   {
     "id": "6ce200a6-16f7-42f6-aa4d-4d3509ce052d",
