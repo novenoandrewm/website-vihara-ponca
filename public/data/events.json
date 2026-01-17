@@ -10,6 +10,15 @@
     "time": "10:00"
   },
   {
+    "id": "b33a442f-035b-4de5-9a6a-41ba929a54df",
+    "title": "Olahraga",
+    "date": "2026-01-18",
+    "location": "Pamulang Center",
+    "category": "pmv",
+    "description": "Olahraga",
+    "isRoutine": false
+  },
+  {
     "id": "995581c3-33d4-403a-8be2-76481581f053",
     "title": "Puja Bakti Mingguan Umum",
     "date": "2026-01-18",
