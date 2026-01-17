@@ -37,6 +37,7 @@
     "category": "pmv",
     "description": "Puja Bakti Muda Mudi",
     "image": "https://raw.githubusercontent.com/novenoandrewm/website-vihara-ponca/main/public/uploads/1768416036183-screenshot-2026-01-14-184030.png",
-    "time": "08:00"
+    "time": "08:00",
+    "isRoutine": true
   }
 ]
