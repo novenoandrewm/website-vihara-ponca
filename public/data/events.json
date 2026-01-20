@@ -10,13 +10,36 @@
     "time": "10:00"
   },
   {
-    "id": "07c8d055-5cd4-41c8-b380-9e087e76549c",
-    "title": "Puja Bakti Umum Mingguan",
-    "date": "2026-01-17",
-    "location": "Aula Bakti Sala - Vihara Avalokitesvara Pondok Cabe",
+    "id": "b33a442f-035b-4de5-9a6a-41ba929a54df",
+    "title": "Olahraga",
+    "date": "2026-01-18",
+    "location": "Pamulang Center",
+    "category": "pmv",
+    "description": "Olahraga",
+    "isRoutine": false,
+    "time": "16:43"
+  },
+  {
+    "id": "995581c3-33d4-403a-8be2-76481581f053",
+    "title": "Puja Bakti Mingguan Umum",
+    "date": "2026-01-18",
+    "location": "Bakti Sala",
     "category": "general",
-    "description": "Puja bakti rutin mingguan",
-    "time": "10:00"
+    "description": "Puja bakti mingguan umum",
+    "image": "https://raw.githubusercontent.com/novenoandrewm/website-vihara-ponca/main/public/uploads/1768672798876-wallpaperdog-20523645-(1).jpg",
+    "time": "10:10",
+    "isRoutine": true
+  },
+  {
+    "id": "e2",
+    "title": "Kegiatan PMV",
+    "date": "2026-01-18",
+    "location": "Aula Bakti Sala",
+    "category": "pmv",
+    "description": "Puja Bakti Muda Mudi",
+    "image": "https://raw.githubusercontent.com/novenoandrewm/website-vihara-ponca/main/public/uploads/1768416036183-screenshot-2026-01-14-184030.png",
+    "time": "08:00",
+    "isRoutine": true
   },
   {
     "id": "6ce200a6-16f7-42f6-aa4d-4d3509ce052d",
@@ -25,16 +48,8 @@
     "location": "Vihara Kwan In Thang",
     "category": "general",
     "description": "* Barongsai & Wushu : 20.00 WIB\n* Puja Bakti oleh Anggota Sangha : 21.00 WIB\n* Pembagian Angpao oleh Chai Sen : 22.30 WIB",
-    "image": "https://raw.githubusercontent.com/novenoandrewm/website-vihara-ponca/main/public/uploads/1768416259608-whatsapp-image-2026-01-14-at-9.09.37-am.jpeg"
-  },
-  {
-    "id": "e2",
-    "title": "Kegiatan PMV",
-    "date": "2026-02-23",
-    "location": "Aula Bakti Sala",
-    "category": "pmv",
-    "description": "Puja Bakti Muda Mudi",
-    "image": "https://raw.githubusercontent.com/novenoandrewm/website-vihara-ponca/main/public/uploads/1768416036183-screenshot-2026-01-14-184030.png",
-    "time": "08:00"
+    "image": "https://raw.githubusercontent.com/novenoandrewm/website-vihara-ponca/main/public/uploads/1768416259608-whatsapp-image-2026-01-14-at-9.09.37-am.jpeg",
+    "time": "09:42",
+    "isRoutine": false
   }
 ]
