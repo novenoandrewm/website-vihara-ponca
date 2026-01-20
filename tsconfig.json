@@ -27,6 +27,8 @@
     "scripts/**/*.ts",
     "vite.config.ts",
     "vitest.config.ts",
-    "src/env.d.ts"
+    "src/env.d.ts",
+    "netlify/functions/events.mts",
+    "netlify/functions/upload.mts"
   ]
 }

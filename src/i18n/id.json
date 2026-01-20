@@ -64,6 +64,7 @@
     "field_location": "Lokasi",
     "field_description": "Deskripsi",
     "field_image": "Path Gambar (opsional)",
+    "field_is_routine_hint": "Centang jika ini adalah kegiatan berkala (bukan event khusus).",
     "add": "Tambah",
     "edit": "Edit",
     "save": "Simpan",
@@ -240,7 +241,9 @@
     "empty_past": "Belum ada arsip.",
     "empty": "Belum ada jadwal yang ditampilkan.",
     "no_items_day": "Tidak ada kegiatan.",
-    "error": "Gagal memuat jadwal."
+    "error": "Gagal memuat jadwal.",
+    "upcoming_title": "Agenda Mendatang",
+    "routine_title": "Kegiatan Rutin"
   },
   "days": {
     "mon": "Senin",

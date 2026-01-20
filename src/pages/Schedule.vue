@@ -14,7 +14,7 @@ const { t } = useI18n({ useScope: 'global' })
 
 const loading = ref<boolean>(true)
 const errorMsg = ref<string | null>(null)
-const all = ref<EventItem[]>([])
+const allEvents = ref<EventItem[]>([])
 
 function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null
@@ -36,10 +36,24 @@ function isoTime(iso: string): number {
 
 const todayIso = computed<string>(() => new Date().toISOString().slice(0, 10))
 
-const upcoming = computed<EventItem[]>(() => {
-  return all.value
-    .filter((e) => e.category === 'general' && e.date >= todayIso.value)
-    .slice()
+// 1. Get all events in the 'general' category that have not yet passed (date >= today)
+const generalEvents = computed(() => {
+  return allEvents.value.filter(
+    (e) => e.category === 'general' && e.date >= todayIso.value
+  )
+})
+
+// 2. Filter: Upcoming Agenda (isRoutine = false/undefined)
+const upcomingItems = computed(() => {
+  return generalEvents.value
+    .filter((e) => !e.isRoutine)
+    .sort((a, b) => isoTime(a.date) - isoTime(b.date))
+})
+
+// 3. Filter: Routine Activities (isRoutine = true)
+const routineItems = computed(() => {
+  return generalEvents.value
+    .filter((e) => e.isRoutine)
     .sort((a, b) => isoTime(a.date) - isoTime(b.date))
 })
 
@@ -47,7 +61,7 @@ async function refresh(): Promise<void> {
   loading.value = true
   errorMsg.value = null
   try {
-    all.value = await getUpcomingEvents()
+    allEvents.value = await getUpcomingEvents()
   } catch (err: unknown) {
     errorMsg.value =
       getErrMsg(err) ?? t('admin.error_generic', 'Terjadi kesalahan.')
@@ -131,70 +145,112 @@ onMounted(refresh)
         {{ errorMsg }}
       </div>
 
-      <div v-if="loading" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div v-else-if="loading" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <SkeletonCard v-for="i in 6" :key="i" :lines="3" />
       </div>
 
-      <template v-else>
+      <div
+        v-else-if="upcomingItems.length === 0 && routineItems.length === 0"
+        class="flex min-h-[300px] flex-col items-center justify-center rounded-3xl border border-dashed border-zinc-800 bg-zinc-900/30 p-10 text-center backdrop-blur-sm"
+      >
         <div
-          v-if="upcoming.length === 0"
-          class="flex min-h-[300px] flex-col items-center justify-center rounded-3xl border border-dashed border-zinc-800 bg-zinc-900/30 p-10 text-center backdrop-blur-sm"
+          class="flex h-16 w-16 items-center justify-center rounded-full bg-zinc-800/50 text-zinc-600"
         >
-          <div
-            class="flex h-16 w-16 items-center justify-center rounded-full bg-zinc-800/50 text-zinc-600"
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-8 w-8"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="h-8 w-8"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
-              />
-            </svg>
-          </div>
-          <h3 class="mt-4 font-display text-lg font-medium text-zinc-300">
-            {{ t('schedule.empty', 'Tidak ada kegiatan') }}
-          </h3>
-          <p class="mt-2 text-sm text-zinc-500">
-            {{
-              t(
-                'schedule.empty_upcoming',
-                'Belum ada jadwal kegiatan umum terdekat.'
-              )
-            }}
-          </p>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
+            />
+          </svg>
         </div>
+        <h3 class="mt-4 font-display text-lg font-medium text-zinc-300">
+          {{ t('schedule.empty', 'Tidak ada kegiatan') }}
+        </h3>
+        <p class="mt-2 text-sm text-zinc-500">
+          {{ t('schedule.empty', 'Belum ada data kegiatan saat ini.') }}
+        </p>
+      </div>
 
-        <div
-          v-else
-          class="grid animate-fadeUp gap-6 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          <EventCard
-            v-for="e in upcoming"
-            :key="e.id"
-            :title="e.title"
-            :date="e.date"
-            :time="e.time"
-            :location="e.location"
-            :description="e.description"
-            :image="e.image"
-            :category="e.category as 'pmv' | 'gabi' | 'general'"
-            :to="'/events/' + e.id"
-          />
-        </div>
-      </template>
+      <div v-else class="animate-fadeUp space-y-24">
+        <section v-if="upcomingItems.length > 0">
+          <div class="mb-10 flex items-center gap-6">
+            <h2
+              class="shrink-0 font-display text-2xl font-semibold tracking-wide text-zinc-100 md:text-3xl"
+            >
+              {{ t('schedule.upcoming_title', 'Agenda Mendatang') }}
+            </h2>
+            <div class="relative h-px flex-1">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-zinc-500/50 via-zinc-700/20 to-transparent"
+              ></div>
+              <div
+                class="absolute left-0 top-1/2 h-1 w-1 -translate-y-1/2 rounded-full bg-zinc-400 shadow-[0_0_8px_rgba(255,255,255,0.6)]"
+              ></div>
+            </div>
+          </div>
+
+          <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <EventCard
+              v-for="e in upcomingItems"
+              :key="e.id"
+              :title="e.title"
+              :date="e.date"
+              :time="e.time"
+              :location="e.location"
+              :description="e.description"
+              :image="e.image"
+              :category="e.category as 'pmv' | 'gabi' | 'general'"
+              :to="'/events/' + e.id"
+            />
+          </div>
+        </section>
+
+        <section v-if="routineItems.length > 0">
+          <div class="mb-10 flex items-center gap-6">
+            <h2
+              class="shrink-0 font-display text-2xl font-semibold tracking-wide text-brand-200 md:text-3xl"
+            >
+              {{ t('schedule.routine_title', 'Kegiatan Rutin') }}
+            </h2>
+            <div class="relative h-px flex-1">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-brand-500/60 via-brand-800/20 to-transparent"
+              ></div>
+              <div
+                class="absolute left-0 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rotate-45 bg-brand-300 shadow-[0_0_12px_rgba(245,181,72,0.8)]"
+              ></div>
+            </div>
+          </div>
+
+          <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <EventCard
+              v-for="e in routineItems"
+              :key="e.id"
+              :title="e.title"
+              :date="e.date"
+              :time="e.time"
+              :location="e.location"
+              :description="e.description"
+              :image="e.image"
+              :category="e.category as 'pmv' | 'gabi' | 'general'"
+              :to="'/events/' + e.id"
+            />
+          </div>
+        </section>
+      </div>
     </Container>
   </div>
 </template>
 
 <style scoped>
-/* Performance helper */
 .content-visibility-auto {
   content-visibility: auto;
   contain-intrinsic-size: 600px;

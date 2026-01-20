@@ -37,6 +37,7 @@ const time = ref('')
 const location = ref('')
 const description = ref('')
 const image = ref('')
+const isRoutine = ref(false)
 
 // State for upload file
 const selectedFile = ref<File | null>(null)
@@ -55,6 +56,11 @@ function getErrMsg(err: unknown): string | null {
   return null
 }
 
+function formatTimeDisplay(t: string): string {
+  if (!t) return ''
+  return t.slice(0, 5)
+}
+
 function resetForm() {
   editingId.value = null
   title.value = ''
@@ -63,6 +69,7 @@ function resetForm() {
   location.value = ''
   description.value = ''
   image.value = ''
+  isRoutine.value = false
 
   // Reset state file upload
   selectedFile.value = null
@@ -74,9 +81,10 @@ function startEdit(e: EventItem) {
   title.value = e.title
   date.value = e.date
   time.value = e.time ?? ''
-  location.value = e.location
-  description.value = e.description
+  location.value = e.location || ''
+  description.value = e.description || ''
   image.value = e.image ?? ''
+  isRoutine.value = e.isRoutine || false
 
   // Set preview image if exists
   imagePreview.value = e.image ?? null
@@ -121,7 +129,7 @@ async function submit() {
       finalImagePath = await uploadEventImage(selectedFile.value)
     }
 
-    // Prepare the payload with the final image URL.
+    // Prepare the payload
     const payload = {
       title: title.value.trim(),
       date: date.value,
@@ -130,6 +138,7 @@ async function submit() {
       description: description.value.trim(),
       image: finalImagePath || undefined,
       category: props.category,
+      isRoutine: isRoutine.value,
     }
 
     if (
@@ -186,7 +195,7 @@ onMounted(() => void refresh())
 
     <section class="grid gap-6 md:grid-cols-2">
       <form
-        class="space-y-3 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4"
+        class="space-y-4 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4"
         @submit.prevent="() => void submit()"
       >
         <h2 class="text-lg font-semibold">
@@ -201,9 +210,33 @@ onMounted(() => void refresh())
             id="title"
             v-model="title"
             type="text"
-            class="w-full rounded border border-zinc-600 bg-zinc-800 p-2 text-zinc-200"
+            class="w-full rounded border border-zinc-600 bg-zinc-800 p-2 text-zinc-200 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             required
           />
+        </div>
+
+        <div
+          class="flex items-center gap-3 rounded-lg border border-zinc-700 bg-zinc-800/50 p-3"
+        >
+          <div class="relative flex items-center">
+            <input
+              id="isRoutine"
+              v-model="isRoutine"
+              type="checkbox"
+              class="peer h-5 w-5 cursor-pointer rounded border-zinc-600 bg-zinc-700 text-brand-500 focus:ring-brand-500/50"
+            />
+          </div>
+          <label
+            for="isRoutine"
+            class="cursor-pointer select-none text-sm text-zinc-300"
+          >
+            <span class="block font-medium text-zinc-200">
+              {{ t('schedule.routine_title', 'Kegiatan Rutin') }}?
+            </span>
+            <span class="block text-xs text-zinc-500">
+              {{ t('admin.field_is_routine_hint') }}
+            </span>
+          </label>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
@@ -215,20 +248,21 @@ onMounted(() => void refresh())
               id="date"
               v-model="date"
               type="date"
-              class="w-full rounded border border-zinc-600 bg-zinc-800 p-2 text-zinc-200"
+              class="w-full rounded border border-zinc-600 bg-zinc-800 p-2 text-zinc-200 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
               required
             />
           </div>
 
           <div>
-            <label class="mb-1 block text-sm" for="time">{{
-              t('admin.field_time', 'Waktu')
-            }}</label>
+            <label class="mb-1 block text-sm" for="time">
+              {{ t('admin.field_time', 'Waktu') }}
+              <span class="text-xs text-zinc-500">(WIB)</span>
+            </label>
             <input
               id="time"
               v-model="time"
               type="time"
-              class="w-full rounded border border-zinc-600 bg-zinc-800 p-2 text-zinc-200"
+              class="w-full rounded border border-zinc-600 bg-zinc-800 p-2 text-zinc-200 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             />
           </div>
         </div>
@@ -241,7 +275,7 @@ onMounted(() => void refresh())
             id="location"
             v-model="location"
             type="text"
-            class="w-full rounded border border-zinc-600 bg-zinc-800 p-2 text-zinc-200"
+            class="w-full rounded border border-zinc-600 bg-zinc-800 p-2 text-zinc-200 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             required
           />
         </div>
@@ -254,7 +288,7 @@ onMounted(() => void refresh())
             id="desc"
             v-model="description"
             rows="5"
-            class="w-full rounded border border-zinc-600 bg-zinc-800 p-2 text-zinc-200"
+            class="w-full rounded border border-zinc-600 bg-zinc-800 p-2 text-zinc-200 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             required
           />
         </div>
@@ -268,7 +302,7 @@ onMounted(() => void refresh())
             id="imageFile"
             type="file"
             accept="image/*"
-            class="w-full rounded border border-zinc-600 bg-zinc-800 p-2 text-zinc-200 file:mr-4 file:rounded file:border-0 file:bg-brand-500 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-brand-600"
+            class="w-full rounded border border-zinc-600 bg-zinc-800 p-2 text-zinc-200 file:mr-4 file:rounded file:border-0 file:bg-brand-500 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-brand-600 focus:outline-none"
             @change="handleFileChange"
           />
 
@@ -298,7 +332,7 @@ onMounted(() => void refresh())
         <div class="flex gap-2 pt-2">
           <button
             type="submit"
-            class="rounded bg-brand-500 px-4 py-2 text-white hover:bg-brand-600 disabled:opacity-50"
+            class="rounded bg-brand-500 px-4 py-2 text-white transition hover:bg-brand-600 disabled:opacity-50"
             :disabled="loading"
           >
             {{
@@ -308,7 +342,7 @@ onMounted(() => void refresh())
 
           <button
             type="button"
-            class="rounded bg-zinc-800 px-4 py-2 text-zinc-100 hover:bg-zinc-700"
+            class="rounded bg-zinc-800 px-4 py-2 text-zinc-100 transition hover:bg-zinc-700"
             @click="resetForm"
           >
             {{ t('admin.cancel', 'Batal') }}
@@ -341,15 +375,23 @@ onMounted(() => void refresh())
           <article
             v-for="e in items"
             :key="e.id"
-            class="rounded-xl border border-zinc-800 bg-zinc-950/40 p-3"
+            class="rounded-xl border border-zinc-800 bg-zinc-950/40 p-3 transition hover:border-zinc-700"
           >
             <div class="flex items-start justify-between gap-3">
               <div>
-                <h3 class="font-semibold">{{ e.title }}</h3>
+                <div class="flex items-center gap-2">
+                  <h3 class="font-semibold">{{ e.title }}</h3>
+                  <span
+                    v-if="e.isRoutine"
+                    class="inline-flex items-center rounded-full border border-blue-800/50 bg-blue-900/30 px-2 py-0.5 text-[10px] font-medium text-blue-200"
+                  >
+                    Rutin
+                  </span>
+                </div>
                 <p class="mt-1 text-sm text-zinc-300">
                   {{ e.date }}
-                  <span v-if="e.time" class="text-brand-300">
-                    ({{ e.time }})
+                  <span v-if="e.time" class="font-mono text-brand-300">
+                    ({{ formatTimeDisplay(e.time) }} WIB)
                   </span>
                   • {{ e.location }}
                 </p>

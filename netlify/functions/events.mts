@@ -1,4 +1,4 @@
-// netlify/functions/events.ts
+// netlify/functions/events.mts
 import type { Handler } from '@netlify/functions'
 import { randomUUID } from 'node:crypto'
 import {
@@ -21,6 +21,7 @@ type EventItem = {
   description?: string
   category: string
   image?: string
+  isRoutine?: boolean
 }
 
 const EVENTS_PATH = 'public/data/events.json'
@@ -58,7 +59,6 @@ export const handler: Handler = async (event) => {
     const method = event.httpMethod
     const id = getIdFromPath(event.path)
 
-    // Optional: handle preflight
     if (method === 'OPTIONS') {
       return json(200, { ok: true }, { Allow: 'GET,POST,PUT,DELETE,OPTIONS' })
     }
@@ -115,6 +115,7 @@ export const handler: Handler = async (event) => {
         category,
         description: body.description ? String(body.description) : undefined,
         image: body.image ? String(body.image) : undefined,
+        isRoutine: !!body.isRoutine,
       }
 
       const next = sortByDate([newItem, ...list])
@@ -156,7 +157,9 @@ export const handler: Handler = async (event) => {
         ...current,
         ...body,
         id: current.id,
-        category: nextCategory, // force normalized
+        category: nextCategory,
+        isRoutine:
+          body.isRoutine !== undefined ? !!body.isRoutine : current.isRoutine,
       }
 
       const next = sortByDate(list.map((x) => (x.id === id ? updated : x)))

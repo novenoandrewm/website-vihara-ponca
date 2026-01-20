@@ -11,6 +11,7 @@ export type EventItem = {
   description?: string
   category: 'pmv' | 'gabi' | 'general' | string
   image?: string
+  isRoutine?: boolean
 }
 
 export type EventCreateInput = Omit<EventItem, 'id'>

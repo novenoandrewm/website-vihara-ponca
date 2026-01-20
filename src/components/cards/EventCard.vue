@@ -25,6 +25,14 @@ const categoryTone = computed(() => {
   return 'neutral'
 })
 
+function formatTime(timeString: string): string {
+  if (!timeString) return ''
+
+  const [hours, minutes] = timeString.split(':')
+
+  return `${hours}:${minutes} WIB`
+}
+
 function handleImageError(e: Event) {
   const target = e.target as HTMLImageElement
   target.src =
@@ -118,7 +126,7 @@ function handleImageError(e: Event) {
                 clip-rule="evenodd"
               />
             </svg>
-            <span>{{ time }}</span>
+            <span class="uppercase">{{ formatTime(time) }}</span>
           </div>
 
           <div

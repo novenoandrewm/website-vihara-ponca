@@ -12,6 +12,7 @@ export type EventItem = {
   category: EventCategory
   description: string
   image?: string
+  isRoutine?: boolean
 }
 
 export async function listEvents(): Promise<EventItem[]> {

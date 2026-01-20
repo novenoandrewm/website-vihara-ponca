@@ -64,6 +64,7 @@
     "field_location": "Location",
     "field_description": "Description",
     "field_image": "Image Path (optional)",
+    "field_is_routine_hint": "Check if this is a recurring activity (not a special event).",
     "add": "Add",
     "edit": "Edit",
     "save": "Save",
@@ -240,7 +241,9 @@
     "empty_past": "No archive yet.",
     "empty": "No schedule is available.",
     "no_items_day": "No activities.",
-    "error": "Failed to load the schedule."
+    "error": "Failed to load the schedule.",
+    "upcoming_title": "Upcoming Events",
+    "routine_title": "Routine Activities"
   },
   "days": {
     "mon": "Monday",
