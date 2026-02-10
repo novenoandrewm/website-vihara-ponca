@@ -20,17 +20,6 @@
     "time": "16:43"
   },
   {
-    "id": "995581c3-33d4-403a-8be2-76481581f053",
-    "title": "Puja Bakti Mingguan Umum",
-    "date": "2026-01-18",
-    "location": "Bakti Sala",
-    "category": "general",
-    "description": "Puja bakti mingguan umum.",
-    "image": "https://raw.githubusercontent.com/novenoandrewm/website-vihara-ponca/main/public/uploads/1768672798876-wallpaperdog-20523645-(1).jpg",
-    "time": "10:10",
-    "isRoutine": true
-  },
-  {
     "id": "e2",
     "title": "Kegiatan PMV",
     "date": "2026-01-18",
