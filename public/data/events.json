@@ -31,6 +31,16 @@
     "isRoutine": true
   },
   {
+    "id": "4d25577a-2b6b-43e9-8ee5-1cc61ef8ee0c",
+    "title": "Puja bakti Umum",
+    "date": "2026-02-16",
+    "location": "Bakti Sala",
+    "category": "general",
+    "description": "Puja bakti umum",
+    "image": "https://raw.githubusercontent.com/novenoandrewm/website-vihara-ponca/main/public/uploads/1770726165079-screenshot-2026-02-10-122235.png",
+    "isRoutine": true
+  },
+  {
     "id": "6ce200a6-16f7-42f6-aa4d-4d3509ce052d",
     "title": "Perayaan Imlek",
     "date": "2026-02-16",
